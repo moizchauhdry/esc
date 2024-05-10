@@ -9,7 +9,7 @@ import { Link } from "@inertiajs/vue3";
                 <img src="../../../images/logo-icon.png" class="logo-icon" alt="logo icon">
             </div>
             <div>
-                <h4 class="logo-text">HSB Portal</h4>
+                <h4 class="logo-text">ESC Portal</h4>
             </div>
             <div class="toggle-icon ms-auto"><i class='bx bx-arrow-back'></i>
             </div>
