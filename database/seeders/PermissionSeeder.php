@@ -14,10 +14,10 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            
+
             // Basic
             'dashboard',
-            
+
             // Role
             'role-list',
             'role-create',
@@ -28,11 +28,16 @@ class PermissionSeeder extends Seeder
             'user-create',
             'user-update',
             'user-delete',
-            
+
+            // Invoice
+            'invoice-list',
+            'invoice-create',
+            'invoice-update',
+            'invoice-delete',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::updateOrCreate(['name' => $permission], ['name' => $permission]);
         }
     }
 }

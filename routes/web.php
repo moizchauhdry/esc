@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('role.index')->middleware('permission:role-list');
         Route::post('/create', [RoleController::class, 'create'])->name('role.create')->middleware('permission:role-create');
         Route::post('/update', [RoleController::class, 'update'])->name('role.update')->middleware('permission:role-update');
+    });
+
+    Route::prefix('invoices')->group(function () {
+        Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice-list');
+        Route::post('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice-create');
+        Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
     });
 });
 
