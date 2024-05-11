@@ -28,7 +28,7 @@ import { Link } from "@inertiajs/vue3";
                     </li>
                 </ul>
             </li>
-            <li class="menu-label">Application</li>
+            <!-- <li class="menu-label">Application</li> -->
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bx bx-category"></i>
@@ -42,6 +42,15 @@ import { Link } from "@inertiajs/vue3";
                     <li>
                         <Link :href="route('role.index')"><i class='bx bx-radio-circle'></i>Role & Permissions</Link>
                     </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bx bx-printer"></i>
+                    </div>
+                    <div class="menu-title">Invoice Management</div>
+                </a>
+                <ul>
                     <li>
                         <Link :href="route('invoice.index')"><i class='bx bx-radio-circle'></i>Invoices</Link>
                     </li>
