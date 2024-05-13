@@ -1,13 +1,18 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, usePage } from "@inertiajs/vue3";
 import Create from "@/Pages/Invoice/Create.vue";
+import { ref } from "vue";
 
 defineProps({
     invoices: Object,
 });
-</script>
 
+const createComponentRef = ref(null);
+const edit = (invoice) => {
+    createComponentRef.value.edit(invoice)
+};
+</script>
 
 <template>
 
@@ -41,7 +46,7 @@ defineProps({
                                         class="bx bx-search"></i></span>
                             </div>
                             <div class="ms-auto">
-                                <Create v-bind="$props"></Create>
+                                <Create v-bind="$props" ref="createComponentRef"></Create>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -54,7 +59,6 @@ defineProps({
                                         <th>Status</th>
                                         <th>Total</th>
                                         <th>Date</th>
-                                        <th>View Details</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -72,22 +76,28 @@ defineProps({
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ invoice.shipper_address }}</td>
-                                            <td>{{ invoice.consignee_address }}</td>
+                                            <td>
+                                                {{ invoice.data.shipper_address }}
+                                            </td>
+                                            <td>{{ invoice.data.consignee_address }}</td>
                                             <td>
                                                 <div
                                                     class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
                                                     <i class='bx bxs-circle me-1'></i>Done
                                                 </div>
                                             </td>
-                                            <td>PKR {{ invoice.total }}</td>
+                                            <td>PKR {{ invoice.data.total }}</td>
                                             <td>{{ invoice.created_at }}</td>
-                                            <td><button type="button" class="btn btn-primary btn-sm radius-30 px-4">View
-                                                    Details</button></td>
                                             <td>
                                                 <div class="d-flex order-actions">
-                                                    <a href="#" class=""><i class='bx bxs-edit'></i></a>
-                                                    <a href="#" class="ms-1"><i class='bx bxs-trash'></i></a>
+                                                    <a href="#" title="Edit" class="" @click=edit(invoice.data)>
+                                                        <i class='bx bxs-edit'></i></a>
+                                                    <a href="#" title="Detail" class="ms-1"><i
+                                                            class='bx bxs-collection'></i></a>
+                                                    <a href="#" title="Print" class="ms-1"><i
+                                                            class='bx bxs-printer'></i></a>
+                                                    <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                            class='bx bxs-trash'></i></a>
                                                 </div>
                                             </td>
                                         </tr>

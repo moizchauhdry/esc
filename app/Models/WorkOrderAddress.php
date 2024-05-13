@@ -4,15 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-class Invoice extends Model
+class WorkOrderAddress extends Model
 {
-    use HasFactory;
+    use HasFactory,Notifiable;
 
     protected $guarded = [];
-
-    public function items()
-    {
-        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
-    }
+    
 }
