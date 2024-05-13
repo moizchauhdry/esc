@@ -36,13 +36,13 @@ defineProps({
                     <div class="card-body">
                         <div class="d-lg-flex align-items-center mb-4 gap-3">
                             <div class="position-relative">
-                                <input type="text" class="form-control ps-5 radius-30" placeholder="Search Order"> <span
-                                    class="position-absolute top-50 product-show translate-middle-y"><i
+                                <input type="text" class="form-control ps-5 radius-30" placeholder="Search Invoice">
+                                <span class="position-absolute top-50 product-show translate-middle-y"><i
                                         class="bx bx-search"></i></span>
                             </div>
                             <div class="ms-auto">
-                                    <Create v-bind="$props"></Create>
-                                </div>
+                                <Create v-bind="$props"></Create>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table mb-0">
@@ -68,19 +68,20 @@ defineProps({
                                                             aria-label="...">
                                                     </div>
                                                     <div class="ms-2">
-                                                        <h6 class="mb-0 font-14">#OS-{{ invoice.id }}</h6>
+                                                        <h6 class="mb-0 font-14">#ESC-{{ invoice.id }}</h6>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>Gaspur Antunes</td>
-                                            <td>Gaspur Antunes</td>
+                                            <td>{{ invoice.shipper_address }}</td>
+                                            <td>{{ invoice.consignee_address }}</td>
                                             <td>
                                                 <div
                                                     class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                                                    <i class='bx bxs-circle me-1'></i>FulFilled</div>
+                                                    <i class='bx bxs-circle me-1'></i>Done
+                                                </div>
                                             </td>
-                                            <td>$485.20</td>
-                                            <td>June 10, 2020</td>
+                                            <td>PKR {{ invoice.total }}</td>
+                                            <td>{{ invoice.created_at }}</td>
                                             <td><button type="button" class="btn btn-primary btn-sm radius-30 px-4">View
                                                     Details</button></td>
                                             <td>

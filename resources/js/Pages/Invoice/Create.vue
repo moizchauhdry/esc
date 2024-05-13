@@ -12,13 +12,15 @@ const edit_mode = ref(false);
 
 const form = useForm({
     invoice_id: "",
+
     shipper_id: "",
-    consignee_id: "",
-    shipper_name: "",
+    shipper_account: "",
     shipper_address: "",
+
     consignee_id: "",
-    consignee_name: "",
+    consignee_account: "",
     consignee_address: "",
+
     carrier: "",
     mawb_no: "",
     quantity: "",
@@ -29,11 +31,13 @@ const form = useForm({
     destination: "",
     consignment_no: "",
     departure_airport: "",
+
     issued_by: "",
     created_by: "",
+
+    total: 0,
+    subtotal: 0,
     items: [],
-    total: [],
-    subtotal: [],
 });
 
 const addItem = () => {
@@ -63,11 +67,13 @@ const edit = (invoice) => {
     edit_mode.value = true;
 
     form.invoice_id = invoice.id;
+
     form.shipper_id = invoice.shipper_id;
-    form.shipper_name = invoice.shipper_name;
+    form.shipper_account = invoice.shipper_account;
     form.shipper_address = invoice.shipper_address;
+
     form.consignee_id = invoice.consignee_id;
-    form.consignee_name = invoice.consignee_name;
+    form.consignee_account = invoice.consignee_account;
     form.consignee_address = invoice.consignee_address;
 
     form.carrier = invoice.carrier;
@@ -80,6 +86,7 @@ const edit = (invoice) => {
     form.destination = invoice.destination;
     form.consignment_no = invoice.consignment_no;
     form.departure_airport = invoice.departure_airport;
+
     form.issued_by = invoice.issued_by;
     form.created_by = invoice.created_by;
 };
@@ -164,8 +171,9 @@ const getGrandTotal = () => {
                                                                     <label for="input13" class="form-label">Account
                                                                         Number</label>
                                                                     <input type="text" class="form-control"
-                                                                        v-model="form.shipper_name">
-                                                                    <InputError :message="form.errors.shipper_name" />
+                                                                        v-model="form.shipper_account">
+                                                                    <InputError
+                                                                        :message="form.errors.shipper_account" />
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <label for="input11" class="form-label">Name &
@@ -186,10 +194,11 @@ const getGrandTotal = () => {
                                                                     <label for="input13" class="form-label">Account
                                                                         Number</label>
                                                                     <input type="text" class="form-control"
-                                                                        v-model="form.consignee_name">
-                                                                    <InputError :message="form.errors.consignee_name" />
+                                                                        v-model="form.consignee_account">
+                                                                    <InputError
+                                                                        :message="form.errors.consignee_account" />
                                                                 </div>
-                                                                <div class="col-md-12">
+                                                                <div class=" col-md-12">
                                                                     <label for="input13" class="form-label">Name &
                                                                         Address</label>
                                                                     <textarea class="form-control"
@@ -312,16 +321,25 @@ const getGrandTotal = () => {
                                                             <template v-for="(item, index) in form.items"
                                                                 :key="item.id">
                                                                 <tr>
-                                                                    <td class="no"><span>
-                                                                        Item #{{ ++index }}
-                                                                    </span></td>
+                                                                    <td class="no">
+                                                                        <span>
+                                                                            Item #{{ ++index }}
+                                                                        </span>
+
+                                                                        <br>
+
+                                                                        <butto type="button" @click="removeItem(index)">
+                                                                            Remove</butto>
+
+                                                                    </td>
                                                                     <td class="text-left" colspan="3">
                                                                         <input type="text" class="form-control"
                                                                             v-model="item.particular">
                                                                     </td>
                                                                     <td class="text-left">
-                                                                        <input type="text" class="form-control"
-                                                                            v-model="item.amount">
+                                                                        <input type="number" class="form-control"
+                                                                            v-model="item.amount"
+                                                                            @keyup="getGrandTotal()">
                                                                     </td>
 
                                                                     <td class="total">${{ item.amount }}</td>
@@ -333,12 +351,12 @@ const getGrandTotal = () => {
                                                             <tr>
                                                                 <td colspan="3"></td>
                                                                 <td colspan="2">SUBTOTAL</td>
-                                                                <td>$5,200.00</td>
+                                                                <td>PKR {{ form.total.toFixed(2) }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="3"></td>
                                                                 <td colspan="2">GRAND TOTAL</td>
-                                                                <td>$6,500.00</td>
+                                                                <td>PKR {{ form.total.toFixed(2) }}</td>
                                                             </tr>
                                                         </tfoot>
                                                     </table>

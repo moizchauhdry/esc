@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
 
             $table->integer('shipper_id');
-            $table->string('shipper_name', 100)->nullable();
+            $table->string('shipper_account', 100)->nullable();
             $table->string('shipper_address', 100)->nullable();
 
             $table->integer('consignee_id');
-            $table->string('consignee_name', 100)->nullable();
+            $table->string('consignee_account', 100)->nullable();
             $table->string('consignee_address', 100)->nullable();
 
             $table->string('carrier', 100)->nullable();
@@ -35,6 +35,9 @@ return new class extends Migration
             $table->string('consignment_no', 100)->nullable();
             $table->string('departure_airport', 100)->nullable();
             $table->string('issued_by', 100)->nullable();
+
+            $table->decimal('subtotal', 8, 2)->default(0);
+            $table->decimal('total', 8, 2)->default(0);
 
             $table->integer('created_by')->unsigned();
 
