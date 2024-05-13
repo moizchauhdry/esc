@@ -86,8 +86,8 @@ defineProps({
                                                     Details</button></td>
                                             <td>
                                                 <div class="d-flex order-actions">
-                                                    <a href="javascript:;" class=""><i class='bx bxs-edit'></i></a>
-                                                    <a href="javascript:;" class="ms-3"><i class='bx bxs-trash'></i></a>
+                                                    <a href="#" class=""><i class='bx bxs-edit'></i></a>
+                                                    <a href="#" class="ms-1"><i class='bx bxs-trash'></i></a>
                                                 </div>
                                             </td>
                                         </tr>
