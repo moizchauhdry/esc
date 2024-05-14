@@ -53,10 +53,6 @@
             height: auto;
         }
 
-        .invoice-info {
-            text-align: right;
-        }
-
         .invoice-info p {
             margin: 5px 0;
         }
@@ -102,7 +98,7 @@
             </div>
             <div class="invoice-info" style="float: right;">
                 <p><b>Express Saver Cargo</b></p>
-                <div style="font-size: 12px; ">
+                <div style="font-size: 12px;">
                     <p>Hammad Ali<br>+92 321 4208852<br>hammad.ali@esavercargo.com</p>
                     <p>Habibur Haseeb<br>+92 321 4487971<br>habibur.haseeb@esavercargo.com</p>
                 </div>
@@ -157,7 +153,7 @@
                 <td>200</td>
             </tr>
             <tr>
-                <td colspan="3">Grand Total</td>
+                <td colspan="3" style="text-align: right">Grand Total</td>
                 <td>400</td>
             </tr>
         </table>
