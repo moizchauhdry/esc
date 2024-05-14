@@ -110,6 +110,8 @@ class InvoiceController extends Controller
     {
         // dd($request->all());
 
+        $invoice = Invoice::find($request->invoice_id);
+
         $request->validate([
             'invoice_id' => 'required',
 
@@ -165,7 +167,7 @@ class InvoiceController extends Controller
                 'created_by' => auth()->id(),
             ];
 
-            $invoice = Invoice::create($data);
+            $invoice->update($data);
 
             InvoiceItem::where('invoice_id', $invoice->id)->delete();
             foreach ($request->items as $key => $item) {
