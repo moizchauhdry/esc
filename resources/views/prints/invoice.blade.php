@@ -10,6 +10,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            font-size: 14px
         }
 
         .container {
@@ -62,7 +63,7 @@
         }
 
         .particulars-table th {
-            background-color: #f2f2f2;
+            /* background-color: #f2f2f2; */
         }
 
         .particulars-table td:first-child {
@@ -75,6 +76,11 @@
         }
 
         .particulars-table td,
+        {
+        padding: 12px;
+        text-align: left;
+        }
+
         .particulars-table th {
             padding: 8px;
             text-align: left;
@@ -94,7 +100,8 @@
     <div class="container">
         <div class="invoice-header">
             <div style="float: left;">
-                <img src="https://esavercargo.com/wp-content/uploads/2022/11/png-01-3.png" alt="Logo">
+                <img src="https://esavercargo.com/wp-content/uploads/2022/11/png-01-3.png" alt="Logo"> <br>
+                <span>Express Saver Cargo</span>
             </div>
             <div class="invoice-info" style="float: right;">
                 <p><b>Express Saver Cargo</b></p>
@@ -106,26 +113,39 @@
         </div>
         <table style="padding-top:120px">
             <tr>
-                <td>
-                    <h1>Invoice #000001256</h1>
+                <td style="background-color: #0662ae; color:white; width:60%">
+                    <h2>Invoice #202412</h2>
                 </td>
-                <td>
-                    Invoice To: Company Name<br>
-                    Invoice Date: 25-05-2024 02:45 AM
+                <td style="font-size:14px;font-weight:400">
+                    Invoice To: Octalsol<br>
+                    Invoice Date: 25-05-2024
                 </td>
             </tr>
         </table>
 
         <table>
             <tr>
-                <td>
-                    <b>Shipper</b> <br>
+                <td style="font-size:14px; width:60%">
+                    <b>Shipper</b> <br> <br>
                     Moiz Chauhdry <br>
                     Arfa Tower, Model Town <br>
                     Lahore, Punjab, Pakistan
                 </td>
-                <td>
-                    <b>Consignee</b> <br>
+                <td rowspan="2">
+                    <b>Carrier:</b> alpha <br>
+                    <b>MAWB No:</b> alpha <br>
+                    <b>Sender:</b> alpha <br>
+                    <b>Destination:</b> alpha <br>
+
+                    <b>Commodity:</b> alpha <br>
+                    <b>Quantity:</b> alpha <br>
+                    <b>Weight (KGS):</b> alpha <br>
+                    <b>AFC Rate/KG:</b> alpha <br>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size:14px; width:60%">
+                    <b>Consignee</b> <br> <br>
                     Moiz Chauhdry <br>
                     Arfa Tower, Model Town <br>
                     Lahore, Punjab, Pakistan
@@ -134,7 +154,7 @@
         </table>
 
         <table class="particulars-table">
-            <tr>
+            <tr style="background-color: #0662ae; color:white; font-size:12px">
                 <th>Particulars</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
