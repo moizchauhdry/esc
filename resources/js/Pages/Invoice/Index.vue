@@ -94,7 +94,7 @@ const edit = (invoice) => {
                                                         <i class='bx bxs-edit'></i></a>
                                                     <a href="#" title="Detail" class="ms-1"><i
                                                             class='bx bxs-collection'></i></a>
-                                                    <a href="#" title="Print" class="ms-1"><i
+                                                    <a :href="route('invoice.print', invoice.id)" title="Print" class="ms-1" target="_blank"><i
                                                             class='bx bxs-printer'></i></a>
                                                     <a href="#" title="Delete" class="ms-1 text-danger"><i
                                                             class='bx bxs-trash'></i></a>

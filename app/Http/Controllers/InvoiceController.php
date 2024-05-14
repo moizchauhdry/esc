@@ -6,7 +6,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use PDF;
 class InvoiceController extends Controller
 {
     public function index()
@@ -187,4 +187,19 @@ class InvoiceController extends Controller
             throw $th;
         }
     }
+
+    public function print($id)
+    {
+        $invoice = Invoice::find($id);
+
+        view()->share([
+            'invoice' => $invoice,
+        ]);
+
+        $pdf = PDF::loadView('prints.invoice');
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('invoice.pdf');
+    }
+
+
 }
