@@ -177,6 +177,15 @@
                 <td>400</td>
             </tr>
         </table>
+
+        <table>
+            <tr>
+                <td style="font-size:12px">
+                    Please Make Check Payable to <b>EXPRESS SAVER CARGO.</b> <br>
+                    <b>Online Transfer: A/C: 3397301000001395 :: EXPRESS SAVER CARGO BANK: FAYSAL BANK</b>
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 
