@@ -113,7 +113,7 @@
         </div>
         <table style="padding-top:120px">
             <tr>
-                <td style="background-color: #0662ae; color:white; width:60%">
+                <td style="background-color: #0662ae; color:white; width:55%">
                     <h2>Invoice #202412</h2>
                 </td>
                 <td style="font-size:14px;font-weight:400">
@@ -125,26 +125,26 @@
 
         <table>
             <tr>
-                <td style="font-size:14px; width:60%">
+                <td style="font-size:12px; width:55%">
                     <b>Shipper</b> <br> <br>
                     Moiz Chauhdry <br>
                     Arfa Tower, Model Town <br>
                     Lahore, Punjab, Pakistan
                 </td>
-                <td rowspan="2">
-                    <b>Carrier:</b> alpha <br>
-                    <b>MAWB No:</b> alpha <br>
-                    <b>Sender:</b> alpha <br>
-                    <b>Destination:</b> alpha <br>
+                <td rowspan="2" style="font-size:12px;">
+                    <b>Carrier:</b> 9P <br>
+                    <b>MAWB No:</b> 514-0972-3265 <br>
+                    <b>Sender:</b> LHE <br>
+                    <b>Destination:</b> SHJ <br>
 
-                    <b>Commodity:</b> alpha <br>
-                    <b>Quantity:</b> alpha <br>
-                    <b>Weight (KGS):</b> alpha <br>
-                    <b>AFC Rate/KG:</b> alpha <br>
+                    <b>Commodity:</b> FRESH CHILLED MEAT <br>
+                    <b>Quantity:</b> 54 <br>
+                    <b>Weight (KGS):</b> 1780 <br>
+                    <b>AFC Rate/KG:</b> PKR 305.00 <br>
                 </td>
             </tr>
             <tr>
-                <td style="font-size:14px; width:60%">
+                <td style="font-size:12px; width:55%">
                     <b>Consignee</b> <br> <br>
                     Moiz Chauhdry <br>
                     Arfa Tower, Model Town <br>
@@ -160,14 +160,14 @@
                 <th>Unit Price</th>
                 <th>Total</th>
             </tr>
-            <tr>
-                <td>Lorem, ipsum dolor.</td>
+            <tr style="font-size:12px">
+                <td>AIR FREIGHT CHARGES (AFC)</td>
                 <td>2</td>
                 <td>100</td>
                 <td>200</td>
             </tr>
-            <tr>
-                <td>Lorem, ipsum dolor.</td>
+            <tr style="font-size:12px">
+                <td>AWB FEE</td>
                 <td>2</td>
                 <td>100</td>
                 <td>200</td>
