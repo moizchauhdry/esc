@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
+
 class InvoiceController extends Controller
 {
     public function index()
@@ -20,18 +22,17 @@ class InvoiceController extends Controller
                 'created_at' => $invoice->created_at->format('F d, Y'),
             ]);
 
+        $address = Session::get('address');
+
         return Inertia::render('Invoice/Index', [
-            'invoices' => $invoices
+            'invoices' => $invoices,
+            'address' => $address,
         ]);
     }
 
     public function create(Request $request)
     {
-        // dd($request->all());
-
         $request->validate([
-            // 'invoice_id' => 'required|string|max:50',
-
             // 'shipper_id' => 'required|string|max:50',
             'shipper_account' => 'required|numeric',
             'shipper_address' => 'required|string|max:50',
@@ -57,11 +58,8 @@ class InvoiceController extends Controller
             'items.*.amount' => 'required|numeric|gte:0',
         ]);
 
-        // dd('s');
-
         try {
             $data = [
-                // 'invoice_id' => $request->invoice_id,
                 'shipper_id' => 0,
                 'shipper_account' => $request->shipper_account,
                 'shipper_address' => $request->shipper_address,
@@ -200,6 +198,4 @@ class InvoiceController extends Controller
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('invoice.pdf');
     }
-
-
 }

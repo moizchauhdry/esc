@@ -2,13 +2,17 @@
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import { ref, watch } from "vue";
+import Address from "@/Pages/Invoice/Address.vue";
 
 const props = defineProps({
-    invoices: Object
+    invoices: Object,
+    address: Object,
 });
 
 const invoice_modal = ref(false);
 const edit_mode = ref(false);
+
+const address = usePage().props.address;
 
 const form = useForm({
     invoice_id: "",
@@ -50,6 +54,8 @@ const addItem = () => {
 const create = () => {
     invoice_modal.value = true;
     edit_mode.value = false;
+    form.shipper_account = address.id;
+    form.shipper_address = address.address_1 + ',' + address.city + ',' + address.state + ',' + address.country;
     addItem();
 };
 
@@ -152,13 +158,14 @@ defineExpose({ edit: (invoice) => edit(invoice) });
                                 <div class="card-body">
                                     <div class="invoice overflow-auto">
                                         <div>
-                                            <!-- <div class="row contacts">
+                                            <div class="row contacts">
                                                 <div class="col invoice-details" style="text-align:left">
                                                     <h1 class="invoice-id">Invoice #00{{ form.invoice_id }}
                                                     </h1>
                                                     <div class="date">Date of Invoice: 01/01/2024</div>
+                                                    <Address></Address>
                                                 </div>
-                                            </div> -->
+                                            </div>
 
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
@@ -290,12 +297,13 @@ defineExpose({ edit: (invoice) => edit(invoice) });
                                                     <tr>
                                                         <th>
                                                             <button type="button" @click="addItem()"
-                                                                class="ms-1 text-sucess btn btn-success btn-sm"><i class='bx bx-plus'></i>Add
+                                                                class="ms-1 text-sucess btn btn-success btn-sm"><i
+                                                                    class='bx bx-plus'></i>Add
                                                                 Item</button>
                                                         </th>
                                                         <th class="text-left" colspan="3">
-                                                           
-                                                            PARTICULARS 
+
+                                                            PARTICULARS
                                                         </th>
                                                         <th class="text-left">AMOUNT</th>
                                                         <th class="text-left">TOTAL</th>

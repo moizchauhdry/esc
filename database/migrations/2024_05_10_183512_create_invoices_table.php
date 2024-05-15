@@ -27,14 +27,9 @@ return new class extends Migration
             $table->string('quantity', 100)->nullable();
             $table->string('weight', 100)->nullable();
             $table->string('commodity', 100)->nullable();
-            $table->string('afc_rate', 100)->nullable();
 
             $table->string('sender', 100)->nullable();
             $table->string('destination', 100)->nullable();
-
-            $table->string('consignment_no', 100)->nullable();
-            $table->string('departure_airport', 100)->nullable();
-            $table->string('issued_by', 100)->nullable();
 
             $table->decimal('subtotal', 8, 2)->default(0);
             $table->decimal('total', 8, 2)->default(0);

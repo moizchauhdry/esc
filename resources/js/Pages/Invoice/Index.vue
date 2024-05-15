@@ -6,6 +6,7 @@ import { ref } from "vue";
 
 defineProps({
     invoices: Object,
+    address: Object,
 });
 
 const createComponentRef = ref(null);

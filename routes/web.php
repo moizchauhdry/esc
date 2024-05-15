@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CustomerAccountController;
@@ -54,7 +55,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice-create');
         Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
         Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print');
+    });
 
+    Route::prefix('address')->group(function () {
+        Route::post('/create', [AddressController::class, 'create'])->name('address.create');
     });
 });
 
