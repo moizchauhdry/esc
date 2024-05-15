@@ -6,7 +6,7 @@ import { ref, watch } from "vue";
 const address_modal = ref(false);
 const edit_mode = ref(false);
 
-const form = useForm({
+const address_form = useForm({
     type: 1,
     address_1: "",
     address_2: "",
@@ -24,12 +24,15 @@ const create = () => {
 };
 
 const submit = () => {
-    form.post(route("address.create"), {
+    address_form.post(route("address.create"), {
         preserveScroll: true,
-        onSuccess: () => {
+        onSuccess: (response) => {
+            console.log(response)
             closeModal()
         },
-        onError: () => error(),
+        onError: (errors) => {
+            console.log(errors)
+        },
         onFinish: () => { },
     });
 };
@@ -41,7 +44,7 @@ const edit = () => {
 };
 
 const update = () => {
-    form.post(route("invoice.update"), {
+    address_form.post(route("invoice.update"), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
         onError: () => error(),
@@ -55,7 +58,7 @@ const error = () => {
 
 const closeModal = () => {
     address_modal.value = false;
-    form.reset();
+    address_form.reset();
 };
 </script>
 
@@ -77,51 +80,51 @@ const closeModal = () => {
                             <div class="row g-2">
                                 <div class="col-md-6">
                                     <label for="">Type</label>
-                                    <select v-model="form.type" class="form-control">
+                                    <select v-model="address_form.type" class="form-control">
                                         <option value="shipper">Shipper</option>
                                         <option value="consignee">Consignee</option>
                                     </select>
-                                    <InputError :message="form.errors.type" />
+                                    <InputError :message="address_form.errors.type" />
                                 </div>
                                 <div class="col-md-12">
                                     <label for="">Address Line 1</label>
-                                    <input type="text" v-model="form.address_1" class="form-control">
-                                    <InputError :message="form.errors.address_1" />
+                                    <input type="text" v-model="address_form.address_1" class="form-control">
+                                    <InputError :message="address_form.errors.address_1" />
                                 </div>
                                 <div class="col-md-12">
                                     <label for="">Address Line 2</label>
-                                    <input type="text" v-model="form.address_2" class="form-control">
-                                    <InputError :message="form.errors.address_2" />
+                                    <input type="text" v-model="address_form.address_2" class="form-control">
+                                    <InputError :message="address_form.errors.address_2" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="">City</label>
-                                    <input type="text" v-model="form.city" class="form-control">
-                                    <InputError :message="form.errors.city" />
+                                    <input type="text" v-model="address_form.city" class="form-control">
+                                    <InputError :message="address_form.errors.city" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="">State</label>
-                                    <input type="text" v-model="form.state" class="form-control">
-                                    <InputError :message="form.errors.state" />
+                                    <input type="text" v-model="address_form.state" class="form-control">
+                                    <InputError :message="address_form.errors.state" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="">Country</label>
-                                    <input type="text" v-model="form.country" class="form-control">
-                                    <InputError :message="form.errors.country" />
+                                    <input type="text" v-model="address_form.country" class="form-control">
+                                    <InputError :message="address_form.errors.country" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="">Zipcode</label>
-                                    <input type="text" v-model="form.zipcode" class="form-control">
-                                    <InputError :message="form.errors.zipcode" />
+                                    <input type="text" v-model="address_form.zipcode" class="form-control">
+                                    <InputError :message="address_form.errors.zipcode" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">Phone</label>
-                                    <input type="text" v-model="form.phone" class="form-control">
-                                    <InputError :message="form.errors.phone" />
+                                    <input type="text" v-model="address_form.phone" class="form-control">
+                                    <InputError :message="address_form.errors.phone" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">Email</label>
-                                    <input type="text" v-model="form.email" class="form-control">
-                                    <InputError :message="form.errors.email" />
+                                    <input type="text" v-model="address_form.email" class="form-control">
+                                    <InputError :message="address_form.errors.email" />
                                 </div>
                             </div>
                         </div>

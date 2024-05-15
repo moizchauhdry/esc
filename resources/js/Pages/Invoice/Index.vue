@@ -6,13 +6,16 @@ import { ref } from "vue";
 
 defineProps({
     invoices: Object,
-    address: Object,
+    address: String,
 });
 
 const createComponentRef = ref(null);
 const edit = (invoice) => {
     createComponentRef.value.edit(invoice)
 };
+
+// const page_props = usePage().props;
+
 </script>
 
 <template>
@@ -47,6 +50,7 @@ const edit = (invoice) => {
                                         class="bx bx-search"></i></span>
                             </div>
                             <div class="ms-auto">
+                                {{ address }}
                                 <Create v-bind="$props" ref="createComponentRef"></Create>
                             </div>
                         </div>

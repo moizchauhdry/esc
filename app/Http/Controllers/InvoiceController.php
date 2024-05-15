@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
@@ -22,11 +23,9 @@ class InvoiceController extends Controller
                 'created_at' => $invoice->created_at->format('F d, Y'),
             ]);
 
-        $address = Session::get('address');
-
         return Inertia::render('Invoice/Index', [
             'invoices' => $invoices,
-            'address' => $address,
+            'address' => session('address'),
         ]);
     }
 
@@ -99,6 +98,9 @@ class InvoiceController extends Controller
                 'subtotal' => $invoice_total,
                 'total' => $invoice_total,
             ]);
+
+            return Redirect::route('invoice.index')->with('success', 'Organization created.');
+
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -181,6 +183,11 @@ class InvoiceController extends Controller
                 'subtotal' => $invoice_total,
                 'total' => $invoice_total,
             ]);
+
+            return back()->with('address', 'hellow orld');
+
+            // return Redirect::route('invoice.index')->with('success', 'Organization created.');
+
         } catch (\Throwable $th) {
             throw $th;
         }

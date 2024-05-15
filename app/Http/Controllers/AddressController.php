@@ -12,6 +12,8 @@ class AddressController extends Controller
 {
     public function create(Request $request)
     {
+        // dd($request->all());
+
         $request->validate([
             'type' => 'required|in:shipper,consignee',
             'address_1' => 'required|string|max:50',
@@ -38,6 +40,7 @@ class AddressController extends Controller
 
         $address = Address::create($data);
 
-        Session::put('address', $address);
+        return Redirect::route('invoice.index')->with('address', $address->id);
+
     }
 }
