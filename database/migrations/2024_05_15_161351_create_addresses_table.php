@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['shipper', 'consignee']);
+            $table->string('name', 100)->nullable();
             $table->string('address_1', 100)->nullable();
             $table->string('address_2', 100)->nullable();
             $table->string('city', 100)->nullable();

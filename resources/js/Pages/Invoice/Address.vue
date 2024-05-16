@@ -1,13 +1,18 @@
 <script setup>
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
-import InputError from "@/Components/InputError.vue";
 import { ref, watch } from "vue";
+import Modal from "@/Components/Modal.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
+import InputError from '@/Components/InputError.vue';
 
 const address_modal = ref(false);
 const edit_mode = ref(false);
 
-const address_form = useForm({
-    type: 1,
+const form = useForm({
+    type: "",
+    name: "",
     address_1: "",
     address_2: "",
     city: "",
@@ -24,11 +29,11 @@ const create = () => {
 };
 
 const submit = () => {
-    address_form.post(route("address.create"), {
+    form.post(route("address.create"), {
         preserveScroll: true,
         onSuccess: (response) => {
-            console.log(response)
-            closeModal()
+            console.log(response);
+            closeModal();
         },
         onError: (errors) => {
             console.log(errors)
@@ -44,7 +49,7 @@ const edit = () => {
 };
 
 const update = () => {
-    address_form.post(route("invoice.update"), {
+    form.post(route("invoice.update"), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
         onError: () => error(),
@@ -58,86 +63,93 @@ const error = () => {
 
 const closeModal = () => {
     address_modal.value = false;
-    address_form.reset();
+    form.reset();
 };
 </script>
 
 <template>
     <div class="col">
-        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleLargeModal"
-            @click="create"><i class="bx bx-plus"></i></button>
-        <div class="modal fade show" id="exampleLargeModal" tabindex="-1" aria-hidden="true" style="display: block;"
-            v-if="address_modal">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <form @submit.prevent="edit_mode ? update() : submit()">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Shipper Add</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                                @click="closeModal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row g-2">
-                                <div class="col-md-6">
-                                    <label for="">Type</label>
-                                    <select v-model="address_form.type" class="form-control">
-                                        <option value="shipper">Shipper</option>
-                                        <option value="consignee">Consignee</option>
-                                    </select>
-                                    <InputError :message="address_form.errors.type" />
-                                </div>
-                                <div class="col-md-12">
-                                    <label for="">Address Line 1</label>
-                                    <input type="text" v-model="address_form.address_1" class="form-control">
-                                    <InputError :message="address_form.errors.address_1" />
-                                </div>
-                                <div class="col-md-12">
-                                    <label for="">Address Line 2</label>
-                                    <input type="text" v-model="address_form.address_2" class="form-control">
-                                    <InputError :message="address_form.errors.address_2" />
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="">City</label>
-                                    <input type="text" v-model="address_form.city" class="form-control">
-                                    <InputError :message="address_form.errors.city" />
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="">State</label>
-                                    <input type="text" v-model="address_form.state" class="form-control">
-                                    <InputError :message="address_form.errors.state" />
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="">Country</label>
-                                    <input type="text" v-model="address_form.country" class="form-control">
-                                    <InputError :message="address_form.errors.country" />
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="">Zipcode</label>
-                                    <input type="text" v-model="address_form.zipcode" class="form-control">
-                                    <InputError :message="address_form.errors.zipcode" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Phone</label>
-                                    <input type="text" v-model="address_form.phone" class="form-control">
-                                    <InputError :message="address_form.errors.phone" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Email</label>
-                                    <input type="text" v-model="address_form.email" class="form-control">
-                                    <InputError :message="address_form.errors.email" />
-                                </div>
+        <PrimaryButton @click="create">Add</PrimaryButton>
+
+        <Modal :show="address_modal" @close="closeModal">
+            <form @submit.prevent="edit_mode ? update() : submit()">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">Shipper & Consignee Account</h2>
+
+                    <p class="mt-1 text-sm text-gray-600">
+                        Once your account is added, you can simply search by account
+                        number, and the address will be fetched accordingly in invoice form.
+                    </p>
+
+                    <div class="mt-6">
+                        
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <label for="">Type</label>
+                                <select v-model="form.type" class="form-control">
+                                    <option value="shipper">Shipper</option>
+                                    <option value="consignee">Consignee</option>
+                                </select>
+                                <InputError :message="form.errors.type" />
+                            </div>
+                            <div class="col-md-8">
+                                <label for="">Account Name</label>
+                                <input type="text" v-model="form.name" class="form-control">
+                                <InputError :message="form.errors.name" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Address Line 1</label>
+                                <input type="text" v-model="form.address_1" class="form-control">
+                                <InputError :message="form.errors.address_1" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Address Line 2</label>
+                                <input type="text" v-model="form.address_2" class="form-control">
+                                <InputError :message="form.errors.address_2" />
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">City</label>
+                                <input type="text" v-model="form.city" class="form-control">
+                                <InputError :message="form.errors.city" />
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">State</label>
+                                <input type="text" v-model="form.state" class="form-control">
+                                <InputError :message="form.errors.state" />
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Country</label>
+                                <input type="text" v-model="form.country" class="form-control">
+                                <InputError :message="form.errors.country" />
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Zipcode</label>
+                                <input type="text" v-model="form.zipcode" class="form-control">
+                                <InputError :message="form.errors.zipcode" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Phone</label>
+                                <input type="text" v-model="form.phone" class="form-control">
+                                <InputError :message="form.errors.phone" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Email</label>
+                                <input type="text" v-model="form.email" class="form-control">
+                                <InputError :message="form.errors.email" />
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
-                                @click="closeModal">Close</button>
+                    </div>
 
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                {{ edit_mode ? 'Save & Update' : 'Save & Submit' }}</button>
-                        </div>
-                    </form>
+                    <div class="mt-6 flex justify-end">
+                        <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                        <SuccessButton class="ml-3" :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing">
+                            Save
+                        </SuccessButton>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </form>
+        </Modal>
     </div>
 </template>

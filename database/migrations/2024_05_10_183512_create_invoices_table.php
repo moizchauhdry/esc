@@ -15,11 +15,9 @@ return new class extends Migration
             $table->id();
 
             $table->integer('shipper_id');
-            $table->string('shipper_account', 100)->nullable();
             $table->string('shipper_address', 100)->nullable();
 
             $table->integer('consignee_id');
-            $table->string('consignee_account', 100)->nullable();
             $table->string('consignee_address', 100)->nullable();
 
             $table->string('carrier', 100)->nullable();

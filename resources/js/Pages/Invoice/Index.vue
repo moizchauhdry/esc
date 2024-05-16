@@ -1,20 +1,12 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
-import Create from "@/Pages/Invoice/Create.vue";
-import { ref } from "vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     invoices: Object,
     address: String,
 });
-
-const createComponentRef = ref(null);
-const edit = (invoice) => {
-    createComponentRef.value.edit(invoice)
-};
-
-// const page_props = usePage().props;
 
 </script>
 
@@ -23,7 +15,6 @@ const edit = (invoice) => {
     <Head title="Invoices" />
 
     <AuthenticatedLayout>
-        <!--start page wrapper -->
         <div class="page-wrapper">
             <div class="page-content">
                 <!--breadcrumb-->
@@ -39,6 +30,12 @@ const edit = (invoice) => {
                             </ol>
                         </nav>
                     </div>
+
+                    <div class="ms-auto">
+                        <Link :href="route('invoice.create')">
+                        <PrimaryButton>Add Invoice</PrimaryButton>
+                        </Link>
+                    </div>
                 </div>
 
                 <div class="card">
@@ -48,10 +45,6 @@ const edit = (invoice) => {
                                 <input type="text" class="form-control ps-5 radius-30" placeholder="Search Invoice">
                                 <span class="position-absolute top-50 product-show translate-middle-y"><i
                                         class="bx bx-search"></i></span>
-                            </div>
-                            <div class="ms-auto">
-                                {{ address }}
-                                <Create v-bind="$props" ref="createComponentRef"></Create>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -99,8 +92,8 @@ const edit = (invoice) => {
                                                         <i class='bx bxs-edit'></i></a>
                                                     <a href="#" title="Detail" class="ms-1"><i
                                                             class='bx bxs-collection'></i></a>
-                                                    <a :href="route('invoice.print', invoice.id)" title="Print" class="ms-1" target="_blank"><i
-                                                            class='bx bxs-printer'></i></a>
+                                                    <a :href="route('invoice.print', invoice.id)" title="Print"
+                                                        class="ms-1" target="_blank"><i class='bx bxs-printer'></i></a>
                                                     <a href="#" title="Delete" class="ms-1 text-danger"><i
                                                             class='bx bxs-trash'></i></a>
                                                 </div>
@@ -116,7 +109,6 @@ const edit = (invoice) => {
 
             </div>
         </div>
-        <!--end page wrapper -->
     </AuthenticatedLayout>
 
 </template>

@@ -12,7 +12,8 @@ const props = defineProps({
 const invoice_modal = ref(false);
 const edit_mode = ref(false);
 
-// const address = usePage().props.address;
+const address = usePage().props.address;
+console.log(address);
 
 
 const form = useForm({
@@ -55,7 +56,7 @@ const addItem = () => {
 const create = () => {
     invoice_modal.value = true;
     edit_mode.value = false;
-    // form.shipper_account = address
+    form.shipper_account = address
     addItem();
 };
 
@@ -164,8 +165,6 @@ defineExpose({ edit: (invoice) => edit(invoice) });
                                                     </h1>
                                                     <div class="date">Date of Invoice: 01/01/2024</div>
                                                     <Address></Address>
-
-                                                    {{ address }} ss
                                                 </div>
                                             </div>
 

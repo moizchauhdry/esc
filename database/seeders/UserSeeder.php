@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -15,13 +16,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
+        $user = User::updateOrCreate(['email' => 'moizchauhdry@gmail.com',], [
             'name' => 'Moiz Chauhdry',
             'email' => 'moizchauhdry@gmail.com',
             'password' => Hash::make('12345678'),
         ]);
-        
-        $role = Role::create(['name' => 'Admin']);
+
+        $role = Role::updateOrCreate(['name' => 'Admin'], ['name' => 'Admin']);
         $permissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);

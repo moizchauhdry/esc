@@ -52,12 +52,14 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('invoices')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice-list');
-        Route::post('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice-create');
+        Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice-create');
+        Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store');
         Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
         Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print');
     });
 
     Route::prefix('address')->group(function () {
+        Route::post('/fetch', [AddressController::class, 'fetch'])->name('address.fetch');
         Route::post('/create', [AddressController::class, 'create'])->name('address.create');
     });
 });
