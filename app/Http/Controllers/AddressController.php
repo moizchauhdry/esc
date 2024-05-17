@@ -11,7 +11,7 @@ use Inertia\Inertia;
 class AddressController extends Controller
 {
     public function fetch(Request $request)
-    {        
+    {                
         $address = Address::find($request->id);
 
         return back()->with([

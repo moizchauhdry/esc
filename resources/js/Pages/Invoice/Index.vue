@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import CustomLink from "@/Components/CustomLink.vue";
 
 defineProps({
     invoices: Object,
@@ -88,13 +89,18 @@ defineProps({
                                             <td>{{ invoice.created_at }}</td>
                                             <td>
                                                 <div class="d-flex order-actions">
-                                                    <a href="#" title="Edit" class="" @click=edit(invoice.data)>
-                                                        <i class='bx bxs-edit'></i></a>
+
+                                                    <Link :href="route('invoice.edit',invoice.id)">
+                                                    <i class='bx bxs-edit'></i>
+                                                    </Link>
+                                                    
                                                     <a href="#" title="Detail" class="ms-1"><i
                                                             class='bx bxs-collection'></i></a>
+
                                                     <a :href="route('invoice.print', invoice.id)" title="Print"
                                                         class="ms-1" target="_blank"><i class='bx bxs-printer'></i></a>
-                                                    <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                    
+                                                        <a href="#" title="Delete" class="ms-1 text-danger"><i
                                                             class='bx bxs-trash'></i></a>
                                                 </div>
                                             </td>

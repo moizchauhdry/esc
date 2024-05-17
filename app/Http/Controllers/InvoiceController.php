@@ -29,136 +29,103 @@ class InvoiceController extends Controller
         ]);
     }
 
+    public function save($request)
+    {
+        $request->validate([
+            'shipper_id' => 'required',
+            'shipper_address' => 'required|string|max:200',
+            'consignee_id' => 'required',
+            'consignee_address' => 'required|string|max:200',
+
+            'carrier' => 'required|string|max:50',
+            'mawb_no' => 'required|string|max:50',
+            'quantity' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'commodity' => 'required|string|max:50',
+
+            'sender' => 'required|string|max:50',
+            'destination' => 'required|string|max:50',
+
+            'items' => 'required|array',
+            'items.*.particular' => 'required|max:150',
+            'items.*.amount' => 'required|numeric|gte:0',
+        ]);
+
+        $data = [
+            'shipper_id' => $request->shipper_id,
+            'shipper_address' => $request->shipper_address,
+            'consignee_id' => $request->consignee_id,
+            'consignee_address' => $request->consignee_address,
+
+            'carrier' => $request->carrier,
+            'mawb_no' => $request->mawb_no,
+            'quantity' => $request->quantity,
+            'weight' => $request->weight,
+            'commodity' => $request->commodity,
+
+            'sender' => $request->sender,
+            'destination' => $request->destination,
+            'created_by' => auth()->id(),
+        ];
+
+        if ($request->invoice_id) {
+            $invoice = Invoice::find($request->invoice_id);
+        } else {
+            $invoice = Invoice::create($data);
+        }
+
+        InvoiceItem::where('invoice_id', $invoice->id)->delete();
+        foreach ($request->items as $key => $item) {
+            InvoiceItem::create([
+                'invoice_id' => $invoice->id,
+                'particular' => $item['particular'],
+                'amount' => $item['amount']
+            ]);
+        }
+
+        $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('amount');
+        $invoice->update([
+            'subtotal' => $invoice_total,
+            'total' => $invoice_total,
+        ]);
+
+    }
+
     public function create()
     {
         $shippers = Address::where('type', 'shipper')->get();
         $consignees = Address::where('type', 'consignee')->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
-            'address' => session('address'),
             'shippers' => $shippers,
-            'consignees' => $consignees,
+            'consignees' => $consignees
         ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'shipper_id' => 'required|string|max:50',
-            'shipper_address' => 'required|string|max:200',
-            'consignee_id' => 'required|string|max:50',
-            'consignee_address' => 'required|string|max:200',
-
-            'carrier' => 'required|string|max:50',
-            'mawb_no' => 'required|string|max:50',
-            'quantity' => 'required|numeric',
-            'weight' => 'required|numeric',
-            'commodity' => 'required|string|max:50',
-
-            'sender' => 'required|string|max:50',
-            'destination' => 'required|string|max:50',
-
-            'items' => 'required|array',
-            'items.*.particular' => 'required|max:150',
-            'items.*.amount' => 'required|numeric|gte:0',
-        ]);
-
-        $data = [
-            'shipper_id' => $request->shipper_id,
-            'shipper_address' => $request->shipper_address,
-            'consignee_id' => $request->consignee_id,
-            'consignee_address' => $request->consignee_address,
-
-            'carrier' => $request->carrier,
-            'mawb_no' => $request->mawb_no,
-            'quantity' => $request->quantity,
-            'weight' => $request->weight,
-            'commodity' => $request->commodity,
-
-            'sender' => $request->sender,
-            'destination' => $request->destination,
-            'created_by' => auth()->id(),
-        ];
-
-        $invoice = Invoice::create($data);
-
-        InvoiceItem::where('invoice_id', $invoice->id)->delete();
-        foreach ($request->items as $key => $item) {
-            InvoiceItem::create([
-                'invoice_id' => $invoice->id,
-                'particular' => $item['particular'],
-                'amount' => $item['amount']
-            ]);
-        }
-
-        $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('amount');
-        $invoice->update([
-            'subtotal' => $invoice_total,
-            'total' => $invoice_total,
-        ]);
-
+        $this->save($request);
         return Redirect::route('invoice.index')->with('success', 'Invoice created.');
+    }
+
+    public function edit($id)
+    {
+        $invoice = Invoice::with('items')->find($id);
+        $shippers = Address::where('type', 'shipper')->get();
+        $consignees = Address::where('type', 'consignee')->get();
+
+        return Inertia::render('Invoice/CreateInvoice', [
+            'invoice' => $invoice,
+            'shippers' => $shippers,
+            'consignees' => $consignees,
+            'edit_mode' => true,
+        ]);
     }
 
     public function update(Request $request)
     {
-        $invoice = Invoice::find($request->invoice_id);
-
-        $request->validate([
-            'shipper_id' => 'required|string|max:50',
-            'shipper_address' => 'required|string|max:200',
-            'consignee_id' => 'required|string|max:50',
-            'consignee_address' => 'required|string|max:200',
-
-            'carrier' => 'required|string|max:50',
-            'mawb_no' => 'required|string|max:50',
-            'quantity' => 'required|numeric',
-            'weight' => 'required|numeric',
-            'commodity' => 'required|string|max:50',
-
-            'sender' => 'required|string|max:50',
-            'destination' => 'required|string|max:50',
-
-            'items' => 'required|array',
-            'items.*.particular' => 'required|max:150',
-            'items.*.amount' => 'required|numeric|gte:0',
-        ]);
-
-        $data = [
-            'shipper_id' => $request->shipper_id,
-            'shipper_address' => $request->shipper_address,
-            'consignee_id' => $request->consignee_id,
-            'consignee_address' => $request->consignee_address,
-
-            'carrier' => $request->carrier,
-            'mawb_no' => $request->mawb_no,
-            'quantity' => $request->quantity,
-            'weight' => $request->weight,
-            'commodity' => $request->commodity,
-
-            'sender' => $request->sender,
-            'destination' => $request->destination,
-            'created_by' => auth()->id(),
-        ];
-
-        $invoice->update($data);
-
-        InvoiceItem::where('invoice_id', $invoice->id)->delete();
-        foreach ($request->items as $key => $item) {
-            InvoiceItem::create([
-                'invoice_id' => $invoice->id,
-                'particular' => $item['particular'],
-                'amount' => $item['amount']
-            ]);
-        }
-
-        $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('amount');
-        $invoice->update([
-            'subtotal' => $invoice_total,
-            'total' => $invoice_total,
-        ]);
-
-        return back()->with('success', 'Invoice updated.');
+        $this->save($request);
+        return Redirect::route('invoice.index')->with('success', 'Invoice updated.');
     }
 
     public function print($id)

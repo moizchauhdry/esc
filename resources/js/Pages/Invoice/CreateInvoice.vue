@@ -9,42 +9,39 @@ import Address from "@/Pages/Invoice/Address.vue";
 import { onMounted } from "vue";
 
 const props = defineProps({
+    invoice: Object,
     address: Object,
     shippers: Array,
     consignees: Array,
+    edit_mode: Boolean,
 });
 
 const invoice_modal = ref(false);
-const edit_mode = ref(false);
+const invoice = usePage().props.invoice;
+const edit_mode = usePage().props.edit_mode;
 
 const form = useForm({
-    invoice_id: "",
+    invoice_id: invoice?.id,
 
-    shipper_id: "",
-    shipper_account: "",
-    shipper_address: "",
+    shipper_id: invoice?.shipper_id,
+    shipper_address: invoice?.shipper_address,
 
-    consignee_id: "",
-    consignee_account: "",
-    consignee_address: "",
+    consignee_id: invoice?.consignee_id,
+    consignee_address: invoice?.consignee_address,
 
-    carrier: "",
-    mawb_no: "",
-    quantity: "",
-    weight: "",
-    commodity: "",
-    afc_rate: "",
-    sender: "",
-    destination: "",
-    consignment_no: "",
-    departure_airport: "",
+    carrier: invoice?.carrier,
+    mawb_no: invoice?.mawb_no,
+    commodity: invoice?.commodity,
+    quantity: invoice?.quantity,
+    weight: invoice?.weight,
 
-    issued_by: "",
-    created_by: "",
+    sender: invoice?.sender,
+    destination: invoice?.destination,
 
-    total: 0,
     subtotal: 0,
-    items: [],
+    total: 0,
+
+    items: invoice?.items,
 });
 
 const addItem = () => {
@@ -54,61 +51,22 @@ const addItem = () => {
     });
 };
 
-// const create = () => {
-//     invoice_modal.value = true;
-//     edit_mode.value = false;
-//     addItem();
-// };
-
 const submit = () => {
-    form.post(route("invoice.store"), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => error(),
-        onFinish: () => { },
-    });
-};
-
-const edit = (invoice) => {
-
-    invoice_modal.value = true;
-    edit_mode.value = true;
-
-    form.invoice_id = invoice.id;
-
-    form.shipper_id = invoice.shipper_id;
-    form.shipper_account = invoice.shipper_account;
-    form.shipper_address = invoice.shipper_address;
-
-    form.consignee_id = invoice.consignee_id;
-    form.consignee_account = invoice.consignee_account;
-    form.consignee_address = invoice.consignee_address;
-
-    form.carrier = invoice.carrier;
-    form.mawb_no = invoice.mawb_no;
-    form.quantity = invoice.quantity;
-    form.weight = invoice.weight;
-    form.commodity = invoice.commodity;
-    form.afc_rate = invoice.afc_rate;
-    form.sender = invoice.sender;
-    form.destination = invoice.destination;
-    form.consignment_no = invoice.consignment_no;
-    form.departure_airport = invoice.departure_airport;
-
-    form.issued_by = invoice.issued_by;
-    form.created_by = invoice.created_by;
-
-    form.items = invoice.items;
-
-};
-
-const update = () => {
-    form.post(route("invoice.update"), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => error(),
-        onFinish: () => { },
-    });
+    if (edit_mode) {
+        form.post(route("invoice.update"), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+            onError: () => error(),
+            onFinish: () => { },
+        });
+    } else {
+        form.post(route("invoice.store"), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+            onError: () => error(),
+            onFinish: () => { },
+        });
+    }
 };
 
 const error = () => {
@@ -133,18 +91,22 @@ const getGrandTotal = () => {
     form.total = form.subtotal;
 };
 
-defineExpose({ edit: (invoice) => edit(invoice) });
-
-onMounted(() => {
-    console.log('mounted ')
-});
 
 
-const fetchAddress = () => {
+const fetchAddress = (type) => {
+
+    var address_id = 0;
+
+    if (type == 'shipper') {
+        address_id = form.shipper_id
+    }
+
+    if (type == 'consignee') {
+        address_id = form.consignee_id
+    }
 
     const fetch_address_form = useForm({
-        id: form.shipper_id
-
+        id: address_id
     });
 
     fetch_address_form.post(route("address.fetch"), {
@@ -168,6 +130,11 @@ const fetchAddress = () => {
     });
 };
 
+// defineExpose({ edit: (invoice) => edit(invoice) });
+
+onMounted(() => {
+    console.log('mounted ')
+});
 </script>
 
 <template>
@@ -195,7 +162,7 @@ const fetchAddress = () => {
                 </div>
 
                 <div class="card">
-                    <form @submit.prevent="edit_mode ? update() : submit()">
+                    <form @submit.prevent="submit()">
                         <div class="card-body">
                             <div class="invoice overflow-auto">
                                 <div class="row mb-3">
@@ -207,7 +174,7 @@ const fetchAddress = () => {
                                                 <label for="input13" class="form-label">Account
                                                     Number</label>
                                                 <select class="form-control" v-model="form.shipper_id"
-                                                    @change="fetchAddress()">
+                                                    @change="fetchAddress('shipper')">
                                                     <template v-for="shipper in shippers" :key="shipper.id">
                                                         <option :value="shipper.id">{{ shipper.id }} - {{
                                                             shipper.address_1 }}
@@ -232,14 +199,15 @@ const fetchAddress = () => {
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
                                                     Number</label>
-                                                <select class="form-control" v-model="form.consignee_account">
+                                                <select class="form-control" v-model="form.consignee_id"
+                                                    @change="fetchAddress('consignee')">
                                                     <template v-for="consignee in consignees" :key="consignee.id">
                                                         <option :value="consignee.id">{{ consignee.id }} - {{
                                                             consignee.address_1 }}
                                                         </option>
                                                     </template>
                                                 </select>
-                                                <InputError :message="form.errors.consignee_account" />
+                                                <InputError :message="form.errors.consignee_id" />
                                             </div>
                                             <div class=" col-md-12">
                                                 <label for="input13" class="form-label">Name &
@@ -302,32 +270,6 @@ const fetchAddress = () => {
                                         <input type="text" class="form-control" v-model="form.commodity">
                                         <InputError :message="form.errors.commodity" />
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <label for="input13" class="form-label">AFC Rate</label>
-                                        <input type="text" class="form-control" v-model="form.afc_rate">
-                                        <InputError :message="form.errors.afc_rate" />
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="input13" class="form-label">Consignment
-                                            No</label>
-                                        <input type="text" class="form-control" v-model="form.consignment_no">
-                                        <InputError :message="form.errors.consignment_no" />
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="input13" class="form-label">Airport of
-                                            Departure</label>
-                                        <input type="text" class="form-control" v-model="form.departure_airport">
-                                        <InputError :message="form.errors.departure_airport" />
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="input13" class="form-label">Issued By</label>
-                                        <input type="text" class="form-control" v-model="form.issued_by">
-                                        <InputError :message="form.errors.issued_by" />
-                                    </div>
                                 </div>
 
                                 <table>
@@ -358,10 +300,6 @@ const fetchAddress = () => {
                                                         <button type="button" @click="removeItem(index)"
                                                             class="ms-1 text-danger"><i
                                                                 class='bx bxs-trash'></i></button>
-
-                                                        <!-- <button type="button" class="btn btn-danger btn-sm"
-                                                                        @click="removeItem(index)">
-                                                                        Remove</button> -->
                                                     </span>
 
                                                 </td>

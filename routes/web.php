@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice-list');
         Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice-create');
         Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store');
+        Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit');
         Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
         Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print');
     });
