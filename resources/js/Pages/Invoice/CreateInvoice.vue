@@ -182,13 +182,13 @@ onMounted(() => {
                             <div class="invoice overflow-auto">
                                 <div class="row mb-3">
                                     <div class="col-md-4">
-                                        <h6>Shipper <Address></Address>
+                                        <h6>Shipper 
                                         </h6>
                                         <hr>
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number </label>
+                                                    Number <Address></Address></label>
                                                 <select class="form-control" v-model="form.shipper_id"
                                                     @change="fetchAddress('shipper')">
                                                     <template v-for="shipper in shippers" :key="shipper.id">
@@ -209,13 +209,13 @@ onMounted(() => {
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <h6>Consignee <Address></Address>
+                                        <h6>Consignee
                                         </h6>
                                         <hr>
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number</label>
+                                                    Number <Address></Address></label>
                                                 <select class="form-control" v-model="form.consignee_id"
                                                     @change="fetchAddress('consignee')">
                                                     <template v-for="consignee in consignees" :key="consignee.id">
@@ -337,12 +337,12 @@ onMounted(() => {
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="3"></td>
+                                            <td colspan="4"></td>
                                             <td colspan="2">SUBTOTAL</td>
                                             <td>PKR {{ form.total }}</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="3"></td>
+                                            <td colspan="4"></td>
                                             <td colspan="2">GRAND TOTAL</td>
                                             <td>PKR {{ form.total }}</td>
                                         </tr>
@@ -371,3 +371,18 @@ onMounted(() => {
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style>
+
+.invoice table .no {
+    color: black;
+    font-size: 17px;
+    background: #eee;
+}
+
+.invoice table td, .invoice table th {
+    padding: 10px;
+    background: #eee;
+    border-bottom: 1px solid #fff;
+}
+</style>

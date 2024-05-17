@@ -68,7 +68,6 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="col">
         <PrimaryButton @click="create" type="button">Add</PrimaryButton>
 
         <Modal :show="address_modal" @close="closeModal">
@@ -151,5 +150,4 @@ const closeModal = () => {
                 </div>
             </form>
         </Modal>
-    </div>
 </template>
