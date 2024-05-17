@@ -41,7 +41,7 @@ const form = useForm({
     subtotal: 0,
     total: 0,
 
-    items: invoice?.items,
+    items: [],
 });
 
 const addItem = () => {
@@ -91,8 +91,6 @@ const getGrandTotal = () => {
     form.total = form.subtotal;
 };
 
-
-
 const fetchAddress = (type) => {
 
     var address_id = 0;
@@ -113,6 +111,7 @@ const fetchAddress = (type) => {
         preserveScroll: true,
         onSuccess: (response) => {
             var address = response.props.address;
+            console.log(response);
             var concat_address = address.name + '\n' + address.address_1 + ', ' + address.address_2 + '\n' + address.city + ', ' + address.state + ', ' + address.country;
 
             if (address.type == 'shipper') {

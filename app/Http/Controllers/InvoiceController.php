@@ -70,6 +70,8 @@ class InvoiceController extends Controller
 
         if ($request->invoice_id) {
             $invoice = Invoice::find($request->invoice_id);
+            $invoice->update($data);
+            dd('stop');
         } else {
             $invoice = Invoice::create($data);
         }
@@ -98,7 +100,8 @@ class InvoiceController extends Controller
 
         return Inertia::render('Invoice/CreateInvoice', [
             'shippers' => $shippers,
-            'consignees' => $consignees
+            'consignees' => $consignees,
+            'address' => session('address'),
         ]);
     }
 
@@ -118,6 +121,7 @@ class InvoiceController extends Controller
             'invoice' => $invoice,
             'shippers' => $shippers,
             'consignees' => $consignees,
+            'address' => session('address'),
             'edit_mode' => true,
         ]);
     }
