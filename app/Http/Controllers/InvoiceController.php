@@ -49,6 +49,7 @@ class InvoiceController extends Controller
             'items' => 'required|array',
             'items.*.particular' => 'required|max:150',
             'items.*.amount' => 'required|numeric|gte:0',
+            'items.*.qty' => 'required|numeric|gte:1',
         ]);
 
         $data = [
@@ -71,7 +72,6 @@ class InvoiceController extends Controller
         if ($request->invoice_id) {
             $invoice = Invoice::find($request->invoice_id);
             $invoice->update($data);
-            dd('stop');
         } else {
             $invoice = Invoice::create($data);
         }
@@ -81,7 +81,9 @@ class InvoiceController extends Controller
             InvoiceItem::create([
                 'invoice_id' => $invoice->id,
                 'particular' => $item['particular'],
-                'amount' => $item['amount']
+                'amount' => $item['amount'],
+                'qty' => $item['qty'],
+                'total' =>  $item['amount'] * $item['qty'],
             ]);
         }
 
@@ -90,7 +92,6 @@ class InvoiceController extends Controller
             'subtotal' => $invoice_total,
             'total' => $invoice_total,
         ]);
-
     }
 
     public function create()

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('invoice_id')->unsigned();
             $table->string('particular', 100);
             $table->decimal('amount', 8, 2)->default(0);
+            $table->integer('qty')->unsigned()->default(1);
+            $table->decimal('total', 8, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -69,7 +69,7 @@ const closeModal = () => {
 
 <template>
     <div class="col">
-        <PrimaryButton @click="create">Add</PrimaryButton>
+        <PrimaryButton @click="create" type="button">Add</PrimaryButton>
 
         <Modal :show="address_modal" @close="closeModal">
             <form @submit.prevent="edit_mode ? update() : submit()">

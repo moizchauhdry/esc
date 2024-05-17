@@ -38,16 +38,18 @@ const form = useForm({
     sender: invoice?.sender,
     destination: invoice?.destination,
 
-    subtotal: 0,
-    total: 0,
+    subtotal: invoice?.total,
+    total: invoice?.total,
 
-    items: [],
+    items: invoice?.items,
 });
 
 const addItem = () => {
     form.items.push({
         particular: "",
         amount: 0,
+        qty: 1,
+        subtotal: 0,
     });
 };
 
@@ -86,9 +88,17 @@ const removeItem = (index) => {
 const getGrandTotal = () => {
     form.subtotal = 0;
     form.items.forEach((item) => {
-        form.subtotal += parseFloat(item.amount);
+        form.subtotal += parseFloat(item.subtotal);
     });
     form.total = form.subtotal;
+};
+
+const getLineTotal = (index) => {
+    const item = form.items[index];
+    const line_total = item.qty * item.amount;
+    item.subtotal = line_total;
+
+    getGrandTotal();
 };
 
 const fetchAddress = (type) => {
@@ -132,7 +142,13 @@ const fetchAddress = (type) => {
 // defineExpose({ edit: (invoice) => edit(invoice) });
 
 onMounted(() => {
-    console.log('mounted ')
+    if (!edit_mode) {
+        form.items = [];
+    }
+
+    if (edit_mode) {
+        getGrandTotal();
+    }
 });
 </script>
 
@@ -156,7 +172,7 @@ onMounted(() => {
                         </nav>
                     </div>
                     <div class="ms-auto">
-                        <Address></Address>
+                        <!-- <Address></Address> -->
                     </div>
                 </div>
 
@@ -166,12 +182,13 @@ onMounted(() => {
                             <div class="invoice overflow-auto">
                                 <div class="row mb-3">
                                     <div class="col-md-4">
-                                        <h6>Shipper</h6>
+                                        <h6>Shipper <Address></Address>
+                                        </h6>
                                         <hr>
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number</label>
+                                                    Number </label>
                                                 <select class="form-control" v-model="form.shipper_id"
                                                     @change="fetchAddress('shipper')">
                                                     <template v-for="shipper in shippers" :key="shipper.id">
@@ -192,7 +209,8 @@ onMounted(() => {
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <h6>Consignee</h6>
+                                        <h6>Consignee <Address></Address>
+                                        </h6>
                                         <hr>
                                         <div class="row g-2">
                                             <div class="col-md-12">
@@ -280,21 +298,19 @@ onMounted(() => {
                                                         class='bx bx-plus'></i>Add
                                                     Item</button>
                                             </th>
-                                            <th class="text-left" colspan="3">
-
-                                                PARTICULARS
-                                            </th>
-                                            <th class="text-left">AMOUNT</th>
+                                            <th class="text-left" colspan="3">PARTICULARS</th>
+                                            <th class="text-left">UNIT PRICE</th>
+                                            <th class="text-left">QUANTITY</th>
                                             <th class="text-left">TOTAL</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
-                                        <template v-for="(item, count, index) in form.items" :key="item.id">
+                                        <template v-for="(item, index) in form.items" :key="item.id">
                                             <tr>
                                                 <td class="no">
                                                     <span>
-                                                        Item #{{ ++count }}
+                                                        Item #{{ index }}
 
                                                         <button type="button" @click="removeItem(index)"
                                                             class="ms-1 text-danger"><i
@@ -307,10 +323,14 @@ onMounted(() => {
                                                 </td>
                                                 <td class="text-left">
                                                     <input type="number" class="form-control" v-model="item.amount"
-                                                        @keyup="getGrandTotal()">
+                                                        @keyup="getLineTotal(index)">
+                                                </td>
+                                                <td class="text-left">
+                                                    <input type="number" class="form-control" v-model="item.qty"
+                                                        @keyup="getLineTotal(index)">
                                                 </td>
 
-                                                <td class="total">${{ item.amount }}</td>
+                                                <td class="total">PKR {{ item.subtotal }}</td>
                                             </tr>
                                         </template>
 
@@ -319,12 +339,12 @@ onMounted(() => {
                                         <tr>
                                             <td colspan="3"></td>
                                             <td colspan="2">SUBTOTAL</td>
-                                            <td>PKR {{ form.total.toFixed(2) }}</td>
+                                            <td>PKR {{ form.total }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="3"></td>
                                             <td colspan="2">GRAND TOTAL</td>
-                                            <td>PKR {{ form.total.toFixed(2) }}</td>
+                                            <td>PKR {{ form.total }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
