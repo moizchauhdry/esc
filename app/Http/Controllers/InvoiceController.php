@@ -141,7 +141,7 @@ class InvoiceController extends Controller
             'invoice' => $invoice,
         ]);
 
-        $pdf = PDF::loadView('prints.invoice');
+        $pdf = PDF::loadView('prints.invoice-2');
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('invoice.pdf');
     }
