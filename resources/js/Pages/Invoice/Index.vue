@@ -49,12 +49,11 @@ defineProps({
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table mb-0">
+                            <table class="table">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Invoice#</th>
-                                        <th>Shipper</th>
-                                        <th>Consignee</th>
+                                        <th>Invoice #</th>
+                                        <th>Address</th>
                                         <th>Status</th>
                                         <th>Total</th>
                                         <th>Date</th>
@@ -76,9 +75,10 @@ defineProps({
                                                 </div>
                                             </td>
                                             <td>
-                                                {{ invoice.data.shipper_address }}
+                                                <b>Shipper:</b> {{ invoice.data.shipper_address }} <br>
+                                                <b>Consignee:</b> {{ invoice.data.consignee_address }} <br>
                                             </td>
-                                            <td>{{ invoice.data.consignee_address }}</td>
+                                            <!-- <td>{{ invoice.data.consignee_address }}</td> -->
                                             <td>
                                                 <div
                                                     class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
@@ -90,17 +90,17 @@ defineProps({
                                             <td>
                                                 <div class="d-flex order-actions">
 
-                                                    <Link :href="route('invoice.edit',invoice.id)">
+                                                    <Link :href="route('invoice.edit', invoice.id)">
                                                     <i class='bx bxs-edit'></i>
                                                     </Link>
-                                                    
+
                                                     <a href="#" title="Detail" class="ms-1"><i
                                                             class='bx bxs-collection'></i></a>
 
                                                     <a :href="route('invoice.print', invoice.id)" title="Print"
                                                         class="ms-1" target="_blank"><i class='bx bxs-printer'></i></a>
-                                                    
-                                                        <a href="#" title="Delete" class="ms-1 text-danger"><i
+
+                                                    <a href="#" title="Delete" class="ms-1 text-danger"><i
                                                             class='bx bxs-trash'></i></a>
                                                 </div>
                                             </td>
