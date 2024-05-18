@@ -26,12 +26,8 @@ class InvoiceController extends Controller
                 'created_at' => $invoice->created_at->format('F d, Y'),
             ]);
 
-
-        $companies = User::get();
-
         return Inertia::render('Invoice/Index', [
-            'invoices' => $invoices,
-            'companies' => $companies
+            'invoices' => $invoices
         ]);
     }
 
@@ -163,30 +159,6 @@ class InvoiceController extends Controller
 
         $pdf = PDF::loadView('prints.invoice-2');
         $pdf->setPaper('A4', 'portrait');
-        return $pdf->stream('invoice.pdf');
-    }
-
-    public function ledger()
-    {
-        // $request->validate([
-            // 'company_id' => 'required',
-            // 'date' => 'required',
-        // ]);
-
-        // $from = Carbon::parse($request->date[0])->format('Y-m-d');
-        // $to = Carbon::parse($request->date[1])->format('Y-m-d');
-    
-        $invoices = Invoice::query()
-        // ->whereDate('created_at','>=',$from)
-        // ->whereDate('created_at','<=',$to)
-        ->get();
-
-        view()->share([
-            'invoices' => $invoices,
-        ]);
-
-        $pdf = PDF::loadView('prints.ledger');
-        $pdf->setPaper('A4', 'landscape');
         return $pdf->stream('invoice.pdf');
     }
 }

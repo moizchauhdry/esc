@@ -54,6 +54,9 @@ import { Link } from "@inertiajs/vue3";
                     <li>
                         <Link :href="route('invoice.index')"><i class='bx bx-radio-circle'></i>Invoices</Link>
                     </li>
+                    <li>
+                        <Link :href="route('ledger.index')"><i class='bx bx-radio-circle'></i>Ledgers</Link>
+                    </li>
                 </ul>
             </li>
 

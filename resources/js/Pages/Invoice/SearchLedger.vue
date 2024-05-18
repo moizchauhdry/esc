@@ -9,6 +9,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import InputError from '@/Components/InputError.vue';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { onMounted } from "vue";
 
 defineProps({
     companies: Array
@@ -16,23 +17,37 @@ defineProps({
 
 const modal = ref(false);
 const edit = ref(false);
+const companies = usePage().props.companies;
+var saved_filters = "";
 
 const form = useForm({
-    company_id: "",
-    date: ""
+    company: "",
+    date: "",
 });
 
 const create = () => {
     modal.value = true;
     edit.value = false;
+
+    saved_filters = localStorage.getItem('filters');
+    if (saved_filters) {
+        saved_filters = JSON.parse(saved_filters);
+        form.company = saved_filters.company
+        form.date = saved_filters.date
+    }
 };
 
 const submit = () => {
-    form.post(route("invoice.ledger"), {
+    var filters = {
+        company: form.company,
+        date: form.date,
+    };
+
+    form.post(route("ledger.index"), {
         preserveScroll: true,
         onSuccess: (response) => {
-            console.log(response);
             closeModal();
+            localStorage.setItem('filters', JSON.stringify(filters));
         },
         onError: (errors) => {
             console.log(errors)
@@ -68,12 +83,12 @@ const closeModal = () => {
                     <div class="row g-2">
                         <div class="col-md-6">
                             <InputLabel for="" value="Company" class="mb-1" />
-                            <select v-model="form.company_id" class="form-control">
+                            <select v-model="form.company" class="form-control">
                                 <template v-for="company in companies">
                                     <option :value="company.id">{{ company.name }}</option>
                                 </template>
                             </select>
-                            <InputError :message="form.errors.company_id" />
+                            <InputError :message="form.errors.company" />
                         </div>
 
                         <div class="col-md-6">
@@ -90,9 +105,6 @@ const closeModal = () => {
                     <SuccessButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                         Search
                     </SuccessButton>
-
-                    <a :href="route('invoice.ledger')" title="" class="ms-1" target="_blank"><i
-                            class='bx bxs-printer'></i>Print Ledger</a>
                 </div>
             </div>
         </form>

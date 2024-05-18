@@ -6,8 +6,7 @@ import SearchLedger from "@/Pages/Invoice/SearchLedger.vue";
 
 defineProps({
     invoices: Object,
-    address: String,
-    companies: Array,
+    address: String
 });
 
 </script>
@@ -34,7 +33,6 @@ defineProps({
                     </div>
 
                     <div class="ms-auto">
-                        <SearchLedger v-bind="$props"></SearchLedger>
                         <Link :href="route('invoice.create')">
                         <PrimaryButton>Add Invoice</PrimaryButton>
                         </Link>
@@ -55,6 +53,7 @@ defineProps({
                                 <thead class="table-light">
                                     <tr>
                                         <th>Invoice #</th>
+                                        <th>Company</th>
                                         <th>Address</th>
                                         <th>Status</th>
                                         <th>Total</th>
@@ -75,6 +74,9 @@ defineProps({
                                                         <h6 class="mb-0 font-14">000{{ invoice.id }}</h6>
                                                     </div>
                                                 </div>
+                                            </td>
+                                            <td>
+                                                {{ invoice.data.company_id }}
                                             </td>
                                             <td>
                                                 <b>Shipper:</b> {{ invoice.data.shipper_address }} <br>
