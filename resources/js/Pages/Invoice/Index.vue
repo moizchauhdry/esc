@@ -2,7 +2,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SearchLedger from "@/Pages/Invoice/SearchLedger.vue";
 
 defineProps({
     invoices: Object,
