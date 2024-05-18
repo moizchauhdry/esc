@@ -79,9 +79,9 @@
                 <td>{{ $invoice->quantity }}</td>
                 <td>{{ $invoice->weight }}</td>
                 <td>{{ $invoice->id }}</td>
-                <td>778,110</td>
-                <td>1,345,764</td>
-                <td>3,345,764</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>DR</td>
             </tr>
             @endforeach
