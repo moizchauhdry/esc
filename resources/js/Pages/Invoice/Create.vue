@@ -170,6 +170,26 @@ defineExpose({ edit: (invoice) => edit(invoice) });
 
                                             <div class="row mb-3">
                                                 <div class="col-md-4">
+                                                    <h6>Company</h6>
+                                                    <hr>
+                                                    <div class="row g-2">
+                                                        <div class="col-md-12">
+                                                            <label for="input13" class="form-label">Account
+                                                                Number</label>
+                                                            <input type="text" class="form-control"
+                                                                v-model="form.shipper_account">
+                                                            <InputError :message="form.errors.shipper_account" />
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label for="input11" class="form-label">Name &
+                                                                Address</label>
+                                                            <textarea class="form-control"
+                                                                v-model="form.shipper_address" rows="3"></textarea>
+                                                            <InputError :message="form.errors.shipper_address" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
                                                     <h6>Shipper</h6>
                                                     <hr>
                                                     <div class="row g-2">
@@ -210,25 +230,6 @@ defineExpose({ edit: (invoice) => edit(invoice) });
 
                                                     </div>
                                                 </div>
-
-                                                <div class="col-md-4">
-                                                    <h6>Sender/Destination</h6>
-                                                    <hr>
-                                                    <div class="row g-2">
-                                                        <div class="col-md-12">
-                                                            <label for="input13" class="form-label">Sender</label>
-                                                            <input type="text" class="form-control"
-                                                                v-model="form.sender">
-                                                            <InputError :message="form.errors.sender" />
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label for="input13" class="form-label">Destination</label>
-                                                            <input type="text" class="form-control"
-                                                                v-model="form.destination">
-                                                            <InputError :message="form.errors.destination" />
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
 
                                             <div class="row g-2 mb-3">
@@ -244,6 +245,17 @@ defineExpose({ edit: (invoice) => edit(invoice) });
                                                     <label for="input13" class="form-label">MAWB No</label>
                                                     <input type="text" class="form-control" v-model="form.mawb_no">
                                                     <InputError :message="form.errors.mawb_no" />
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <label for="input13" class="form-label">Sender</label>
+                                                    <input type="text" class="form-control" v-model="form.sender">
+                                                    <InputError :message="form.errors.sender" />
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label for="input13" class="form-label">Destination</label>
+                                                    <input type="text" class="form-control" v-model="form.destination">
+                                                    <InputError :message="form.errors.destination" />
                                                 </div>
 
                                                 <div class="col-md-4">

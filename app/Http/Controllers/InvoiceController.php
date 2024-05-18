@@ -136,9 +136,15 @@ class InvoiceController extends Controller
     public function print($id)
     {
         $invoice = Invoice::find($id);
+        $shipper = Address::where('id', $invoice->shipper_id)->first();
+        $consignee = Address::where('id', $invoice->consignee_id)->first();
+        $items = InvoiceItem::where('invoice_id',$invoice->id)->get();
 
         view()->share([
             'invoice' => $invoice,
+            'shipper' => $shipper,
+            'consignee' => $consignee,
+            'items' => $items,
         ]);
 
         $pdf = PDF::loadView('prints.invoice-2');

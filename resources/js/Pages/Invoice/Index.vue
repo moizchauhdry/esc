@@ -65,12 +65,12 @@ defineProps({
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <div>
+                                                    <!-- <div>
                                                         <input class="form-check-input me-3" type="checkbox" value=""
                                                             aria-label="...">
-                                                    </div>
+                                                    </div> -->
                                                     <div class="ms-2">
-                                                        <h6 class="mb-0 font-14">#ESC-{{ invoice.id }}</h6>
+                                                        <h6 class="mb-0 font-14">000{{ invoice.id }}</h6>
                                                     </div>
                                                 </div>
                                             </td>
