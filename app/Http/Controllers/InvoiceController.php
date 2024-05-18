@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -32,6 +33,8 @@ class InvoiceController extends Controller
     public function save($request)
     {
         $request->validate([
+            'company_id' => 'required',
+
             'shipper_id' => 'required',
             'shipper_address' => 'required|string|max:200',
             'consignee_id' => 'required',
@@ -53,6 +56,8 @@ class InvoiceController extends Controller
         ]);
 
         $data = [
+            'company_id' => $request->company_id,
+
             'shipper_id' => $request->shipper_id,
             'shipper_address' => $request->shipper_address,
             'consignee_id' => $request->consignee_id,
@@ -98,10 +103,12 @@ class InvoiceController extends Controller
     {
         $shippers = Address::where('type', 'shipper')->get();
         $consignees = Address::where('type', 'consignee')->get();
+        $companies = User::orderBy('id', 'desc')->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'shippers' => $shippers,
             'consignees' => $consignees,
+            'companies' => $companies,
             'address' => session('address'),
         ]);
     }
@@ -117,11 +124,13 @@ class InvoiceController extends Controller
         $invoice = Invoice::with('items')->find($id);
         $shippers = Address::where('type', 'shipper')->get();
         $consignees = Address::where('type', 'consignee')->get();
+        $companies = User::orderBy('id', 'desc')->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
             'shippers' => $shippers,
             'consignees' => $consignees,
+            'companies' => $companies,
             'address' => session('address'),
             'edit_mode' => true,
         ]);
@@ -138,7 +147,7 @@ class InvoiceController extends Controller
         $invoice = Invoice::find($id);
         $shipper = Address::where('id', $invoice->shipper_id)->first();
         $consignee = Address::where('id', $invoice->consignee_id)->first();
-        $items = InvoiceItem::where('invoice_id',$invoice->id)->get();
+        $items = InvoiceItem::where('invoice_id', $invoice->id)->get();
 
         view()->share([
             'invoice' => $invoice,

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
 
+            $table->integer('company_id');
+
             $table->integer('shipper_id');
             $table->string('shipper_address', 100)->nullable();
 

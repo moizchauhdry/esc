@@ -13,6 +13,7 @@ const props = defineProps({
     address: Object,
     shippers: Array,
     consignees: Array,
+    companies: Array,
     edit_mode: Boolean,
 });
 
@@ -22,7 +23,8 @@ const edit_mode = usePage().props.edit_mode;
 
 const form = useForm({
     invoice_id: invoice?.id,
-
+    company_id: invoice?.company_id,
+    
     shipper_id: invoice?.shipper_id,
     shipper_address: invoice?.shipper_address,
 
@@ -182,7 +184,34 @@ onMounted(() => {
                             <div class="invoice overflow-auto">
                                 <div class="row mb-3">
                                     <div class="col-md-4">
-                                        <h6>Shipper 
+                                        <h6>Company
+                                        </h6>
+                                        <hr>
+                                        <div class="row g-2">
+                                            <div class="col-md-12">
+                                                <label for="input13" class="form-label">Account
+                                                    Number <Address></Address></label>
+                                                <select class="form-control" v-model="form.company_id"
+                                                    @change="fetchAddress('company')">
+                                                    <template v-for="company in companies" :key="company.id">
+                                                        <option :value="company.id">{{ company.id }} - {{
+                                                            company.name }}
+                                                        </option>
+                                                    </template>
+                                                </select>
+                                                <InputError :message="form.errors.company_id" />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="input11" class="form-label">Name &
+                                                    Address</label>
+                                                <textarea class="form-control" v-model="form.company_address"
+                                                    rows="3" disabled></textarea>
+                                                <InputError :message="form.errors.company_address" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Shipper
                                         </h6>
                                         <hr>
                                         <div class="row g-2">
@@ -193,7 +222,7 @@ onMounted(() => {
                                                     @change="fetchAddress('shipper')">
                                                     <template v-for="shipper in shippers" :key="shipper.id">
                                                         <option :value="shipper.id">{{ shipper.id }} - {{
-                                                            shipper.address_1 }}
+                                                            shipper.name }}
                                                         </option>
                                                     </template>
                                                 </select>
@@ -203,7 +232,7 @@ onMounted(() => {
                                                 <label for="input11" class="form-label">Name &
                                                     Address</label>
                                                 <textarea class="form-control" v-model="form.shipper_address"
-                                                    rows="3"></textarea>
+                                                    rows="3" disabled></textarea>
                                                 <InputError :message="form.errors.shipper_address" />
                                             </div>
                                         </div>
@@ -220,7 +249,7 @@ onMounted(() => {
                                                     @change="fetchAddress('consignee')">
                                                     <template v-for="consignee in consignees" :key="consignee.id">
                                                         <option :value="consignee.id">{{ consignee.id }} - {{
-                                                            consignee.address_1 }}
+                                                            consignee.name }}
                                                         </option>
                                                     </template>
                                                 </select>
@@ -230,59 +259,54 @@ onMounted(() => {
                                                 <label for="input13" class="form-label">Name &
                                                     Address</label>
                                                 <textarea class="form-control" v-model="form.consignee_address"
-                                                    rows="3"></textarea>
+                                                    rows="3" disabled></textarea>
                                                 <InputError :message="form.errors.consignee_address" />
                                             </div>
 
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <h6>Sender/Destination</h6>
-                                        <hr>
-                                        <div class="row g-2">
-                                            <div class="col-md-12">
-                                                <label for="input13" class="form-label">Sender</label>
-                                                <input type="text" class="form-control" v-model="form.sender">
-                                                <InputError :message="form.errors.sender" />
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label for="input13" class="form-label">Destination</label>
-                                                <input type="text" class="form-control" v-model="form.destination">
-                                                <InputError :message="form.errors.destination" />
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div class="row g-2 mb-3">
                                     <h6>Invoice</h6>
                                     <hr>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="input13" class="form-label">Carrier</label>
                                         <input type="text" class="form-control" v-model="form.carrier">
                                         <InputError :message="form.errors.carrier" />
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="input13" class="form-label">MAWB No</label>
                                         <input type="text" class="form-control" v-model="form.mawb_no">
                                         <InputError :message="form.errors.mawb_no" />
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label for="input13" class="form-label">Sender</label>
+                                        <input type="text" class="form-control" v-model="form.sender">
+                                        <InputError :message="form.errors.sender" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="input13" class="form-label">Destination</label>
+                                        <input type="text" class="form-control" v-model="form.destination">
+                                        <InputError :message="form.errors.destination" />
+                                    </div>
+
+                                    <div class="col-md-3">
                                         <label for="input13" class="form-label">Quantity</label>
                                         <input type="text" class="form-control" v-model="form.quantity">
                                         <InputError :message="form.errors.quantity" />
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="input13" class="form-label">Weight</label>
                                         <input type="text" class="form-control" v-model="form.weight">
                                         <InputError :message="form.errors.weight" />
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="input13" class="form-label">Commodity</label>
                                         <input type="text" class="form-control" v-model="form.commodity">
                                         <InputError :message="form.errors.commodity" />
@@ -373,14 +397,14 @@ onMounted(() => {
 </template>
 
 <style>
-
 .invoice table .no {
     color: black;
     font-size: 17px;
     background: #eee;
 }
 
-.invoice table td, .invoice table th {
+.invoice table td,
+.invoice table th {
     padding: 10px;
     background: #eee;
     border-bottom: 1px solid #fff;
