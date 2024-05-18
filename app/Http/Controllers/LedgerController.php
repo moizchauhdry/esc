@@ -28,10 +28,8 @@ class LedgerController extends Controller
             'company_name' => $company_name,
             'date' => $request->date,
             'from' => $from,
-            'to' => $to ,
+            'to' => $to,
         ];
-
-
 
         $query = Invoice::query();
         $query->when($filter['company'], function ($q) use ($filter) {
@@ -60,23 +58,28 @@ class LedgerController extends Controller
     }
 
 
-    public function print()
+    public function print(Request $request)
     {
-        // $request->validate([
-        // 'company_id' => 'required',
-        // 'date' => 'required',
-        // ]);
+        $from = $request->from;
+        $to = $request->to;
+        $company = $request->company;
 
-        // $from = Carbon::parse($request->date[0])->format('Y-m-d');
-        // $to = Carbon::parse($request->date[1])->format('Y-m-d');
+        $query = Invoice::query();
 
-        $invoices = Invoice::query()
-            // ->whereDate('created_at','>=',$from)
-            // ->whereDate('created_at','<=',$to)
-            ->get();
+        $query->when($company, function ($q) use ($company) {
+            $q->where('company_id', $company);
+        });
+        
+        $query->when($from && $to, function ($q) use ($from, $to) {
+            $q->whereDate('created_at', '>=', $from);
+            $q->whereDate('created_at', '<=', $to);
+        });
+
+        $invoices = $query->orderBy('id', 'desc')->get();
 
         view()->share([
             'invoices' => $invoices,
+            'filters' => $request->all(),
         ]);
 
         $pdf = PDF::loadView('prints.ledger');

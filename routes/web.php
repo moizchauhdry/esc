@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('ledgers')->group(function () {
         Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');
-        //    Route::get('/print', [InvoiceController::class, 'ledger'])->name('invoice.ledger');
+        Route::get('/print', [LedgerController::class, 'print'])->name('ledger.print');
     });
 
     Route::prefix('address')->group(function () {

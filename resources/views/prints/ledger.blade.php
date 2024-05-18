@@ -19,7 +19,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid black;
             padding: 8px;
             text-align: left;
@@ -47,10 +48,11 @@
                 <th colspan="12" style="text-align: center">EXPRESS SAVER CARGO</th>
             </tr>
             <tr>
-                <th colspan="12" style="text-align: center">ABEDIN INTERNATIONAL PVT LTD CURR: PKR/RS</th>
+                <th colspan="12" style="text-align: center">{{$filters['company_name'] ?? ''}} CURR: PKR/RS</th>
             </tr>
             <tr>
-                <th colspan="12" style="text-align: center">General Ledger From 16/04/2024 to 30/04/2024</th>
+                <th colspan="12" style="text-align: center">General Ledger From {{$filters['from']}} to
+                    {{$filters['to']}}</th>
             </tr>
             <tr>
                 <th>Date</th>
@@ -67,35 +69,23 @@
                 <th>D/C</th>
             </tr>
 
+            @foreach ($invoices as $invoice)
             <tr>
-                <td>04/24/2024</td>
-                <td>9P</td>
-                <td>514-0972-0675</td>
-                <td>LHE</td>
-                <td>SHJ</td>
-                <td>78</td>
-                <td>2480</td>
-                <td>14</td>
+                <td>{{ $invoice->created_at }}</td>
+                <td>{{ $invoice->carrier }}</td>
+                <td>{{ $invoice->mawb_no }}</td>
+                <td>{{ $invoice->sender }}</td>
+                <td>{{ $invoice->destination }}</td>
+                <td>{{ $invoice->quantity }}</td>
+                <td>{{ $invoice->weight }}</td>
+                <td>{{ $invoice->id }}</td>
                 <td>778,110</td>
                 <td>1,345,764</td>
                 <td>3,345,764</td>
                 <td>DR</td>
             </tr>
-            
-            <tr>
-                <td>04/24/2024</td>
-                <td>9P</td>
-                <td>514-0972-0675</td>
-                <td>LHE</td>
-                <td>SHJ</td>
-                <td>78</td>
-                <td>2480</td>
-                <td>14</td>
-                <td>778,110</td>
-                <td>1,345,764</td>
-                <td>3,345,764</td>
-                <td>DR</td>
-            </tr>
+            @endforeach
+
 
         </table>
     </div>

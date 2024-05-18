@@ -37,6 +37,8 @@ defineProps({
 
                     <div class="ms-auto">
                         <SearchLedger v-bind="$props"></SearchLedger>
+                        <a :href="route('ledger.print', filter)" title="Print"
+                                                        class="ms-1" target="_blank"><i class='bx bxs-printer'></i></a>
                     </div>
                 </div>
 
