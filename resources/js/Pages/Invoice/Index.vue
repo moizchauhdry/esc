@@ -2,11 +2,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import CustomLink from "@/Components/CustomLink.vue";
+import SearchLedger from "@/Pages/Invoice/SearchLedger.vue";
 
 defineProps({
     invoices: Object,
     address: String,
+    companies: Array,
 });
 
 </script>
@@ -33,6 +34,7 @@ defineProps({
                     </div>
 
                     <div class="ms-auto">
+                        <SearchLedger v-bind="$props"></SearchLedger>
                         <Link :href="route('invoice.create')">
                         <PrimaryButton>Add Invoice</PrimaryButton>
                         </Link>

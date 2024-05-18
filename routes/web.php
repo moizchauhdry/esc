@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit');
         Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
         Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print');
+        Route::get('/ledger', [InvoiceController::class, 'ledger'])->name('invoice.ledger');
     });
 
     Route::prefix('address')->group(function () {
