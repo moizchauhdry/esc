@@ -67,7 +67,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <PrimaryButton @click="create" type="button">Search Ledger</PrimaryButton>
+    <PrimaryButton @click="create"  type="button">Search</PrimaryButton>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit ? update() : submit()">

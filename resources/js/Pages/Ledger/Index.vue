@@ -1,7 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
-import SearchLedger from "@/Pages/Invoice/SearchLedger.vue";
+import Filter from "@/Pages/Ledger/Filter.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     invoices: Object,
@@ -36,9 +37,12 @@ defineProps({
                     </div>
 
                     <div class="ms-auto">
-                        <SearchLedger v-bind="$props"></SearchLedger>
-                        <a :href="route('ledger.print', filter)" title="Print"
-                                                        class="ms-1" target="_blank"><i class='bx bxs-printer'></i></a>
+                        <Filter v-bind="$props"></Filter>
+                        <a :href="route('ledger.print', filter)" title="Print" class="ms-1" target="_blank">
+                            <PrimaryButton>
+                                <i class='bx bxs-printer text-white'></i>
+                            </PrimaryButton>
+                        </a>
                     </div>
                 </div>
 
@@ -61,8 +65,9 @@ defineProps({
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th colspan="12" style="text-align: center">General Ledger From {{filter['from']}} to
-                                            {{filter['to']}}</th>
+                                        <th colspan="12" style="text-align: center">General Ledger From
+                                            {{ filter['from'] }} to
+                                            {{ filter['to'] }}</th>
                                     </tr>
                                     <tr>
                                         <th>Date</th>
