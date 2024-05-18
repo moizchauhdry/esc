@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit');
         Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
         Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print');
+    });
+
+    Route::prefix('ledgers')->group(function () {
+        Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');
+        Route::get('/print', [LedgerController::class, 'print'])->name('ledger.print');
     });
 
     Route::prefix('address')->group(function () {

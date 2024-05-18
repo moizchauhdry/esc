@@ -2,11 +2,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import CustomLink from "@/Components/CustomLink.vue";
+import SearchLedger from "@/Pages/Invoice/SearchLedger.vue";
 
 defineProps({
     invoices: Object,
-    address: String,
+    address: String
 });
 
 </script>
@@ -53,6 +53,7 @@ defineProps({
                                 <thead class="table-light">
                                     <tr>
                                         <th>Invoice #</th>
+                                        <th>Company</th>
                                         <th>Address</th>
                                         <th>Status</th>
                                         <th>Total</th>
@@ -73,6 +74,9 @@ defineProps({
                                                         <h6 class="mb-0 font-14">000{{ invoice.id }}</h6>
                                                     </div>
                                                 </div>
+                                            </td>
+                                            <td>
+                                                {{ invoice.data.company_id }}
                                             </td>
                                             <td>
                                                 <b>Shipper:</b> {{ invoice.data.shipper_address }} <br>
