@@ -104,7 +104,7 @@ class InvoiceController extends Controller
     {
         $shippers = Address::where('type', 'shipper')->get();
         $consignees = Address::where('type', 'consignee')->get();
-        $companies = User::orderBy('id', 'desc')->get();
+        $companies = User::role('company')->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'shippers' => $shippers,

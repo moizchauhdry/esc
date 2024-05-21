@@ -141,11 +141,16 @@ const fetchAddress = (type) => {
     });
 };
 
-// defineExpose({ edit: (invoice) => edit(invoice) });
-
 onMounted(() => {
     if (!edit_mode) {
-        form.items = [];
+        form.items = [
+            {
+                particular: "",
+                amount: 0,
+                qty: 1,
+                total: 0,
+            },
+        ];
     }
 
     if (edit_mode) {
@@ -190,7 +195,7 @@ onMounted(() => {
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number <Address></Address></label>
+                                                    Number</label>
                                                 <select class="form-control" v-model="form.company_id"
                                                     @change="fetchAddress('company')">
                                                     <template v-for="company in companies" :key="company.id">
@@ -201,13 +206,7 @@ onMounted(() => {
                                                 </select>
                                                 <InputError :message="form.errors.company_id" />
                                             </div>
-                                            <div class="col-md-12">
-                                                <label for="input11" class="form-label">Name &
-                                                    Address</label>
-                                                <textarea class="form-control" v-model="form.company_address" rows="3"
-                                                    disabled></textarea>
-                                                <InputError :message="form.errors.company_address" />
-                                            </div>
+                                           
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -284,12 +283,12 @@ onMounted(() => {
                                     </div>
 
                                     <div class="col-md-3">
-                                        <label for="input13" class="form-label">Sender</label>
+                                        <label for="input13" class="form-label">Port of Departure</label>
                                         <input type="text" class="form-control" v-model="form.sender">
                                         <InputError :message="form.errors.sender" />
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="input13" class="form-label">Destination</label>
+                                        <label for="input13" class="form-label">Port of Landing</label>
                                         <input type="text" class="form-control" v-model="form.destination">
                                         <InputError :message="form.errors.destination" />
                                     </div>

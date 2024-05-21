@@ -26,5 +26,12 @@ class UserSeeder extends Seeder
         $permissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);
+
+        Role::updateOrCreate(['name' => 'Admin']);
+        Role::updateOrCreate(['name' => 'Company']);
+        Role::updateOrCreate(['name' => 'Shipper']);
+        Role::updateOrCreate(['name' => 'Consignee']);
+        Role::updateOrCreate(['name' => 'Manager']);
+        Role::updateOrCreate(['name' => 'Employee']);
     }
 }

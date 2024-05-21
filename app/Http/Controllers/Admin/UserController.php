@@ -56,23 +56,30 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $user = User::findOrFail($request->user_id);
+        // dd($request->all());
 
-        $validate = $request->validate([
-            'user_id' => ['required'],
-            'name' => ['required', 'string', 'min:5', 'max:50'],
-            'email' => ['required', 'string', 'email', 'max:50'],
-            'role' => ['required'],
-        ]);
+        try {
+            $user = User::findOrFail($request->user_id);
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            // 'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-        ];
+            $validate = $request->validate([
+                'user_id' => ['required'],
+                'name' => ['required', 'string', 'min:5', 'max:50'],
+                'email' => ['required', 'string', 'email', 'max:50'],
+                'role' => ['required'],
+            ]);
 
-        $user->update($data);
-        $user->assignRole($validate['role']);
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                // 'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+            ];
+
+            $user->update($data);
+            $user->syncRoles($validate['role']);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }
