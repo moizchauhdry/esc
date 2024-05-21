@@ -93,7 +93,7 @@ class InvoiceController extends Controller
             ]);
         }
 
-        $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('amount');
+        $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('total');
         $invoice->update([
             'subtotal' => $invoice_total,
             'total' => $invoice_total,
@@ -157,7 +157,7 @@ class InvoiceController extends Controller
             'items' => $items,
         ]);
 
-        $pdf = PDF::loadView('prints.invoice-2');
+        $pdf = PDF::loadView('prints.invoice');
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('invoice.pdf');
     }

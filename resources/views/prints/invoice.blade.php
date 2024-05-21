@@ -17,6 +17,7 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
         }
 
         table {
@@ -49,8 +50,9 @@
             margin-bottom: 20px;
         }
 
+
         .invoice-header img {
-            max-width: 150px;
+            max-width: 200px;
             height: auto;
         }
 
@@ -62,12 +64,13 @@
             font-weight: bold;
         }
 
-        .particulars-table th {
-            /* background-color: #f2f2f2; */
+        .particulars-table {
+            padding-top: 130px;
+            border: none;
         }
 
-        .particulars-table td:first-child {
-            width: 50%;
+        .particulars-table tr {
+            border-bottom: 1px solid #f4f4f4;
         }
 
         .particulars-table td,
@@ -86,12 +89,103 @@
             text-align: left;
         }
 
-        .particulars-table tr:nth-child(even) {
-            background-color: #f2f2f2;
+
+        .invoice_heading {
+            font-size: 55px;
+            color: #0D8FCC;
+            margin: 0;
+            margin-top: -15px;
         }
 
-        .particulars-table tr:last-child {
-            font-weight: bold;
+        .invoice-ref {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            margin-top: 180px;
+        }
+
+
+        .invoice-ref>div:last-child {
+            width: 33.33%;
+            margin: 0;
+        }
+
+        .invoice-pay {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        .invoice-pay>div {
+            width: 33.33%;
+        }
+
+        .invoice-pay>div:first-child {
+            width: 40%;
+        }
+
+        .invoice-last {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 160px;
+        }
+
+        .invoice-last>div:first-child {
+            width: 40%;
+        }
+
+        .invoice-last>div:last-child {
+            width: 60%;
+        }
+
+        .first-table-row {
+            background: #0D8FCC;
+            height: 35px;
+        }
+
+        .before-span {
+            background: #000;
+            height: 34px;
+            width: 50px;
+            transform: skew(20deg);
+            position: absolute;
+            left: -10px;
+            top: 0;
+            z-index: -1;
+        }
+
+        .footer {
+            background: #000;
+            height: 30px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .footer-first {
+            background: #0D8FCC;
+            height: 40px;
+            width: 35%;
+            z-index: 1;
+            margin-top: -10px;
+            position: relative;
+        }
+
+        .before-footer {
+            background: #0D8FCC;
+            height: 40px;
+            width: 50px;
+            transform: skew(20deg);
+            position: absolute;
+            right: -10px;
+            top: 0;
+            z-index: -1;
         }
     </style>
 </head>
@@ -101,91 +195,186 @@
         <div class="invoice-header">
             <div style="float: left;">
                 <img src="https://esavercargo.com/wp-content/uploads/2022/11/png-01-3.png" alt="Logo"> <br>
-                <span>Express Saver Cargo</span>
+                {{-- <span>Express Saver Cargo</span> --}}
             </div>
             <div class="invoice-info" style="float: right;">
-                <p><b>Express Saver Cargo</b></p>
+                <h2 class="invoice_heading">INVOICE</h2>
+                <div style="font-size: 12px;padding-left:70px;margin-top:-10px;">
+                    <div>
+                        <p style="float: left;"><b>INVOICE NO:</b></p>
+                        <p style="float: right;">000{{$invoice->id}}</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="float: left;"><b>MAWB NO:</b></p>
+                        <p style="float: right;">{{$invoice->mawb_no}}</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="float: left;"><b>INVOICE TO:</b></p>
+                        <p style="float: right;">{{$invoice->company->name ?? 'N/A'}}</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="float: left;"><b>DATE:</b></p>
+                        <p style="float: right;">{{Carbon\Carbon::parse($invoice->created_at)->format('F d, Y')}}</p>
+                    </div>
+                    <hr style="background: #0795CD;border-color: #0795CD;margin-top: 30px;">
+                </div>
+
+            </div>
+        </div>
+        <div class="invoice-ref">
+            <div style="float: left;">
+                <p style="margin: 0;color: #0D8FCC;"><b>SHIPPER:</b></p>
+                <h4 style="margin: 0;font-size: 15px;">{{$shipper->name}}</h4>
                 <div style="font-size: 12px;">
-                    <p>Hammad Ali<br>+92 321 4208852<br>hammad.ali@esavercargo.com</p>
-                    <p>Habibur Haseeb<br>+92 321 4487971<br>habibur.haseeb@esavercargo.com</p>
+                    <p style="margin: 5px 0;">
+                        {{$shipper->address_1}} <br>
+                        {{$shipper->address_2}}
+                    </p>
+                    <p style="margin: 5px 0;">Phone: {{$shipper->phone}}</p>
+                    <p style="margin: 5px 0;">Email: {{$shipper->email}}</p>
+                </div>
+
+            </div>
+            <div style="float: left;padding-left:50px;">
+                <p style="margin: 0;color: #0D8FCC;"><b>CONSIGNEE:</b></p>
+                <h4 style="margin: 0;font-size: 15px;">{{$consignee->name}}</h4>
+                <div style="font-size: 12px;">
+                    <p style="margin: 5px 0;">
+                        {{$consignee->address_1}} <br>
+                        {{$consignee->address_2}}
+                    </p>
+                    <p style="margin: 5px 0;">Phone: {{$consignee->phone}}</p>
+                    <p style="margin: 5px 0;">Email: {{$consignee->email}}</p>
+                </div>
+            </div>
+            <div style="float: left;padding-left:50px;">
+                <p style="margin: 0;color: #0D8FCC;"><b>SHIPMENT:</b></p>
+                {{-- <h4 style="margin: 0;font-size: 15px;">Moiz Chauhdry</h4> --}}
+                <div style="font-size: 12px;">
+                    <p style="margin: 5px 0;"><b>Commodity</b>: {{$invoice->commodity}}</p>
+                    <p style="margin: 5px 0;"><b>Departure</b>: {{$invoice->sender}} | <b>Landing</b>: {{$invoice->destination}}</p>
+                    <p style="margin: 5px 0;"><b>Quantity</b>: {{$invoice->quantity}}</p>
+                    <p style="margin: 5px 0;"><b>Weight (KGS)</b>: {{$invoice->weight}}</p>
+                    <p style="margin: 5px 0;"><b>AFC Rate/KG</b>: {{$invoice->total}}</p>
                 </div>
             </div>
         </div>
-        <table style="padding-top:120px">
-            <tr>
-                <td style="background-color: #0662ae; color:white; width:55%">
-                    <h2>Invoice #202412</h2>
-                </td>
-                <td style="font-size:14px;font-weight:400">
-                    Invoice To: Octalsol<br>
-                    Invoice Date: 25-05-2024
-                </td>
-            </tr>
-        </table>
-
-        <table>
-            <tr>
-                <td style="font-size:12px; width:55%">
-                    <b>Shipper</b> <br> <br>
-                    Moiz Chauhdry <br>
-                    Arfa Tower, Model Town <br>
-                    Lahore, Punjab, Pakistan
-                </td>
-                <td rowspan="2" style="font-size:12px;">
-                    <b>Carrier:</b> 9P <br>
-                    <b>MAWB No:</b> 514-0972-3265 <br>
-                    <b>Sender:</b> LHE <br>
-                    <b>Destination:</b> SHJ <br>
-
-                    <b>Commodity:</b> FRESH CHILLED MEAT <br>
-                    <b>Quantity:</b> 54 <br>
-                    <b>Weight (KGS):</b> 1780 <br>
-                    <b>AFC Rate/KG:</b> PKR 305.00 <br>
-                </td>
-            </tr>
-            <tr>
-                <td style="font-size:12px; width:55%">
-                    <b>Consignee</b> <br> <br>
-                    Moiz Chauhdry <br>
-                    Arfa Tower, Model Town <br>
-                    Lahore, Punjab, Pakistan
-                </td>
-            </tr>
-        </table>
 
         <table class="particulars-table">
-            <tr style="background-color: #0662ae; color:white; font-size:12px">
-                <th>Particulars</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Total</th>
+            <tr class="first-table-row" style="color:white; font-size:14px;">
+                <th>NO.</th>
+                <th>PARTICULARS</th>
+                <th style="background:#000;position:relative;"><span class="before-span"></span>PRICE</th>
+                <th style="background:#000;">QUANTITY</th>
+                <th style="background:#000;">TOTAL</th>
             </tr>
+            @foreach ($items as $item)
             <tr style="font-size:12px">
-                <td>AIR FREIGHT CHARGES (AFC)</td>
-                <td>2</td>
-                <td>100</td>
-                <td>200</td>
+                <td>{{$loop->iteration}}.</td>
+                <td>{{$item->particular}}</td>
+                <td>PKR {{$item->amount}}</td>
+                <td>{{$item->qty}}</td>
+                <td>PKR {{$item->total}}</td>
             </tr>
-            <tr style="font-size:12px">
-                <td>AWB FEE</td>
-                <td>2</td>
-                <td>100</td>
-                <td>200</td>
-            </tr>
-            <tr>
-                <td colspan="3" style="text-align: right">Grand Total</td>
-                <td>400</td>
-            </tr>
+            @endforeach
         </table>
 
-        <table>
-            <tr>
-                <td style="font-size:12px">
-                    Please Make Check Payable to <b>EXPRESS SAVER CARGO.</b> <br>
-                    <b>Online Transfer: A/C: 3397301000001395 :: EXPRESS SAVER CARGO BANK: FAYSAL BANK</b>
-                </td>
-            </tr>
-        </table>
+        <div class="invoice-pay">
+            {{-- <div style="float: left;margin: 0;">
+                <h4 style="margin: 0;font-size: 16px;">Package Detail</h4>
+                <div style="font-size: 12px;margin: 0;">
+                    <div style="margin-top: 0px;">
+                        <p style="float: left;"><b>Commodity:</b></p>
+                        <p style="float: left;padding-left:120px;">{{$invoice->commodity}}</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="float: left;"><b>Quantity:</b></p>
+                        <p style="float: left;padding-left:120px;">{{$invoice->quantity}}</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="float: left;"><b>Weight (KGS):</b></p>
+                        <p style="float: left;padding-left:120px;">{{$invoice->weight}}</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="float: left;"><b>AFC Rate/KG:</b></p>
+                        <p style="float: left;padding-left:120px;">{{$invoice->total}}</p>
+                    </div>
+                </div>
+            </div> --}}
+
+            <div style="font-size: 12px;float: right;">
+                <div style="margin-top: 10px;padding:0 10px;">
+                    <p style="float: left;">Subtotal:</p>
+                    <p style="float: right;"><b>PKR {{$invoice->subtotal}}</b></p>
+                </div>
+                {{-- <div style="margin-top: 20px;padding:0 10px;">
+                    <p style="float: left;">Discount:</p>
+                    <p style="float: right;"><b>00.00</b></p>
+                </div> --}}
+                {{-- <div style="margin-top: 20px;padding:0 10px;">
+                    <p style="float: left;">Tax (10%):</p>
+                    <p style="float: right;"><b>$100.00</b></p>
+                </div> --}}
+                <div
+                    style="margin-top: 35px;background: #0D8FCC;color:#fff;height:40px;padding:0 10px;padding-bottom:5px;height:30px;">
+                    <p style="float: left;"><b>Total:</b></p>
+                    <p style="float: right;"><b>PKR {{$invoice->total}}</b></p>
+                </div>
+            </div>
+
+            <div style="float: left;font-size: 12px;margin: 0;text-align:center;">
+                <div>
+                    <h4 style="margin-top:20px;margin-bottom:5px;"><b>Moiz Chauhdry</b> </h4>
+                    <img style="max-width:140px" src="" alt="signature">
+                    <hr style="max-width:140px;border-color: gray;background:gray;">
+                </div>
+                <p style="font-size: 12px;margin-bottom: 5px"><b>Name & Signature</b></p>
+                <p style="margin: 0">Account Manager</p>
+            </div>
+
+        </div>
+
+        <div class="invoice-last">
+            <div style="float: left;margin: 0;">
+                <h4 style="margin: 0;font-size: 15px;color: #0D8FCC;">Express Saver Cargo</h4>
+                <div style="font-size: 12px;margin: 0;padding-right:50px;">
+                    <div style="margin-top: 0px;">
+                        <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
+                                style="height:25px;width:25px;"
+                                src="https://flypakistan.s3.us-west-2.amazonaws.com/call-icon-removebg-preview.png"
+                                alt=""></p>
+                        <p style="float: left;padding-left:40px;">+92 321 4208852</p>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
+                                style="height:25px;width:25px;transform:scale(.6);"
+                                src="https://flypakistan.s3.us-west-2.amazonaws.com/email-removebg-preview.png" alt="">
+                        </p>
+                        <p style="float: left;padding-left:40px;">info@esavercargo.com</p>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
+                                style="height:25px;width:25px;transform:scale(.5);"
+                                src="https://flypakistan.s3.us-west-2.amazonaws.com/location-removebg-preview.png"
+                                alt=""></p>
+                        <p style="float: left;padding-left:40px;">Lahore, Pakistan</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="float: right;font-size: 12px;margin: 0;padding-left:50px;">
+                <p style="font-size: 14px;"><b>Terms & Consitions:</b></p>
+                Please Make Check Payable to <b>EXPRESS SAVER CARGO.</b> <br>
+                <b>Online Transfer: A/C: 3397301000001395 :: EXPRESS SAVER CARGO BANK: FAYSAL BANK</b>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div class="footer-first">
+                <span class="before-footer"></span>
+            </div>
+        </div>
     </div>
 </body>
 
