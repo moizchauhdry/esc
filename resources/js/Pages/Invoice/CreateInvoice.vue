@@ -24,7 +24,7 @@ const edit_mode = usePage().props.edit_mode;
 const form = useForm({
     invoice_id: invoice?.id,
     company_id: invoice?.company_id,
-    
+
     shipper_id: invoice?.shipper_id,
     shipper_address: invoice?.shipper_address,
 
@@ -40,8 +40,8 @@ const form = useForm({
     sender: invoice?.sender,
     destination: invoice?.destination,
 
-    subtotal: invoice?.total,
-    total: invoice?.total,
+    subtotal: 0,
+    total: 0,
 
     items: invoice?.items,
 });
@@ -51,7 +51,7 @@ const addItem = () => {
         particular: "",
         amount: 0,
         qty: 1,
-        subtotal: 0,
+        total: 0,
     });
 };
 
@@ -90,7 +90,7 @@ const removeItem = (index) => {
 const getGrandTotal = () => {
     form.subtotal = 0;
     form.items.forEach((item) => {
-        form.subtotal += parseFloat(item.subtotal);
+        form.subtotal += parseFloat(item.total);
     });
     form.total = form.subtotal;
 };
@@ -98,7 +98,7 @@ const getGrandTotal = () => {
 const getLineTotal = (index) => {
     const item = form.items[index];
     const line_total = item.qty * item.amount;
-    item.subtotal = line_total;
+    item.total = line_total;
 
     getGrandTotal();
 };
@@ -204,8 +204,8 @@ onMounted(() => {
                                             <div class="col-md-12">
                                                 <label for="input11" class="form-label">Name &
                                                     Address</label>
-                                                <textarea class="form-control" v-model="form.company_address"
-                                                    rows="3" disabled></textarea>
+                                                <textarea class="form-control" v-model="form.company_address" rows="3"
+                                                    disabled></textarea>
                                                 <InputError :message="form.errors.company_address" />
                                             </div>
                                         </div>
@@ -231,8 +231,8 @@ onMounted(() => {
                                             <div class="col-md-12">
                                                 <label for="input11" class="form-label">Name &
                                                     Address</label>
-                                                <textarea class="form-control" v-model="form.shipper_address"
-                                                    rows="3" disabled></textarea>
+                                                <textarea class="form-control" v-model="form.shipper_address" rows="3"
+                                                    disabled></textarea>
                                                 <InputError :message="form.errors.shipper_address" />
                                             </div>
                                         </div>
@@ -258,8 +258,8 @@ onMounted(() => {
                                             <div class=" col-md-12">
                                                 <label for="input13" class="form-label">Name &
                                                     Address</label>
-                                                <textarea class="form-control" v-model="form.consignee_address"
-                                                    rows="3" disabled></textarea>
+                                                <textarea class="form-control" v-model="form.consignee_address" rows="3"
+                                                    disabled></textarea>
                                                 <InputError :message="form.errors.consignee_address" />
                                             </div>
 
@@ -354,7 +354,7 @@ onMounted(() => {
                                                         @keyup="getLineTotal(index)">
                                                 </td>
 
-                                                <td class="total">PKR {{ item.subtotal }}</td>
+                                                <td class="total">PKR {{ item.total }}</td>
                                             </tr>
                                         </template>
 
@@ -363,7 +363,7 @@ onMounted(() => {
                                         <tr>
                                             <td colspan="4"></td>
                                             <td colspan="2">SUBTOTAL</td>
-                                            <td>PKR {{ form.total }}</td>
+                                            <td>PKR {{ form.subtotal }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="4"></td>
@@ -408,5 +408,21 @@ onMounted(() => {
     padding: 10px;
     background: #eee;
     border-bottom: 1px solid #fff;
+}
+
+input[type="number"]:disabled {
+    opacity: 0.5;
+    background-color: #eee;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    display: none;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input:disabled {
+    cursor: not-allowed;
 }
 </style>
