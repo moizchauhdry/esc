@@ -143,6 +143,11 @@ const fetchAddress = (type) => {
     });
 };
 
+const create_edit_ref = ref(null);
+const edit = (user) => {
+    create_edit_ref.value.edit(user)
+};
+
 onMounted(() => {
     if (!edit_mode) {
         form.items = [
@@ -219,7 +224,8 @@ onMounted(() => {
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
                                                     Number
-                                                    <UserCreateEdit :roles="roles"></UserCreateEdit>
+                                                    <UserCreateEdit :roles="roles" ref="create_edit_ref">
+                                                    </UserCreateEdit>
                                                 </label>
                                                 <select class="form-control" v-model="form.shipper_id"
                                                     @change="fetchAddress('shipper')">
@@ -233,7 +239,7 @@ onMounted(() => {
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="input11" class="form-label">Name &
-                                                    Address</label>
+                                                    Address </label>
                                                 <textarea class="form-control" v-model="form.shipper_address" rows="3"
                                                     disabled></textarea>
                                                 <InputError :message="form.errors.shipper_address" />
@@ -247,7 +253,8 @@ onMounted(() => {
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number <UserCreateEdit :roles="roles"></UserCreateEdit>
+                                                    Number <UserCreateEdit :roles="roles" ref="create_edit_ref">
+                                                    </UserCreateEdit>
                                                 </label>
                                                 <select class="form-control" v-model="form.consignee_id"
                                                     @change="fetchAddress('consignee')">
