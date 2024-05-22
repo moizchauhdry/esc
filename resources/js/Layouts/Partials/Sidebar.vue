@@ -1,5 +1,6 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
+const permission = usePage().props.can;
 </script>
 
 <template>
@@ -51,7 +52,7 @@ import { Link } from "@inertiajs/vue3";
                     <div class="menu-title">Invoice Management</div>
                 </a>
                 <ul>
-                    <li>
+                    <li v-if="permission.invoice_list">
                         <Link :href="route('invoice.index')"><i class='bx bx-radio-circle'></i>Invoices</Link>
                     </li>
                     <li>
