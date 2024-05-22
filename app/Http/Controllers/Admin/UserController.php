@@ -94,4 +94,13 @@ class UserController extends Controller
         $this->save($request, true);
         return redirect()->back()->with('success', 'Record updated.');
     }
+
+    public function fetch(Request $request)
+    {
+        $contact = User::find($request->id);
+
+        return back()->with([
+            'contact' => $contact
+        ]);
+    }
 }

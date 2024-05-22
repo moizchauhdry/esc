@@ -5,7 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     invoices: Object,
-    address: String
+    contact: Object
 });
 
 </script>

@@ -11,7 +11,7 @@ import UserCreateEdit from "../User/CreateEdit.vue";
 
 const props = defineProps({
     invoice: Object,
-    address: Object,
+    contact: Object,
     shippers: Array,
     consignees: Array,
     companies: Array,
@@ -121,18 +121,18 @@ const fetchAddress = (type) => {
         id: address_id
     });
 
-    fetch_address_form.post(route("address.fetch"), {
+    fetch_address_form.post(route("user.fetch"), {
         preserveScroll: true,
         onSuccess: (response) => {
-            var address = response.props.address;
+            var address = response.props.contact;
             console.log(response);
             var concat_address = address.name + '\n' + address.address_1 + ', ' + address.address_2 + '\n' + address.city + ', ' + address.state + ', ' + address.country;
 
-            if (address.type == 'shipper') {
+            if (type == 'shipper') {
                 form.shipper_address = concat_address
             }
 
-            if (address.type == 'consignee') {
+            if (type == 'consignee') {
                 form.consignee_address = concat_address
             }
         },

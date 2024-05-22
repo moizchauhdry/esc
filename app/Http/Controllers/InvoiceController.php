@@ -113,7 +113,7 @@ class InvoiceController extends Controller
             'consignees' => $consignees,
             'companies' => $companies,
             'roles' => $roles,
-            'address' => session('address'),
+            'contact' => session('contact'),
         ]);
     }
 

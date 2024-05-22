@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [UserController::class, 'store'])->name('user.store')->middleware('permission:user-create');
         Route::get('/edit', [UserController::class, 'edit'])->name('user.edit')->middleware('permission:user-update');
         Route::post('/update', [UserController::class, 'update'])->name('user.update')->middleware('permission:user-update');
+        Route::post('/fetch', [UserController::class, 'fetch'])->name('user.fetch');
     });
 
     Route::prefix('roles')->group(function () {
@@ -62,8 +63,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('address')->group(function () {
-        Route::post('/fetch', [AddressController::class, 'fetch'])->name('address.fetch');
-        Route::post('/create', [AddressController::class, 'create'])->name('address.create');
+        // Route::post('/fetch', [AddressController::class, 'fetch'])->name('address.fetch');
+        // Route::post('/create', [AddressController::class, 'create'])->name('address.create');
     });
 });
 
