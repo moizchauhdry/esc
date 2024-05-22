@@ -64,12 +64,8 @@ class InvoiceController extends Controller
 
         $data = [
             'company_id' => $request->company_id,
-
             'shipper_id' => $request->shipper_id,
-            'shipper_address' => $request->shipper_address,
             'consignee_id' => $request->consignee_id,
-            'consignee_address' => $request->consignee_address,
-
             'carrier' => $request->carrier,
             'mawb_no' => $request->mawb_no,
             'quantity' => $request->quantity,
