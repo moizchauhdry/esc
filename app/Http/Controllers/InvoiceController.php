@@ -41,21 +41,15 @@ class InvoiceController extends Controller
     {
         $request->validate([
             'company_id' => 'required',
-
             'shipper_id' => 'required',
-            'shipper_address' => 'required|string|max:200',
             'consignee_id' => 'required',
-            'consignee_address' => 'required|string|max:200',
-
             'carrier' => 'required|string|max:50',
             'mawb_no' => 'required|string|max:50',
             'quantity' => 'required|numeric',
             'weight' => 'required|numeric',
             'commodity' => 'required|string|max:50',
-
             'sender' => 'required|string|max:50',
             'destination' => 'required|string|max:50',
-
             'items' => 'required|array',
             'items.*.particular' => 'required|max:150',
             'items.*.amount' => 'required|numeric|gte:0',
@@ -71,7 +65,6 @@ class InvoiceController extends Controller
             'quantity' => $request->quantity,
             'weight' => $request->weight,
             'commodity' => $request->commodity,
-
             'sender' => $request->sender,
             'destination' => $request->destination,
             'created_by' => auth()->id(),
