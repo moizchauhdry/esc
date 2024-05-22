@@ -32,19 +32,23 @@ class HandleInertiaRequests extends Middleware
     {
         $user = auth()->user();
 
-        $data = [
-            'auth' => [
-                'user' => $request->user(),
-            ],
-            'can' => [
-                'invoice_list' => $user->can('invoice-list'),
-            ],
-            'ziggy' => function () use ($request) {
-                return array_merge((new Ziggy)->toArray(), [
-                    'location' => $request->url(),
-                ]);
-            },
-        ];
+        $data = [];
+        
+        if ($user) {
+            $data = [
+                'auth' => [
+                    'user' => $request->user(),
+                ],
+                'can' => [
+                    'invoice_list' => $user->can('invoice-list'),
+                ],
+                'ziggy' => function () use ($request) {
+                    return array_merge((new Ziggy)->toArray(), [
+                        'location' => $request->url(),
+                    ]);
+                },
+            ];
+        }
 
         return array_merge(parent::share($request), $data);
     }
