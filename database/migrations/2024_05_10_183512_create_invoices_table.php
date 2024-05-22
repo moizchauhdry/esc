@@ -13,29 +13,19 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-
             $table->integer('company_id');
-
             $table->integer('shipper_id');
-            $table->string('shipper_address', 100)->nullable();
-
             $table->integer('consignee_id');
-            $table->string('consignee_address', 100)->nullable();
-
             $table->string('carrier', 100)->nullable();
             $table->string('mawb_no', 100)->nullable();
             $table->string('quantity', 100)->nullable();
             $table->string('weight', 100)->nullable();
             $table->string('commodity', 100)->nullable();
-
             $table->string('sender', 100)->nullable();
             $table->string('destination', 100)->nullable();
-
             $table->decimal('subtotal', 8, 2)->default(0);
             $table->decimal('total', 8, 2)->default(0);
-
             $table->integer('created_by')->unsigned();
-
             $table->timestamps();
         });
     }

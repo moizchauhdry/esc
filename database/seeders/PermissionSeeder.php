@@ -34,6 +34,7 @@ class PermissionSeeder extends Seeder
             'invoice-create',
             'invoice-update',
             'invoice-delete',
+            'invoice-print',
         ];
 
         foreach ($permissions as $permission) {

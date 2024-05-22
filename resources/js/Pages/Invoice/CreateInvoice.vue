@@ -7,13 +7,15 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Address from "@/Pages/Invoice/Address.vue";
 import { onMounted } from "vue";
+import UserCreateEdit from "../User/CreateEdit.vue";
 
 const props = defineProps({
     invoice: Object,
-    address: Object,
+    contact: Object,
     shippers: Array,
     consignees: Array,
     companies: Array,
+    roles: Array,
     edit_mode: Boolean,
 });
 
@@ -119,18 +121,18 @@ const fetchAddress = (type) => {
         id: address_id
     });
 
-    fetch_address_form.post(route("address.fetch"), {
+    fetch_address_form.post(route("user.fetch"), {
         preserveScroll: true,
         onSuccess: (response) => {
-            var address = response.props.address;
             console.log(response);
+            var address = response.props.contact;
             var concat_address = address.name + '\n' + address.address_1 + ', ' + address.address_2 + '\n' + address.city + ', ' + address.state + ', ' + address.country;
 
-            if (address.type == 'shipper') {
+            if (type == 'shipper') {
                 form.shipper_address = concat_address
             }
 
-            if (address.type == 'consignee') {
+            if (type == 'consignee') {
                 form.consignee_address = concat_address
             }
         },
@@ -139,6 +141,11 @@ const fetchAddress = (type) => {
         },
         onFinish: () => { },
     });
+};
+
+const create_edit_ref = ref(null);
+const edit = (user) => {
+    create_edit_ref.value.edit(user)
 };
 
 onMounted(() => {
@@ -206,7 +213,7 @@ onMounted(() => {
                                                 </select>
                                                 <InputError :message="form.errors.company_id" />
                                             </div>
-                                           
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -216,7 +223,10 @@ onMounted(() => {
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number <Address></Address></label>
+                                                    Number
+                                                    <UserCreateEdit :roles="roles" ref="create_edit_ref">
+                                                    </UserCreateEdit>
+                                                </label>
                                                 <select class="form-control" v-model="form.shipper_id"
                                                     @change="fetchAddress('shipper')">
                                                     <template v-for="shipper in shippers" :key="shipper.id">
@@ -229,7 +239,7 @@ onMounted(() => {
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="input11" class="form-label">Name &
-                                                    Address</label>
+                                                    Address </label>
                                                 <textarea class="form-control" v-model="form.shipper_address" rows="3"
                                                     disabled></textarea>
                                                 <InputError :message="form.errors.shipper_address" />
@@ -243,7 +253,9 @@ onMounted(() => {
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number <Address></Address></label>
+                                                    Number <UserCreateEdit :roles="roles" ref="create_edit_ref">
+                                                    </UserCreateEdit>
+                                                </label>
                                                 <select class="form-control" v-model="form.consignee_id"
                                                     @change="fetchAddress('consignee')">
                                                     <template v-for="consignee in consignees" :key="consignee.id">

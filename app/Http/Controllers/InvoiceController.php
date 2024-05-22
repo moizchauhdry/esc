@@ -12,18 +12,24 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
+use Spatie\Permission\Models\Role;
 
 class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Invoice::orderBy('id', 'desc')->paginate(10)
+        $invoices = Invoice::with(['shipper', 'consignee', 'company'])
+            ->orderBy('id', 'desc')
+            ->paginate(10)
             ->withQueryString()
             ->through(fn ($invoice) => [
                 'id' => $invoice->id,
                 'data' => $invoice,
                 'items' => $invoice->items,
                 'created_at' => $invoice->created_at->format('F d, Y'),
+                'company_name' => $invoice->company->name,
+                'shipper_name' => $invoice->shipper->name,
+                'consignee_name' => $invoice->consignee->name,
             ]);
 
         return Inertia::render('Invoice/Index', [
@@ -102,15 +108,17 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $shippers = Address::where('type', 'shipper')->get();
-        $consignees = Address::where('type', 'consignee')->get();
+        $shippers = User::role('shipper')->get();
+        $consignees = User::role('consignee')->get();
         $companies = User::role('company')->get();
+        $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'shippers' => $shippers,
             'consignees' => $consignees,
             'companies' => $companies,
-            'address' => session('address'),
+            'roles' => $roles,
+            'contact' => session('contact'),
         ]);
     }
 
@@ -122,17 +130,20 @@ class InvoiceController extends Controller
 
     public function edit($id)
     {
-        $invoice = Invoice::with('items')->find($id);
-        $shippers = Address::where('type', 'shipper')->get();
-        $consignees = Address::where('type', 'consignee')->get();
-        $companies = User::orderBy('id', 'desc')->get();
+        $invoice = Invoice::with(['items'])->find($id);
+
+        $shippers = User::role('shipper')->get();
+        $consignees = User::role('consignee')->get();
+        $companies = User::role('company')->get();
+        $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
             'shippers' => $shippers,
             'consignees' => $consignees,
             'companies' => $companies,
-            'address' => session('address'),
+            'roles' => $roles,
+            'contact' => session('contact'),
             'edit_mode' => true,
         ]);
     }

@@ -24,12 +24,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
-    // return Inertia::render('Welcome', [
-    //     'canLogin' => Route::has('login'),
-    //     'canRegister' => Route::has('register'),
-    //     'laravelVersion' => Application::VERSION,
-    //     'phpVersion' => PHP_VERSION,
-    // ]);
 });
 
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -41,8 +35,11 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index')->middleware('permission:user-list');
-        Route::post('/create', [UserController::class, 'create'])->name('user.create')->middleware('permission:user-create');
+        Route::get('/create', [UserController::class, 'create'])->name('user.create')->middleware('permission:user-create');
+        Route::post('/store', [UserController::class, 'store'])->name('user.store')->middleware('permission:user-create');
+        Route::get('/edit', [UserController::class, 'edit'])->name('user.edit')->middleware('permission:user-update');
         Route::post('/update', [UserController::class, 'update'])->name('user.update')->middleware('permission:user-update');
+        Route::post('/fetch', [UserController::class, 'fetch'])->name('user.fetch');
     });
 
     Route::prefix('roles')->group(function () {
@@ -54,10 +51,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('invoices')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice-list');
         Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice-create');
-        Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store');
-        Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit');
+        Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store')->middleware('permission:invoice-create');
+        Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:invoice-update');
         Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
-        Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print');
+        Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice-print');
     });
 
     Route::prefix('ledgers')->group(function () {
@@ -66,8 +63,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('address')->group(function () {
-        Route::post('/fetch', [AddressController::class, 'fetch'])->name('address.fetch');
-        Route::post('/create', [AddressController::class, 'create'])->name('address.create');
+        // Route::post('/fetch', [AddressController::class, 'fetch'])->name('address.fetch');
+        // Route::post('/create', [AddressController::class, 'create'])->name('address.create');
     });
 });
 
