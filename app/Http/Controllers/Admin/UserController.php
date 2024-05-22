@@ -86,12 +86,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->save($request);
-        return Redirect::route('user.index')->with('success', 'User created.');
+        return redirect()->back()->with('success', 'Record created.');
     }
 
     public function update(Request $request)
     {
         $this->save($request, true);
-        return Redirect::route('user.index')->with('success', 'User updated.');
+        return redirect()->back()->with('success', 'Record updated.');
     }
 }

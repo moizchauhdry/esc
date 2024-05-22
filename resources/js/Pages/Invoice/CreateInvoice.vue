@@ -7,6 +7,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Address from "@/Pages/Invoice/Address.vue";
 import { onMounted } from "vue";
+import UserCreateEdit from "../User/CreateEdit.vue";
 
 const props = defineProps({
     invoice: Object,
@@ -14,6 +15,7 @@ const props = defineProps({
     shippers: Array,
     consignees: Array,
     companies: Array,
+    roles: Array,
     edit_mode: Boolean,
 });
 
@@ -206,7 +208,7 @@ onMounted(() => {
                                                 </select>
                                                 <InputError :message="form.errors.company_id" />
                                             </div>
-                                           
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -216,7 +218,9 @@ onMounted(() => {
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number <Address></Address></label>
+                                                    Number
+                                                    <UserCreateEdit :roles="roles"></UserCreateEdit>
+                                                </label>
                                                 <select class="form-control" v-model="form.shipper_id"
                                                     @change="fetchAddress('shipper')">
                                                     <template v-for="shipper in shippers" :key="shipper.id">
@@ -243,7 +247,8 @@ onMounted(() => {
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number <Address></Address></label>
+                                                    Number <UserCreateEdit :roles="roles"></UserCreateEdit>
+                                                </label>
                                                 <select class="form-control" v-model="form.consignee_id"
                                                     @change="fetchAddress('consignee')">
                                                     <template v-for="consignee in consignees" :key="consignee.id">

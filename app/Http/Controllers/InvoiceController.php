@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
+use Spatie\Permission\Models\Role;
 
 class InvoiceController extends Controller
 {
@@ -102,14 +103,16 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $shippers = Address::where('type', 'shipper')->get();
-        $consignees = Address::where('type', 'consignee')->get();
+        $shippers = User::role('shipper')->get();
+        $consignees = User::role('consignee')->get();
         $companies = User::role('company')->get();
+        $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'shippers' => $shippers,
             'consignees' => $consignees,
             'companies' => $companies,
+            'roles' => $roles,
             'address' => session('address'),
         ]);
     }
@@ -123,15 +126,18 @@ class InvoiceController extends Controller
     public function edit($id)
     {
         $invoice = Invoice::with('items')->find($id);
-        $shippers = Address::where('type', 'shipper')->get();
-        $consignees = Address::where('type', 'consignee')->get();
-        $companies = User::orderBy('id', 'desc')->get();
+
+        $shippers = User::role('shipper')->get();
+        $consignees = User::role('consignee')->get();
+        $companies = User::role('company')->get();
+        $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
             'shippers' => $shippers,
             'consignees' => $consignees,
             'companies' => $companies,
+            'roles' => $roles,
             'address' => session('address'),
             'edit_mode' => true,
         ]);
