@@ -124,8 +124,8 @@ const fetchAddress = (type) => {
     fetch_address_form.post(route("user.fetch"), {
         preserveScroll: true,
         onSuccess: (response) => {
-            var address = response.props.contact;
             console.log(response);
+            var address = response.props.contact;
             var concat_address = address.name + '\n' + address.address_1 + ', ' + address.address_2 + '\n' + address.city + ', ' + address.state + ', ' + address.country;
 
             if (type == 'shipper') {

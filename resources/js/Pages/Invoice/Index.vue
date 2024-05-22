@@ -53,7 +53,8 @@ defineProps({
                                     <tr>
                                         <th>Invoice #</th>
                                         <th>Company</th>
-                                        <th>Address</th>
+                                        <th>Shipper</th>
+                                        <th>Consignee</th>
                                         <th>Status</th>
                                         <th>Total</th>
                                         <th>Date</th>
@@ -75,13 +76,16 @@ defineProps({
                                                 </div>
                                             </td>
                                             <td>
-                                                {{ invoice.data.company_id }}
+                                                {{ invoice.company_name }}
                                             </td>
                                             <td>
-                                                <b>Shipper:</b> {{ invoice.data.shipper_address }} <br>
-                                                <b>Consignee:</b> {{ invoice.data.consignee_address }} <br>
+                                                <b>Account #:</b> {{ invoice.data.shipper_id }} <br>
+                                                <b>Name:</b> {{ invoice.consignee_name }} <br>
                                             </td>
-                                            <!-- <td>{{ invoice.data.consignee_address }}</td> -->
+                                            <td>
+                                                <b>Account #:</b> {{ invoice.data.consignee_id }} <br>
+                                                <b>Name:</b> {{ invoice.consignee_name }} <br>
+                                            </td>
                                             <td>
                                                 <div
                                                     class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">

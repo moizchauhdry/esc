@@ -20,4 +20,14 @@ class Invoice extends Model
     {
         return $this->belongsTo(User::class, 'company_id', 'id');
     }
+    
+    public function shipper()
+    {
+        return $this->belongsTo(User::class, 'shipper_id', 'id');
+    }
+    
+    public function consignee()
+    {
+        return $this->belongsTo(User::class, 'consignee_id', 'id');
+    }
 }

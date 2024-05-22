@@ -18,13 +18,18 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Invoice::orderBy('id', 'desc')->paginate(10)
+        $invoices = Invoice::with(['shipper', 'consignee', 'company'])
+            ->orderBy('id', 'desc')
+            ->paginate(10)
             ->withQueryString()
             ->through(fn ($invoice) => [
                 'id' => $invoice->id,
                 'data' => $invoice,
                 'items' => $invoice->items,
                 'created_at' => $invoice->created_at->format('F d, Y'),
+                'company_name' => $invoice->company->name,
+                'shipper_name' => $invoice->shipper->name,
+                'consignee_name' => $invoice->consignee->name,
             ]);
 
         return Inertia::render('Invoice/Index', [
@@ -125,7 +130,7 @@ class InvoiceController extends Controller
 
     public function edit($id)
     {
-        $invoice = Invoice::with('items')->find($id);
+        $invoice = Invoice::with(['items'])->find($id);
 
         $shippers = User::role('shipper')->get();
         $consignees = User::role('consignee')->get();
@@ -138,7 +143,7 @@ class InvoiceController extends Controller
             'consignees' => $consignees,
             'companies' => $companies,
             'roles' => $roles,
-            'address' => session('address'),
+            'contact' => session('contact'),
             'edit_mode' => true,
         ]);
     }
