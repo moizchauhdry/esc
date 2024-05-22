@@ -24,6 +24,7 @@ class UserController extends Controller
                 'role' => $user->roles[0]->name ?? '-',
                 'role_id' => $user->roles[0]->id ?? NULL,
                 'created_at' => $user->created_at->format('d-m-Y h:i A'),
+                'data' => $user,
             ]);
 
         $roles = Role::select('id', 'name')->get();
@@ -34,22 +35,29 @@ class UserController extends Controller
         ]);
     }
 
-    public function save($request)
+    public function save($request, $edit_mode = false)
     {
-        $validate = $request->validate([
+
+        $rules = [
             'name' => 'required|string|min:5|max:50',
             'email' => 'required|string|email|max:50|unique:users',
             'phone' => 'required|unique:users|max:50',
-            'password' => 'required|string|min:8|confirmed',
             'role' => 'required',
-
             'address_1' => 'required',
             'address_2' => 'required',
             'city' => 'required',
             'state' => 'required',
             'country' => 'required',
             'zipcode' => 'required',
-        ]);
+        ];
+
+        if (!$edit_mode) {
+            $rules += [
+                'password' => 'required|string|min:8|confirmed',
+            ];
+        }
+
+        $validate = $request->validate($rules);
 
         $data = [
             'name' => $request->name,
@@ -83,7 +91,7 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $this->save($request);
+        $this->save($request, true);
         return Redirect::route('user.index')->with('success', 'User updated.');
     }
 }

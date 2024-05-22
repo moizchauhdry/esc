@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
-// import { ref } from "vue";
+import { ref } from "vue";
 import CreateEdit from "./CreateEdit.vue";
 
 defineProps({
@@ -9,61 +9,10 @@ defineProps({
     roles: Object,
 });
 
-// const user_modal = ref(false);
-// const edit_mode = ref(false);
-
-// const form = useForm({
-//     user_id: "",
-//     name: "",
-//     phone: "",
-//     email: "",
-//     password: "",
-//     password_confirmation: "",
-//     role: "",
-// });
-
-// const create = () => {
-//     user_modal.value = true;
-//     edit_mode.value = false;
-// };
-
-// const submit = () => {
-//     form.post(route("user.create"), {
-//         preserveScroll: true,
-//         onSuccess: () => closeModal(),
-//         onError: () => error(),
-//         onFinish: () => { },
-//     });
-// };
-
-// const edit = (user) => {
-//     user_modal.value = true;
-//     edit_mode.value = true;
-
-//     form.user_id = user.id;
-//     form.name = user.name;
-//     form.phone = user.phone;
-//     form.email = user.email;
-//     form.role = user.role_id;
-// };
-
-// const update = () => {
-//     form.post(route("user.update"), {
-//         preserveScroll: true,
-//         onSuccess: () => closeModal(),
-//         onError: () => error(),
-//         onFinish: () => { },
-//     });
-// };
-
-// const error = () => {
-//     // alert('error');
-// };
-
-// const closeModal = () => {
-//     user_modal.value = false;
-//     form.reset();
-// };
+const create_edit_ref = ref(null);
+const edit = (user) => {
+    create_edit_ref.value.edit(user)
+};
 </script>
 
 
@@ -89,7 +38,7 @@ defineProps({
                         </nav>
                     </div>
                     <div class="ms-auto">
-                        <CreateEdit :roles="roles"></CreateEdit>
+                        <CreateEdit :roles="roles" ref="create_edit_ref"></CreateEdit>
                     </div>
                 </div>
 

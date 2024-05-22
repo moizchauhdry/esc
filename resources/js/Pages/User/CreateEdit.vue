@@ -49,9 +49,21 @@ const submit = () => {
 };
 
 
-const edit = () => {
+const edit = (user) => {
     modal.value = true;
     edit_mode.value = true;
+
+    form.user_id = user.id
+    form.role = user.role_id
+    form.name = user.data.name
+    form.phone = user.data.phone
+    form.email = user.data.email
+    form.address_1 = user.data.address_1
+    form.address_2 = user.data.address_2
+    form.city = user.data.city
+    form.state = user.data.state
+    form.country = user.data.country
+    form.zipcode = user.data.zipcode
 };
 
 const update = () => {
@@ -71,6 +83,8 @@ const closeModal = () => {
     modal.value = false;
     form.reset();
 };
+
+defineExpose({ edit: (user) => edit(user) });
 </script>
 
 <template>
