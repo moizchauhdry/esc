@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
@@ -45,14 +43,14 @@ class UserController extends Controller
     {
         $rules = [
             'name' => 'required|string|min:5|max:50',
-            'email' => 'required|string|email|max:50|unique:users',
-            'phone' => 'required|unique:users|max:50',
-            'address_1' => 'required',
-            'address_2' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'country' => 'required',
-            'zipcode' => 'required',
+            'email' => 'required|max:50|unique:users,email,' . ($edit_mode ? $request->user_id : NULL) . ',id',
+            'phone' => 'required|max:50|unique:users,phone,' . ($edit_mode ? $request->user_id : NULL) . ',id',
+            'address_1' => 'nullable',
+            'address_2' => 'nullable',
+            'city' => 'nullable',
+            'state' => 'nullable',
+            'country' => 'nullable',
+            'zipcode' => 'nullable',
         ];
 
         if (!$edit_mode) {
@@ -69,7 +67,6 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-
             'address_1' => $request->address_1,
             'address_2' => $request->address_2,
             'city' => $request->city,
