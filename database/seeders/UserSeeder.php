@@ -16,16 +16,9 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::updateOrCreate(['email' => 'moizchauhdry@gmail.com',], [
-            'name' => 'Moiz Chauhdry',
-            'email' => 'moizchauhdry@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-
         $role = Role::updateOrCreate(['name' => 'Admin'], ['name' => 'Admin']);
         $permissions = Permission::pluck('id', 'id')->all();
         $role->syncPermissions($permissions);
-        $user->assignRole([$role->id]);
 
         Role::updateOrCreate(['name' => 'Admin']);
         Role::updateOrCreate(['name' => 'Company']);
@@ -33,5 +26,50 @@ class UserSeeder extends Seeder
         Role::updateOrCreate(['name' => 'Consignee']);
         Role::updateOrCreate(['name' => 'Manager']);
         Role::updateOrCreate(['name' => 'Employee']);
+        
+        $admin = User::updateOrCreate(['email' => 'moizchauhdry@gmail.com',], [
+            'name' => 'Moiz Chauhdry',
+            'email' => 'moizchauhdry@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $admin->assignRole('admin');
+
+        $company = User::updateOrCreate(['email' => 'company@gmail.com',], [
+            'name' => 'Company',
+            'email' => 'company@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $company->assignRole('company');
+
+        $shipper = User::updateOrCreate(['email' => 'shipper@gmail.com',], [
+            'name' => 'shipper',
+            'email' => 'shipper@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $shipper->assignRole('shipper');
+
+        $shipper2 = User::updateOrCreate(['email' => 'shipper2@gmail.com',], [
+            'name' => 'shipper2',
+            'email' => 'shipper2@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $shipper2->assignRole('shipper');
+
+        $consignee = User::updateOrCreate(['email' => 'consignee@gmail.com',], [
+            'name' => 'consignee',
+            'email' => 'consignee@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $consignee->assignRole('consignee');
+
+        
+        $consignee2 = User::updateOrCreate(['email' => 'consignee2@gmail.com',], [
+            'name' => 'consignee2',
+            'email' => 'consignee2@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $consignee2->assignRole('consignee');
+
+
     }
 }
