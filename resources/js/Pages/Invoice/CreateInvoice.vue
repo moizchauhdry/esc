@@ -241,8 +241,10 @@ onMounted(() => {
                                                     Number
                                                     <UserCreateEdit :roles="roles" ref="create_edit_ref">
                                                     </UserCreateEdit>
-                                                    <button type="button" @click="edit(selected_shipper)" title="Edit"
-                                                        clas="btn btn-primary"><i class="bx bx-edit"></i></button>
+
+                                                    <PrimaryButton @click="edit(selected_shipper)" type="button">Edit
+                                                        <i class="bx bx-edit ms-1"></i>
+                                                    </PrimaryButton>
                                                 </label>
                                                 <select class="form-control" v-model="form.shipper_id"
                                                     @change="fetchShipper(form.shipper_id)">
@@ -269,8 +271,10 @@ onMounted(() => {
                                                 <label for="input13" class="form-label">Account
                                                     Number <UserCreateEdit :roles="roles" ref="create_edit_ref">
                                                     </UserCreateEdit>
-                                                    <button type="button" @click="edit(selected_consignee)" title="Edit"
-                                                        clas="btn btn-primary"><i class="bx bx-edit"></i></button>
+
+                                                    <PrimaryButton @click="edit(selected_consignee)" type="button">Edit
+                                                        <i class="bx bx-edit ms-1"></i>
+                                                    </PrimaryButton>
                                                 </label>
                                                 <select class="form-control" v-model="form.consignee_id"
                                                     @change="fetchConsignee(form.consignee_id)">
