@@ -39,32 +39,49 @@ class InvoiceController extends Controller
 
     public function save($request)
     {
-        $request->validate([
+        $rules = [
+            'invoice_at' => 'nullable',
             'company_id' => 'required',
             'shipper_id' => 'required',
             'consignee_id' => 'required',
+
             'carrier' => 'required|string|max:50',
             'mawb_no' => 'required|string|max:50',
             'quantity' => 'required|numeric',
             'weight' => 'required|numeric',
             'commodity' => 'required|string|max:50',
+
+            'departure_at' => 'required',
+            'landing_at' => 'required',
             'sender' => 'required|string|max:50',
             'destination' => 'required|string|max:50',
+            
             'items' => 'required|array',
             'items.*.particular' => 'required|max:150',
             'items.*.amount' => 'required|numeric|gte:0',
             'items.*.qty' => 'required|numeric|gte:1',
-        ]);
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules,$messages);
 
         $data = [
+            'invoice_at' => Carbon::parse($request->invoice_at)->format("Y-m-d h:i:s"),
             'company_id' => $request->company_id,
             'shipper_id' => $request->shipper_id,
             'consignee_id' => $request->consignee_id,
+
             'carrier' => $request->carrier,
             'mawb_no' => $request->mawb_no,
             'quantity' => $request->quantity,
             'weight' => $request->weight,
             'commodity' => $request->commodity,
+            
+            'departure_at' => Carbon::parse($request->departure_at)->format("Y-m-d h:i:s"),
+            'landing_at' => Carbon::parse($request->landing_at)->format("Y-m-d h:i:s"),
             'sender' => $request->sender,
             'destination' => $request->destination,
             'created_by' => auth()->id(),

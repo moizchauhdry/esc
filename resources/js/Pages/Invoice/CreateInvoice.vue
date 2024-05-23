@@ -30,13 +30,10 @@ var selected_consignee = "";
 
 const form = useForm({
     invoice_id: invoice?.id,
+    invoice_at: invoice?.invoice_at,
     company_id: invoice?.company_id,
-
     shipper_id: invoice?.shipper_id,
-    shipper_address: invoice?.shipper_address,
-
     consignee_id: invoice?.consignee_id,
-    consignee_address: invoice?.consignee_address,
 
     carrier: invoice?.carrier,
     mawb_no: invoice?.mawb_no,
@@ -44,6 +41,8 @@ const form = useForm({
     quantity: invoice?.quantity,
     weight: invoice?.weight,
 
+    departure_at: invoice?.departure_at,
+    landing_at: invoice?.landing_at,
     sender: invoice?.sender,
     destination: invoice?.destination,
 
@@ -114,7 +113,6 @@ const fetchShipper = (id) => {
     axios.get(`/users/fetch/shipper/${id}`)
         .then(({ data }) => {
             selected_shipper = data.selected_shipper
-            console.log(selected_shipper);
         });
 };
 
@@ -122,7 +120,6 @@ const fetchConsignee = (id) => {
     axios.get(`/users/fetch/consignee/${id}`)
         .then(({ data }) => {
             selected_consignee = data.selected_consignee
-            console.log(selected_consignee);
         });
 };
 
@@ -187,8 +184,8 @@ onMounted(() => {
 
                                     <div class="col-md-2">
                                         <InputLabel for="" value="Invoice Date" class="mb-1" />
-                                        <VueDatePicker v-model="form.date" :teleport="true" range></VueDatePicker>
-                                        <InputError :message="form.errors.date" />
+                                        <VueDatePicker v-model="form.invoice_at" :teleport="true"></VueDatePicker>
+                                        <InputError :message="form.errors.invoice_at" />
                                     </div>
 
                                     <div class="col-md-2">
@@ -216,16 +213,6 @@ onMounted(() => {
                                         <InputError :message="form.errors.carrier" />
                                     </div>
 
-                                    <div class="col-md-2">
-                                        <InputLabel for="" value="Port of Departure" class="mb-1" />
-                                        <input type="text" class="form-control" v-model="form.sender">
-                                        <InputError :message="form.errors.sender" />
-                                    </div>
-                                    <div class="col-md-2">
-                                        <InputLabel for="" value="Port of Landing" class="mb-1" />
-                                        <input type="text" class="form-control" v-model="form.destination">
-                                        <InputError :message="form.errors.destination" />
-                                    </div>
                                 </div>
 
                                 <div class="my-3"></div>
@@ -256,11 +243,6 @@ onMounted(() => {
                                                 </select>
                                                 <InputError :message="form.errors.shipper_id" />
                                             </div>
-                                            <!-- <div class="col-md-12">
-                                                <div class="card">
-                                                    {{ selected_shipper }}
-                                                </div>
-                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -286,11 +268,6 @@ onMounted(() => {
                                                 </select>
                                                 <InputError :message="form.errors.consignee_id" />
                                             </div>
-                                            <!-- <div class="col-md-12">
-                                                <div class="card">
-                                                    {{ selected_consignee }}
-                                                </div>
-                                            </div> -->
                                         </div>
                                     </div>
 
@@ -302,7 +279,31 @@ onMounted(() => {
                                     <h6 class="invoice-heading">SHIPMENT DETAIL</h6>
                                     <hr>
 
-                                    <div class="col-md-8">
+                                    <div class="col-md-3">
+                                        <InputLabel for="" value="Departure Date" class="mb-1" />
+                                        <VueDatePicker v-model="form.departure_at" :teleport="true"></VueDatePicker>
+                                        <InputError :message="form.errors.departure_at" />
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <InputLabel for="" value="Landing Date" class="mb-1" />
+                                        <VueDatePicker v-model="form.landing_at" :teleport="true"></VueDatePicker>
+                                        <InputError :message="form.errors.landing_at" />
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <InputLabel for="" value="Port of Departure" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.sender">
+                                        <InputError :message="form.errors.sender" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <InputLabel for="" value="Port of Landing" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.destination">
+                                        <InputError :message="form.errors.destination" />
+                                    </div>
+
+
+                                    <div class="col-md-6">
                                         <InputLabel for="" value="Commodity" class="mb-1" />
                                         <input type="text" class="form-control" v-model="form.commodity">
                                         <InputError :message="form.errors.commodity" />
@@ -316,6 +317,11 @@ onMounted(() => {
 
                                     <div class="col-md-1">
                                         <InputLabel for="" value="Weight" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.weight">
+                                        <InputError :message="form.errors.weight" />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <InputLabel for="" value="AFC Rate/KG" class="mb-1" />
                                         <input type="text" class="form-control" v-model="form.weight">
                                         <InputError :message="form.errors.weight" />
                                     </div>
