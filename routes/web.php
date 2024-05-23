@@ -39,7 +39,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [UserController::class, 'store'])->name('user.store')->middleware('permission:user-create');
         Route::get('/edit', [UserController::class, 'edit'])->name('user.edit')->middleware('permission:user-update');
         Route::post('/update', [UserController::class, 'update'])->name('user.update')->middleware('permission:user-update');
-        Route::post('/fetch', [UserController::class, 'fetch'])->name('user.fetch');
+        Route::get('/fetch/shipper/{id}', [UserController::class, 'fetchShipper'])->name('user.fetch-shipper');
+        Route::get('/fetch/consignee/{id}', [UserController::class, 'fetchConsignee'])->name('user.fetch-consignee');
     });
 
     Route::prefix('roles')->group(function () {

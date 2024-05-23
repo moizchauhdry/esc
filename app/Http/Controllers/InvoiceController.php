@@ -107,7 +107,8 @@ class InvoiceController extends Controller
             'consignees' => $consignees,
             'companies' => $companies,
             'roles' => $roles,
-            'contact' => session('contact'),
+            'selected_shipper' => session('selected_shipper'),
+            'selected_consignee' => session('selected_consignee'),
         ]);
     }
 
@@ -132,7 +133,8 @@ class InvoiceController extends Controller
             'consignees' => $consignees,
             'companies' => $companies,
             'roles' => $roles,
-            'contact' => session('contact'),
+            'selected_shipper' => session('selected_shipper'),
+            'selected_consignee' => session('selected_consignee'),
             'edit_mode' => true,
         ]);
     }

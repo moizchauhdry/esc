@@ -50,20 +50,21 @@ const submit = () => {
 
 
 const edit = (user) => {
+    console.log(user);
     modal.value = true;
     edit_mode.value = true;
 
     form.user_id = user.id
     form.role = user.role_id
-    form.name = user.data.name
-    form.phone = user.data.phone
-    form.email = user.data.email
-    form.address_1 = user.data.address_1
-    form.address_2 = user.data.address_2
-    form.city = user.data.city
-    form.state = user.data.state
-    form.country = user.data.country
-    form.zipcode = user.data.zipcode
+    form.name = user.name
+    form.phone = user.phone
+    form.email = user.email
+    form.address_1 = user.address_1
+    form.address_2 = user.address_2
+    form.city = user.city
+    form.state = user.state
+    form.country = user.country
+    form.zipcode = user.zipcode
 };
 
 const update = () => {
@@ -93,13 +94,13 @@ defineExpose({ edit: (user) => edit(user) });
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit_mode ? update() : submit()">
             <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900">User Create</h2>
+                <h2 class="text-lg font-medium text-gray-900">User {{ edit_mode ? 'Edit' : 'Create' }}</h2>
                 <hr>
                 <div class="mt-6">
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label for="input21" class="form-label">Role</label>
-                            <select id="input21" class="form-select" v-model="form.role">
+                            <select id="input21" class="form-select" v-model="form.role" :disabled="edit_mode">
                                 <option value="">Choose...</option>
                                 <template v-for="role in roles" :key="role.id">
                                     <option :value="role.id">{{ role.name }}</option>

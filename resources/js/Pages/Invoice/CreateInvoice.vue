@@ -5,23 +5,25 @@ import InputError from "@/Components/InputError.vue";
 import { ref, watch } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
-import Address from "@/Pages/Invoice/Address.vue";
 import { onMounted } from "vue";
 import UserCreateEdit from "../User/CreateEdit.vue";
+import axios from 'axios';
 
 const props = defineProps({
     invoice: Object,
-    contact: Object,
     shippers: Array,
     consignees: Array,
     companies: Array,
     roles: Array,
-    edit_mode: Boolean,
+    edit_mode: Boolean
 });
 
 const invoice_modal = ref(false);
 const invoice = usePage().props.invoice;
 const edit_mode = usePage().props.edit_mode;
+
+var selected_shipper = "";
+var selected_consignee = "";
 
 const form = useForm({
     invoice_id: invoice?.id,
@@ -105,42 +107,20 @@ const getLineTotal = (index) => {
     getGrandTotal();
 };
 
-const fetchAddress = (type) => {
+const fetchShipper = (id) => {
+    axios.get(`/users/fetch/shipper/${id}`)
+        .then(({ data }) => {
+            selected_shipper = data.selected_shipper
+            console.log(selected_shipper);
+        });
+};
 
-    var address_id = 0;
-
-    if (type == 'shipper') {
-        address_id = form.shipper_id
-    }
-
-    if (type == 'consignee') {
-        address_id = form.consignee_id
-    }
-
-    const fetch_address_form = useForm({
-        id: address_id
-    });
-
-    fetch_address_form.post(route("user.fetch"), {
-        preserveScroll: true,
-        onSuccess: (response) => {
-            console.log(response);
-            var address = response.props.contact;
-            var concat_address = address.name + '\n' + address.address_1 + ', ' + address.address_2 + '\n' + address.city + ', ' + address.state + ', ' + address.country;
-
-            if (type == 'shipper') {
-                form.shipper_address = concat_address
-            }
-
-            if (type == 'consignee') {
-                form.consignee_address = concat_address
-            }
-        },
-        onError: (errors) => {
-            console.log(errors)
-        },
-        onFinish: () => { },
-    });
+const fetchConsignee = (id) => {
+    axios.get(`/users/fetch/consignee/${id}`)
+        .then(({ data }) => {
+            selected_consignee = data.selected_consignee
+            console.log(selected_consignee);
+        });
 };
 
 const create_edit_ref = ref(null);
@@ -163,6 +143,9 @@ onMounted(() => {
     if (edit_mode) {
         getGrandTotal();
     }
+
+    fetchShipper(form.shipper_id);
+    fetchConsignee(form.consignee_id);
 });
 </script>
 
@@ -226,9 +209,11 @@ onMounted(() => {
                                                     Number
                                                     <UserCreateEdit :roles="roles" ref="create_edit_ref">
                                                     </UserCreateEdit>
+                                                    <button type="button" @click="edit(selected_shipper)" title="Edit"
+                                                    clas="btn btn-primary"><i class="bx bx-edit"></i></button>
                                                 </label>
                                                 <select class="form-control" v-model="form.shipper_id"
-                                                    @change="fetchAddress('shipper')">
+                                                    @change="fetchShipper(form.shipper_id)">
                                                     <template v-for="shipper in shippers" :key="shipper.id">
                                                         <option :value="shipper.id">{{ shipper.id }} - {{
                                                             shipper.name }}
@@ -237,13 +222,11 @@ onMounted(() => {
                                                 </select>
                                                 <InputError :message="form.errors.shipper_id" />
                                             </div>
-                                            <div class="col-md-12">
-                                                <label for="input11" class="form-label">Name &
-                                                    Address </label>
-                                                <textarea class="form-control" v-model="form.shipper_address" rows="3"
-                                                    disabled></textarea>
-                                                <InputError :message="form.errors.shipper_address" />
-                                            </div>
+                                            <!-- <div class="col-md-12">
+                                                <div class="card">
+                                                    {{ selected_shipper }}
+                                                </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -255,9 +238,11 @@ onMounted(() => {
                                                 <label for="input13" class="form-label">Account
                                                     Number <UserCreateEdit :roles="roles" ref="create_edit_ref">
                                                     </UserCreateEdit>
+                                                    <button type="button" @click="edit(selected_consignee)" title="Edit"
+                                                    clas="btn btn-primary"><i class="bx bx-edit"></i></button>
                                                 </label>
                                                 <select class="form-control" v-model="form.consignee_id"
-                                                    @change="fetchAddress('consignee')">
+                                                    @change="fetchConsignee(form.consignee_id)">
                                                     <template v-for="consignee in consignees" :key="consignee.id">
                                                         <option :value="consignee.id">{{ consignee.id }} - {{
                                                             consignee.name }}
@@ -266,14 +251,11 @@ onMounted(() => {
                                                 </select>
                                                 <InputError :message="form.errors.consignee_id" />
                                             </div>
-                                            <div class=" col-md-12">
-                                                <label for="input13" class="form-label">Name &
-                                                    Address</label>
-                                                <textarea class="form-control" v-model="form.consignee_address" rows="3"
-                                                    disabled></textarea>
-                                                <InputError :message="form.errors.consignee_address" />
-                                            </div>
-
+                                            <!-- <div class="col-md-12">
+                                                <div class="card">
+                                                    {{ selected_consignee }}
+                                                </div>
+                                            </div> -->
                                         </div>
                                     </div>
 
