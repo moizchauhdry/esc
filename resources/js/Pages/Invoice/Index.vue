@@ -51,11 +51,12 @@ defineProps({
                             <table class="table">
                                 <thead class="table-light">
                                     <tr>
+                                        <th>SR #</th>
                                         <th>Invoice #</th>
                                         <th>Company</th>
                                         <th>Shipper</th>
                                         <th>Consignee</th>
-                                        <th>Status</th>
+                                        <th>Type/Status</th>
                                         <th>Total</th>
                                         <th>Date</th>
                                         <th>Actions</th>
@@ -67,9 +68,14 @@ defineProps({
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <!-- <div>
-                                                        <input class="form-check-input me-3" type="checkbox" value=""
+                                                        <input class="form-check-input me-3" type="checkbox" value="1"
                                                             aria-label="...">
                                                     </div> -->
+                                                    {{ ++index }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
                                                     <div class="ms-2">
                                                         <h6 class="mb-0 font-14">000{{ invoice.id }}</h6>
                                                     </div>
@@ -88,8 +94,12 @@ defineProps({
                                             </td>
                                             <td>
                                                 <div
-                                                    class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                                                    <i class='bx bxs-circle me-1'></i>Done
+                                                    class="badge text-primary bg-light-primary p-2 text-uppercase px-2 mx-1">
+                                                    <i class='bx bxs-circle me-1'></i>initial
+                                                </div>
+                                                <div
+                                                    class="badge text-warning bg-light-warning p-2 text-uppercase px-2">
+                                                    <i class='bx bxs-circle me-1'></i>open
                                                 </div>
                                             </td>
                                             <td>PKR {{ invoice.data.total }}</td>

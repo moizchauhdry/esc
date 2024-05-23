@@ -8,6 +8,9 @@ import DangerButton from "@/Components/DangerButton.vue";
 import { onMounted } from "vue";
 import UserCreateEdit from "../User/CreateEdit.vue";
 import axios from 'axios';
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import InputLabel from "@/Components/InputLabel.vue";
 
 const props = defineProps({
     invoice: Object,
@@ -177,31 +180,60 @@ onMounted(() => {
                     <form @submit.prevent="submit()">
                         <div class="card-body">
                             <div class="invoice overflow-auto">
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <h6>Company
-                                        </h6>
-                                        <hr>
-                                        <div class="row g-2">
-                                            <div class="col-md-12">
-                                                <label for="input13" class="form-label">Account
-                                                    Number</label>
-                                                <select class="form-control" v-model="form.company_id"
-                                                    @change="fetchAddress('company')">
-                                                    <template v-for="company in companies" :key="company.id">
-                                                        <option :value="company.id">{{ company.id }} - {{
-                                                            company.name }}
-                                                        </option>
-                                                    </template>
-                                                </select>
-                                                <InputError :message="form.errors.company_id" />
-                                            </div>
 
-                                        </div>
+                                <div class="row">
+                                    <h6 class="invoice-heading">INVOICE TO</h6>
+                                    <hr>
+
+                                    <div class="col-md-2">
+                                        <InputLabel for="" value="Invoice Date" class="mb-1" />
+                                        <VueDatePicker v-model="form.date" :teleport="true" range></VueDatePicker>
+                                        <InputError :message="form.errors.date" />
                                     </div>
+
+                                    <div class="col-md-2">
+                                        <InputLabel for="" value="Company Account" class="mb-1" />
+                                        <select class="form-control" v-model="form.company_id"
+                                            @change="fetchAddress('company')">
+                                            <template v-for="company in companies" :key="company.id">
+                                                <option :value="company.id">{{ company.id }} - {{
+                                                    company.name }}
+                                                </option>
+                                            </template>
+                                        </select>
+                                        <InputError :message="form.errors.company_id" />
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <InputLabel for="" value="MAWB No" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.mawb_no">
+                                        <InputError :message="form.errors.mawb_no" />
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <InputLabel for="" value="Carrier" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.carrier">
+                                        <InputError :message="form.errors.carrier" />
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <InputLabel for="" value="Port of Departure" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.sender">
+                                        <InputError :message="form.errors.sender" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <InputLabel for="" value="Port of Landing" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.destination">
+                                        <InputError :message="form.errors.destination" />
+                                    </div>
+                                </div>
+
+                                <div class="my-3"></div>
+
+                                <div class="row">
+
                                     <div class="col-md-4">
-                                        <h6>Shipper
-                                        </h6>
+                                        <h6 class="invoice-heading">SHIPPER</h6>
                                         <hr>
                                         <div class="row g-2">
                                             <div class="col-md-12">
@@ -210,7 +242,7 @@ onMounted(() => {
                                                     <UserCreateEdit :roles="roles" ref="create_edit_ref">
                                                     </UserCreateEdit>
                                                     <button type="button" @click="edit(selected_shipper)" title="Edit"
-                                                    clas="btn btn-primary"><i class="bx bx-edit"></i></button>
+                                                        clas="btn btn-primary"><i class="bx bx-edit"></i></button>
                                                 </label>
                                                 <select class="form-control" v-model="form.shipper_id"
                                                     @change="fetchShipper(form.shipper_id)">
@@ -230,8 +262,7 @@ onMounted(() => {
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <h6>Consignee
-                                        </h6>
+                                        <h6 class="invoice-heading">CONSIGNEE</h6>
                                         <hr>
                                         <div class="row g-2">
                                             <div class="col-md-12">
@@ -239,7 +270,7 @@ onMounted(() => {
                                                     Number <UserCreateEdit :roles="roles" ref="create_edit_ref">
                                                     </UserCreateEdit>
                                                     <button type="button" @click="edit(selected_consignee)" title="Edit"
-                                                    clas="btn btn-primary"><i class="bx bx-edit"></i></button>
+                                                        clas="btn btn-primary"><i class="bx bx-edit"></i></button>
                                                 </label>
                                                 <select class="form-control" v-model="form.consignee_id"
                                                     @change="fetchConsignee(form.consignee_id)">
@@ -261,50 +292,35 @@ onMounted(() => {
 
                                 </div>
 
-                                <div class="row g-2 mb-3">
-                                    <h6>Invoice</h6>
+                                <div class="my-3"></div>
+
+                                <div class="row g-2">
+                                    <h6 class="invoice-heading">SHIPMENT DETAIL</h6>
                                     <hr>
-                                    <div class="col-md-3">
-                                        <label for="input13" class="form-label">Carrier</label>
-                                        <input type="text" class="form-control" v-model="form.carrier">
-                                        <InputError :message="form.errors.carrier" />
+
+                                    <div class="col-md-8">
+                                        <InputLabel for="" value="Commodity" class="mb-1" />
+                                        <input type="text" class="form-control" v-model="form.commodity">
+                                        <InputError :message="form.errors.commodity" />
                                     </div>
 
-                                    <div class="col-md-3">
-                                        <label for="input13" class="form-label">MAWB No</label>
-                                        <input type="text" class="form-control" v-model="form.mawb_no">
-                                        <InputError :message="form.errors.mawb_no" />
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="input13" class="form-label">Port of Departure</label>
-                                        <input type="text" class="form-control" v-model="form.sender">
-                                        <InputError :message="form.errors.sender" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="input13" class="form-label">Port of Landing</label>
-                                        <input type="text" class="form-control" v-model="form.destination">
-                                        <InputError :message="form.errors.destination" />
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="input13" class="form-label">Quantity</label>
+                                    <div class="col-md-1">
+                                        <InputLabel for="" value="Quantity" class="mb-1" />
                                         <input type="text" class="form-control" v-model="form.quantity">
                                         <InputError :message="form.errors.quantity" />
                                     </div>
 
-                                    <div class="col-md-3">
-                                        <label for="input13" class="form-label">Weight</label>
+                                    <div class="col-md-1">
+                                        <InputLabel for="" value="Weight" class="mb-1" />
                                         <input type="text" class="form-control" v-model="form.weight">
                                         <InputError :message="form.errors.weight" />
                                     </div>
-
-                                    <div class="col-md-3">
-                                        <label for="input13" class="form-label">Commodity</label>
-                                        <input type="text" class="form-control" v-model="form.commodity">
-                                        <InputError :message="form.errors.commodity" />
-                                    </div>
                                 </div>
+
+                                <div class="my-3"></div>
+
+                                <h6 class="invoice-heading">PARTICULARS</h6>
+                                <hr>
 
                                 <table>
                                     <thead>
@@ -417,5 +433,9 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input:disabled {
     cursor: not-allowed;
+}
+
+.invoice-heading {
+    font-size: 14px
 }
 </style>
