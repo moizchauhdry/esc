@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('role.index')->middleware('permission:role-list');
         Route::post('/create', [RoleController::class, 'create'])->name('role.create')->middleware('permission:role-create');
         Route::post('/update', [RoleController::class, 'update'])->name('role.update')->middleware('permission:role-update');
+    });
+
+    Route::prefix('shipments')->group(function () {
+        Route::get('/', [ShipmentController::class, 'index'])->name('shipment.index');
+        Route::get('/create', [ShipmentController::class, 'create'])->name('shipment.create');
+        Route::post('/store', [ShipmentController::class, 'store'])->name('shipment.store');
+        Route::get('/edit/{id}', [ShipmentController::class, 'edit'])->name('shipment.edit');
+        Route::post('/update', [ShipmentController::class, 'update'])->name('shipment.update');
+        Route::get('/print/{id}', [ShipmentController::class, 'print'])->name('shipment.print');
     });
 
     Route::prefix('invoices')->group(function () {

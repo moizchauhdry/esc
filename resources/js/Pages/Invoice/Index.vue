@@ -5,7 +5,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     invoices: Object,
-    contact: Object
+    contact: Object,
+    page_type: String,
 });
 
 </script>
@@ -52,13 +53,19 @@ defineProps({
                                 <thead class="table-light">
                                     <tr>
                                         <th>SR #</th>
-                                        <th>Invoice #</th>
+                                        
+                                        <th>AWB #</th>
                                         <th>Company</th>
                                         <th>Shipper</th>
                                         <th>Consignee</th>
+
+                                        <th v-if="page_type == 'shipment'">Departure</th>
+                                        <th v-if="page_type == 'shipment'">Landing</th>
+
+                                        <th v-if="page_type == 'invoice'">Total</th>
+                                        <th v-if="page_type == 'invoice'">Invoice Date</th>
+                                        
                                         <th>Type/Status</th>
-                                        <th>Total</th>
-                                        <th>Date</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -67,31 +74,39 @@ defineProps({
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <!-- <div>
+                                                    <div>
                                                         <input class="form-check-input me-3" type="checkbox" value="1"
                                                             aria-label="...">
-                                                    </div> -->
+                                                    </div>
                                                     {{ ++index }}
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="ms-2">
-                                                        <h6 class="mb-0 font-14">000{{ invoice.id }}</h6>
-                                                    </div>
-                                                </div>
+                                                <b>AWB #:</b> {{ invoice.mawb_no }} <br>
+                                                <b>Shipment #:</b> {{ invoice.id }}
                                             </td>
+                                            <td>{{ invoice.company_name }}</td>
                                             <td>
-                                                {{ invoice.company_name }}
-                                            </td>
-                                            <td>
-                                                <b>Account #:</b> {{ invoice.data.shipper_id }} <br>
+                                                <b>Account #:</b> {{ invoice.shipper_id }} <br>
                                                 <b>Name:</b> {{ invoice.consignee_name }} <br>
                                             </td>
                                             <td>
-                                                <b>Account #:</b> {{ invoice.data.consignee_id }} <br>
+                                                <b>Account #:</b> {{ invoice.consignee_id }} <br>
                                                 <b>Name:</b> {{ invoice.consignee_name }} <br>
                                             </td>
+                                            
+                                            <td v-if="page_type == 'shipment'">
+                                                <b>Port:</b> {{ invoice.sender }} <br>
+                                                <b>Date:</b> {{ invoice.departure_at }}
+                                            </td>
+                                            <td v-if="page_type == 'shipment'">
+                                                <b>Port:</b> {{ invoice.destination }} <br>
+                                                <b>Date:</b> {{ invoice.landing_at }}
+                                            </td>
+
+                                            <td v-if="page_type == 'invoice'">PKR {{ invoice.total }}</td>
+                                            <td v-if="page_type == 'invoice'">{{ invoice.invoice_at }}</td>
+
                                             <td>
                                                 <div
                                                     class="badge text-primary bg-light-primary p-2 text-uppercase px-2 mx-1">
@@ -102,8 +117,7 @@ defineProps({
                                                     <i class='bx bxs-circle me-1'></i>open
                                                 </div>
                                             </td>
-                                            <td>PKR {{ invoice.data.total }}</td>
-                                            <td>{{ invoice.created_at }}</td>
+
                                             <td>
                                                 <div class="d-flex order-actions">
 
@@ -114,11 +128,16 @@ defineProps({
                                                     <a href="#" title="Detail" class="ms-1"><i
                                                             class='bx bxs-collection'></i></a>
 
-                                                    <a :href="route('invoice.print', invoice.id)" title="Print"
-                                                        class="ms-1" target="_blank"><i class='bx bxs-printer'></i></a>
+                                                    <template v-if="page_type == 'invoice'">
+                                                        <a :href="route('invoice.print', invoice.id)" title="Print"
+                                                            class="ms-1" target="_blank"><i
+                                                                class='bx bxs-printer'></i></a>
+                                                    </template>
 
-                                                    <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                    <template  v-if="page_type == 'shipment'">
+                                                        <a href="#" title="Delete" class="ms-1 text-danger"><i
                                                             class='bx bxs-trash'></i></a>
+                                                    </template>
                                                 </div>
                                             </td>
                                         </tr>

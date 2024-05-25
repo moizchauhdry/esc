@@ -28,6 +28,13 @@ class PermissionSeeder extends Seeder
             'user-create',
             'user-update',
             'user-delete',
+            
+            // Shipment
+            'shipment-list',
+            'shipment-create',
+            'shipment-update',
+            'shipment-delete',
+            'shipment-print',
 
             // Invoice
             'invoice-list',

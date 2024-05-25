@@ -24,16 +24,19 @@ class InvoiceController extends Controller
             ->withQueryString()
             ->through(fn ($invoice) => [
                 'id' => $invoice->id,
-                'data' => $invoice,
-                'items' => $invoice->items,
-                'created_at' => $invoice->created_at->format('F d, Y'),
+                'mawb_no' => $invoice->mawb_no,
                 'company_name' => $invoice->company->name,
+                'shipper_id' => $invoice->shipper->id,
                 'shipper_name' => $invoice->shipper->name,
+                'consignee_id' => $invoice->consignee->id,
                 'consignee_name' => $invoice->consignee->name,
+                'total' => $invoice->total,
+                'invoice_at' => $invoice->invoice_at,
             ]);
 
         return Inertia::render('Invoice/Index', [
-            'invoices' => $invoices
+            'invoices' => $invoices,
+            'page_type' => "invoice",
         ]);
     }
 
@@ -55,7 +58,7 @@ class InvoiceController extends Controller
             'landing_at' => 'required',
             'sender' => 'required|string|max:50',
             'destination' => 'required|string|max:50',
-            
+
             'items' => 'required|array',
             'items.*.particular' => 'required|max:150',
             'items.*.amount' => 'required|numeric|gte:0',
@@ -66,7 +69,7 @@ class InvoiceController extends Controller
             'required' => 'The field is required.',
         ];
 
-        $request->validate($rules,$messages);
+        $request->validate($rules, $messages);
 
         $data = [
             'invoice_at' => Carbon::parse($request->invoice_at)->format("Y-m-d h:i:s"),
@@ -79,7 +82,7 @@ class InvoiceController extends Controller
             'quantity' => $request->quantity,
             'weight' => $request->weight,
             'commodity' => $request->commodity,
-            
+
             'departure_at' => Carbon::parse($request->departure_at)->format("Y-m-d h:i:s"),
             'landing_at' => Carbon::parse($request->landing_at)->format("Y-m-d h:i:s"),
             'sender' => $request->sender,

@@ -34,7 +34,7 @@ const permission = usePage().props.can;
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bx bx-category"></i>
                     </div>
-                    <div class="menu-title">User Management</div>
+                    <div class="menu-title">Manage Users</div>
                 </a>
                 <ul>
                     <li>
@@ -49,9 +49,12 @@ const permission = usePage().props.can;
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bx bx-printer"></i>
                     </div>
-                    <div class="menu-title">Invoice Management</div>
+                    <div class="menu-title">Manage Shipments</div>
                 </a>
                 <ul>
+                    <li>
+                        <Link :href="route('shipment.index')"><i class='bx bx-radio-circle'></i>Shipments</Link>
+                    </li>
                     <li v-if="permission.invoice_list">
                         <Link :href="route('invoice.index')"><i class='bx bx-radio-circle'></i>Invoices</Link>
                     </li>
