@@ -110,11 +110,16 @@ const closeModal = () => {
                                                         <InputError :message="form.errors.name" />
                                                     </div>
                                                     <div class="col-md-12">
-                                                        <label for="input13" class="form-label">Role Name</label>
+                                                        <label for="input13" class="form-label">Permissions</label>
 
-                                                        <template v-for="permission in permissions"
+                                                        <div class="card p-3">
+                                                            <template v-for="permission,index in permissions"
                                                             :key="permission.id">
-                                                            <div class="form-check">
+                                                            <div v-if="permission.level == 1">
+                                                                <hr v-if="index !=0">
+                                                                <h6 class="text-uppercase">{{ permission.name }}</h6>
+                                                            </div>
+                                                            <div class="form-check text-capitalize">
                                                                 <input class="form-check-input" type="checkbox"
                                                                     :value="permission.id" id="flexCheckDefault"
                                                                     v-model="form.permissions">
@@ -123,6 +128,7 @@ const closeModal = () => {
                                                                 </label>
                                                             </div>
                                                         </template>
+                                                        </div>
 
                                                         <InputError :message="form.errors.permissions" />
                                                     </div>
