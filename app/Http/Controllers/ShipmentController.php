@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class ShipmentController extends Controller
 {
@@ -32,5 +37,133 @@ class ShipmentController extends Controller
             'invoices' => $invoices,
             'page_type' => "shipment",
         ]);
+    }
+
+    public function save($request)
+    {
+        $rules = [
+            'invoice_at' => 'nullable',
+            'company_id' => 'required',
+            'shipper_id' => 'required',
+            'consignee_id' => 'required',
+
+            'carrier' => 'required|string|max:50',
+            'mawb_no' => 'required|string|max:50',
+            'quantity' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'afc_rate' => 'nullable|numeric',
+            'commodity' => 'required|string|max:50',
+
+            'departure_at' => 'required',
+            'landing_at' => 'required',
+            'sender' => 'required|string|max:50',
+            'destination' => 'required|string|max:50',
+
+            'items' => 'required|array',
+            'items.*.particular' => 'required|max:150',
+            'items.*.amount' => 'required|numeric|gte:0',
+            'items.*.qty' => 'required|numeric|gte:1',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $data = [
+            'invoice_at' => Carbon::parse($request->invoice_at)->format("Y-m-d h:i:s"),
+            'company_id' => $request->company_id,
+            'shipper_id' => $request->shipper_id,
+            'consignee_id' => $request->consignee_id,
+
+            'carrier' => $request->carrier,
+            'mawb_no' => $request->mawb_no,
+            'quantity' => $request->quantity,
+            'weight' => $request->weight,
+            'commodity' => $request->commodity,
+
+            'departure_at' => Carbon::parse($request->departure_at)->format("Y-m-d h:i:s"),
+            'landing_at' => Carbon::parse($request->landing_at)->format("Y-m-d h:i:s"),
+            'sender' => $request->sender,
+            'destination' => $request->destination,
+            'created_by' => auth()->id(),
+        ];
+
+        if ($request->invoice_id) {
+            $invoice = Invoice::find($request->invoice_id);
+            $invoice->update($data);
+        } else {
+            $invoice = Invoice::create($data);
+        }
+
+        InvoiceItem::where('invoice_id', $invoice->id)->delete();
+        foreach ($request->items as $key => $item) {
+            InvoiceItem::create([
+                'invoice_id' => $invoice->id,
+                'particular' => $item['particular'],
+                'amount' => $item['amount'],
+                'qty' => $item['qty'],
+                'total' =>  $item['amount'] * $item['qty'],
+            ]);
+        }
+
+        $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('total');
+        $invoice->update([
+            'subtotal' => $invoice_total,
+            'total' => $invoice_total,
+        ]);
+    }
+
+    public function create()
+    {
+        $shippers = User::role('shipper')->get();
+        $consignees = User::role('consignee')->get();
+        $companies = User::role('company')->get();
+        $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
+
+        return Inertia::render('Invoice/CreateInvoice', [
+            'shippers' => $shippers,
+            'consignees' => $consignees,
+            'companies' => $companies,
+            'roles' => $roles,
+            'selected_shipper' => session('selected_shipper'),
+            'selected_consignee' => session('selected_consignee'),
+            'page_type' => "shipment",
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $this->save($request);
+        return Redirect::route('shipment.index')->with('success', 'Shipment created.');
+    }
+
+    public function edit($id)
+    {
+        $invoice = Invoice::with(['items'])->find($id);
+
+        $shippers = User::role('shipper')->get();
+        $consignees = User::role('consignee')->get();
+        $companies = User::role('company')->get();
+        $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
+
+        return Inertia::render('Invoice/CreateInvoice', [
+            'invoice' => $invoice,
+            'shippers' => $shippers,
+            'consignees' => $consignees,
+            'companies' => $companies,
+            'roles' => $roles,
+            'selected_shipper' => session('selected_shipper'),
+            'selected_consignee' => session('selected_consignee'),
+            'edit_mode' => true,
+            'page_type' => "shipment",
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $this->save($request);
+        return Redirect::route('shipment.index')->with('success', 'Shipment updated.');
     }
 }

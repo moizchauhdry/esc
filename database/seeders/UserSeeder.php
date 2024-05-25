@@ -27,12 +27,26 @@ class UserSeeder extends Seeder
         Role::updateOrCreate(['name' => 'Manager']);
         Role::updateOrCreate(['name' => 'Employee']);
         
-        $admin = User::updateOrCreate(['email' => 'moizchauhdry@gmail.com',], [
-            'name' => 'Moiz Chauhdry',
-            'email' => 'moizchauhdry@gmail.com',
+        $admin = User::updateOrCreate(['email' => 'admin@gmail.com',], [
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
         ]);
         $admin->assignRole('admin');
+
+        $employee = User::updateOrCreate(['email' => 'employee@gmail.com',], [
+            'name' => 'Employee',
+            'email' => 'employee@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $employee->assignRole('employee');
+
+        $manager = User::updateOrCreate(['email' => 'manager@gmail.com',], [
+            'name' => 'Manager',
+            'email' => 'manager@gmail.com',
+            'password' => Hash::make('12345678'),
+        ]);
+        $manager->assignRole('manager');
 
         $company = User::updateOrCreate(['email' => 'company@gmail.com',], [
             'name' => 'Company',

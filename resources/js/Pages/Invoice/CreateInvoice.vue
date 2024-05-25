@@ -18,12 +18,14 @@ const props = defineProps({
     consignees: Array,
     companies: Array,
     roles: Array,
-    edit_mode: Boolean
+    edit_mode: Boolean,
+    page_type: String,
 });
 
 const invoice_modal = ref(false);
 const invoice = usePage().props.invoice;
 const edit_mode = usePage().props.edit_mode;
+const page_type = usePage().props.page_type;
 
 var selected_shipper = "";
 var selected_consignee = "";
@@ -40,6 +42,7 @@ const form = useForm({
     commodity: invoice?.commodity,
     quantity: invoice?.quantity,
     weight: invoice?.weight,
+    afc_rate: invoice?.afc_rate,
 
     departure_at: invoice?.departure_at,
     landing_at: invoice?.landing_at,
@@ -62,7 +65,28 @@ const addItem = () => {
 };
 
 const submit = () => {
-    if (edit_mode) {
+    console.log(page_type)
+
+    if (page_type == 'shipment') {
+        
+        if (edit_mode) {
+            form.post(route("shipment.update"), {
+                preserveScroll: true,
+                onSuccess: () => closeModal(),
+                onError: () => error(),
+                onFinish: () => { },
+            });
+        } else {
+            form.post(route("shipment.store"), {
+                preserveScroll: true,
+                onSuccess: () => closeModal(),
+                onError: () => error(),
+                onFinish: () => { },
+            });
+        }
+    }
+
+    else if (page_type == 'invoice') {
         form.post(route("invoice.update"), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
@@ -164,7 +188,9 @@ onMounted(() => {
                                 <li class="breadcrumb-item"><a href="javascript:;">
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">{{edit_mode ? 'Create' : 'Edit'}}</li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ edit_mode ? 'Create' : 'Edit'
+                                    }}
+                                </li>
                             </ol>
                         </nav>
                     </div>
@@ -322,8 +348,8 @@ onMounted(() => {
                                     </div>
                                     <div class="col-md-1">
                                         <InputLabel for="" value="AFC Rate/KG" class="mb-1" />
-                                        <input type="text" class="form-control" v-model="form.weight">
-                                        <InputError :message="form.errors.weight" />
+                                        <input type="text" class="form-control" v-model="form.afc_rate">
+                                        <InputError :message="form.errors.afc_rate" />
                                     </div>
                                 </div>
 
@@ -400,11 +426,22 @@ onMounted(() => {
                                     {{ edit_mode ? "Update" : "Save" }}
                                 </PrimaryButton>
 
-                                <Link :href="route('invoice.index')">
-                                <DangerButton :disabled="form.processing">
-                                    Cancel
-                                </DangerButton>
-                                </Link>
+                                <template v-if="page_type == 'shipment'">
+                                    <Link :href="route('shipment.index')">
+                                    <DangerButton :disabled="form.processing">
+                                        Cancel
+                                    </DangerButton>
+                                    </Link>
+                                </template>
+
+                                <template v-if="page_type == 'invoice'">
+                                    <Link :href="route('invoice.index')">
+                                    <DangerButton :disabled="form.processing">
+                                        Cancel
+                                    </DangerButton>
+                                    </Link>
+                                </template>
+                                
                             </div>
                         </div>
                     </form>

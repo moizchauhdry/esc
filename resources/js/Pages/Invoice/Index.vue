@@ -27,14 +27,15 @@ defineProps({
                                 <li class="breadcrumb-item"><a href="javascript:;">
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page"><span class="text-capitalize">{{page_type}}</span> List</li>
+                                <li class="breadcrumb-item active" aria-current="page"><span
+                                        class="text-capitalize">{{ page_type }}</span> List</li>
                             </ol>
                         </nav>
                     </div>
 
                     <div class="ms-auto" v-if="page_type == 'shipment'">
-                        <Link :href="route('invoice.create')">
-                        <PrimaryButton>Add {{page_type}}</PrimaryButton>
+                        <Link :href="route('shipment.create')">
+                        <PrimaryButton>Add {{ page_type }}</PrimaryButton>
                         </Link>
                     </div>
                 </div>
@@ -53,7 +54,7 @@ defineProps({
                                 <thead class="table-light">
                                     <tr>
                                         <th>SR #</th>
-                                        
+
                                         <th>AWB #</th>
                                         <th>Company</th>
                                         <th>Shipper</th>
@@ -64,7 +65,7 @@ defineProps({
 
                                         <th v-if="page_type == 'invoice'">Total</th>
                                         <th v-if="page_type == 'invoice'">Invoice Date</th>
-                                        
+
                                         <th>Type/Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -94,7 +95,7 @@ defineProps({
                                                 <b>Account #:</b> {{ invoice.consignee_id }} <br>
                                                 <b>Name:</b> {{ invoice.consignee_name }} <br>
                                             </td>
-                                            
+
                                             <td v-if="page_type == 'shipment'">
                                                 <b>Port:</b> {{ invoice.sender }} <br>
                                                 <b>Date:</b> {{ invoice.departure_at }}
@@ -110,7 +111,7 @@ defineProps({
                                             <td>
                                                 <div
                                                     class="badge text-primary bg-light-primary p-2 text-uppercase px-2 mx-1">
-                                                    <i class='bx bxs-circle me-1'></i>initial
+                                                    <i class='bx bxs-circle me-1'></i>{{page_type}}
                                                 </div>
                                                 <div
                                                     class="badge text-warning bg-light-warning p-2 text-uppercase px-2">
@@ -121,9 +122,17 @@ defineProps({
                                             <td>
                                                 <div class="d-flex order-actions">
 
-                                                    <Link :href="route('invoice.edit', invoice.id)">
-                                                    <i class='bx bxs-edit'></i>
-                                                    </Link>
+                                                    <template v-if="page_type == 'shipment'">
+                                                        <Link :href="route('shipment.edit', invoice.id)">
+                                                        <i class='bx bxs-edit'></i>
+                                                        </Link>
+                                                    </template>
+
+                                                    <template v-if="page_type == 'invoice'">
+                                                        <Link :href="route('invoice.edit', invoice.id)">
+                                                        <i class='bx bxs-edit'></i>
+                                                        </Link>
+                                                    </template>
 
                                                     <a href="#" title="Detail" class="ms-1"><i
                                                             class='bx bxs-collection'></i></a>
@@ -134,9 +143,9 @@ defineProps({
                                                                 class='bx bxs-printer'></i></a>
                                                     </template>
 
-                                                    <template  v-if="page_type == 'shipment'">
+                                                    <template v-if="page_type == 'shipment'">
                                                         <a href="#" title="Delete" class="ms-1 text-danger"><i
-                                                            class='bx bxs-trash'></i></a>
+                                                                class='bx bxs-trash'></i></a>
                                                     </template>
                                                 </div>
                                             </td>

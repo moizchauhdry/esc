@@ -52,6 +52,7 @@ class InvoiceController extends Controller
             'mawb_no' => 'required|string|max:50',
             'quantity' => 'required|numeric',
             'weight' => 'required|numeric',
+            'afc_rate' => 'nullable|numeric',
             'commodity' => 'required|string|max:50',
 
             'departure_at' => 'required',
@@ -129,6 +130,7 @@ class InvoiceController extends Controller
             'roles' => $roles,
             'selected_shipper' => session('selected_shipper'),
             'selected_consignee' => session('selected_consignee'),
+            'page_type' => "invoice",
         ]);
     }
 
@@ -156,14 +158,14 @@ class InvoiceController extends Controller
             'selected_shipper' => session('selected_shipper'),
             'selected_consignee' => session('selected_consignee'),
             'edit_mode' => true,
+            'page_type' => "invoice",
         ]);
     }
 
     public function update(Request $request)
     {
-        // dd($request->all());
         $this->save($request);
-        return Redirect::back()->with('success', 'Invoice updated.');
+        return Redirect::route('invoice.index')->with('success', 'Invoice updated.');
     }
 
     public function print($id)

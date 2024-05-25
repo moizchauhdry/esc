@@ -20,27 +20,33 @@ class PermissionSeeder extends Seeder
 
             // Role
             ['name' => 'role', 'level' => 1],
-            ['name' => 'role-list', 'level' => 2],
-            ['name' => 'role-create', 'level' => 2],
-            ['name' => 'role-update', 'level' => 2],
+            ['name' => 'role_list', 'level' => 2],
+            ['name' => 'role_create', 'level' => 2],
+            ['name' => 'role_update', 'level' => 2],
 
             // User
             ['name' => 'user', 'level' => 1],
-            ['name' => 'user-list', 'level' => 2],
-            ['name' => 'user-create', 'level' => 2],
-            ['name' => 'user-update', 'level' => 2],
+            ['name' => 'user_list', 'level' => 2],
+            ['name' => 'user_create', 'level' => 2],
+            ['name' => 'user_update', 'level' => 2],
 
             // Shipment
             ['name' => 'shipment', 'level' => 1],
-            ['name' => 'shipment-list', 'level' => 2],
-            ['name' => 'shipment-create', 'level' => 2],
-            ['name' => 'shipment-update', 'level' => 2],
+            ['name' => 'shipment_list', 'level' => 2],
+            ['name' => 'shipment_create', 'level' => 2],
+            ['name' => 'shipment_update', 'level' => 2],
 
             // Invoices
             ['name' => 'invoice', 'level' => 1],
-            ['name' => 'invoice-list', 'level' => 2],
-            ['name' => 'invoice-update', 'level' => 2],
-            ['name' => 'invoice-print', 'level' => 2]
+            ['name' => 'invoice_list', 'level' => 2],
+            ['name' => 'invoice_create', 'level' => 2],
+            ['name' => 'invoice_update', 'level' => 2],
+            ['name' => 'invoice_print', 'level' => 2],
+
+            
+            // Ledger
+            ['name' => 'ledger', 'level' => 1],
+            ['name' => 'ledger_list', 'level' => 2],
 
         ];
 
