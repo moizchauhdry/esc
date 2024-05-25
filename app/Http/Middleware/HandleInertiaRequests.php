@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Spatie\Permission\Models\Permission;
 use Tightenco\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
@@ -33,36 +34,19 @@ class HandleInertiaRequests extends Middleware
         $user = auth()->user();
 
         $data = [];
-        
         if ($user) {
+
+            $can = [];
+            $permissions = Permission::get();
+            foreach ($permissions as $permission) {
+                $can[$permission->name] = $user->can($permission->name);
+            }
+
             $data = [
                 'auth' => [
                     'user' => $request->user(),
                 ],
-                'can' => [
-                    'dashboard' => $user->can('dashboard'),
-
-                    'role_list' => $user->can('role_list'),
-                    'role_create' => $user->can('role_create'),
-                    'role_update' => $user->can('role_update'),
-                    
-                    'user_list' => $user->can('user_list'),
-                    'user_create' => $user->can('user_create'),
-                    'user_update' => $user->can('user_update'),
-                    'user_delete' => $user->can('user_delete'),
-                    
-                    'shipment_list' => $user->can('shipment_list'),
-                    'shipment_create' => $user->can('shipment_create'),
-                    'shipment_update' => $user->can('shipment_update'),
-                    'shipment_delete' => $user->can('shipment_delete'),
-                    
-                    'dashboard' => $user->can('dashboard'),
-                    'dashboard' => $user->can('dashboard'),
-                    'dashboard' => $user->can('dashboard'),
-                    'dashboard' => $user->can('dashboard'),
-                    'dashboard' => $user->can('dashboard'),
-                    'dashboard' => $user->can('dashboard'),
-                ],
+                'can' => $can,
                 'ziggy' => function () use ($request) {
                     return array_merge((new Ziggy)->toArray(), [
                         'location' => $request->url(),

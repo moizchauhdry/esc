@@ -52,17 +52,14 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('shipments')->group(function () {
         Route::get('/', [ShipmentController::class, 'index'])->name('shipment.index');
-        Route::get('/create', [ShipmentController::class, 'create'])->name('shipment.create');
-        Route::post('/store', [ShipmentController::class, 'store'])->name('shipment.store');
-        Route::get('/edit/{id}', [ShipmentController::class, 'edit'])->name('shipment.edit');
-        Route::post('/update', [ShipmentController::class, 'update'])->name('shipment.update');
-        Route::get('/print/{id}', [ShipmentController::class, 'print'])->name('shipment.print');
+        Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:shipment-create');
+        Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store')->middleware('permission:shipment-create');
+        Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:shipment-update');
+        Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:shipment-update');
     });
 
     Route::prefix('invoices')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice-list');
-        Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice-create');
-        Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store')->middleware('permission:invoice-create');
         Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:invoice-update');
         Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice-update');
         Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice-print');

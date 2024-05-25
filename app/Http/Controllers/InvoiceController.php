@@ -161,8 +161,9 @@ class InvoiceController extends Controller
 
     public function update(Request $request)
     {
+        // dd($request->all());
         $this->save($request);
-        return Redirect::route('invoice.index')->with('success', 'Invoice updated.');
+        return Redirect::back()->with('success', 'Invoice updated.');
     }
 
     public function print($id)
