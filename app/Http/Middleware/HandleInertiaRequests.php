@@ -40,7 +40,28 @@ class HandleInertiaRequests extends Middleware
                     'user' => $request->user(),
                 ],
                 'can' => [
-                    'invoice_list' => $user->can('invoice-list'),
+                    'dashboard' => $user->can('dashboard'),
+
+                    'role_list' => $user->can('role_list'),
+                    'role_create' => $user->can('role_create'),
+                    'role_update' => $user->can('role_update'),
+                    
+                    'user_list' => $user->can('user_list'),
+                    'user_create' => $user->can('user_create'),
+                    'user_update' => $user->can('user_update'),
+                    'user_delete' => $user->can('user_delete'),
+                    
+                    'shipment_list' => $user->can('shipment_list'),
+                    'shipment_create' => $user->can('shipment_create'),
+                    'shipment_update' => $user->can('shipment_update'),
+                    'shipment_delete' => $user->can('shipment_delete'),
+                    
+                    'dashboard' => $user->can('dashboard'),
+                    'dashboard' => $user->can('dashboard'),
+                    'dashboard' => $user->can('dashboard'),
+                    'dashboard' => $user->can('dashboard'),
+                    'dashboard' => $user->can('dashboard'),
+                    'dashboard' => $user->can('dashboard'),
                 ],
                 'ziggy' => function () use ($request) {
                     return array_merge((new Ziggy)->toArray(), [

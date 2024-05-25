@@ -14,38 +14,101 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-
-            // Basic
-            'dashboard',
-
-            // Role
-            'role-list',
-            'role-create',
-            'role-update',
-
-            // User
-            'user-list',
-            'user-create',
-            'user-update',
-            'user-delete',
-            
-            // Shipment
-            'shipment-list',
-            'shipment-create',
-            'shipment-update',
-            'shipment-delete',
-            'shipment-print',
-
-            // Invoice
-            'invoice-list',
-            'invoice-create',
-            'invoice-update',
-            'invoice-delete',
-            'invoice-print',
+            [
+                'name' =>  'dashboard',
+                'level' =>  1,
+            ],
+            [
+                'name' =>  'roles',
+                'level' =>  1,
+            ],
+            [
+                'name' =>  'role-list',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'role-create',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'role-update',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'users',
+                'level' =>  1,
+            ],
+            [
+                'name' =>  'user-list',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'user-create',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'user-update',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'user-delete',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'shipments',
+                'level' =>  1,
+            ],
+            [
+                'name' =>  'shipment-list',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'shipment-create',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'shipment-update',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'shipment-delete',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'shipment-print',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'invoices',
+                'level' =>  1,
+            ],
+            [
+                'name' =>  'invoice-list',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'invoice-create',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'invoice-update',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'invoice-delete',
+                'level' =>  2,
+            ],
+            [
+                'name' =>  'invoice-print',
+                'level' =>  2,
+            ],
         ];
 
         foreach ($permissions as $permission) {
-            Permission::updateOrCreate(['name' => $permission], ['name' => $permission]);
+            Permission::updateOrCreate(['name' => $permission], [
+                'name' => $permission['name'],
+                'level' => $permission['level'],
+            ]);
         }
     }
 }
