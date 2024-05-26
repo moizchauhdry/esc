@@ -9,6 +9,7 @@ defineProps({
     page_type: String,
 });
 
+const permission = usePage().props.can;
 </script>
 
 <template>
@@ -33,7 +34,7 @@ defineProps({
                         </nav>
                     </div>
 
-                    <div class="ms-auto" v-if="page_type == 'shipment'">
+                    <div class="ms-auto" v-if="page_type == 'shipment' && permission.shipment_create">
                         <Link :href="route('shipment.create')">
                         <PrimaryButton>Add {{ page_type }}</PrimaryButton>
                         </Link>
@@ -122,13 +123,13 @@ defineProps({
                                             <td>
                                                 <div class="d-flex order-actions">
 
-                                                    <template v-if="page_type == 'shipment'">
+                                                    <template v-if="page_type == 'shipment' && permission.shipment_update">
                                                         <Link :href="route('shipment.edit', invoice.id)">
                                                         <i class='bx bxs-edit'></i>
                                                         </Link>
                                                     </template>
 
-                                                    <template v-if="page_type == 'invoice'">
+                                                    <template v-if="page_type == 'invoice' && permission.invoice_update">
                                                         <Link :href="route('invoice.edit', invoice.id)">
                                                         <i class='bx bxs-edit'></i>
                                                         </Link>
@@ -137,16 +138,16 @@ defineProps({
                                                     <a href="#" title="Detail" class="ms-1"><i
                                                             class='bx bxs-collection'></i></a>
 
-                                                    <template v-if="page_type == 'invoice'">
+                                                    <template v-if="page_type == 'invoice' && permission.invoice_print">
                                                         <a :href="route('invoice.print', invoice.id)" title="Print"
                                                             class="ms-1" target="_blank"><i
                                                                 class='bx bxs-printer'></i></a>
                                                     </template>
 
-                                                    <template v-if="page_type == 'shipment'">
+                                                    <!-- <template v-if="page_type == 'shipment'">
                                                         <a href="#" title="Delete" class="ms-1 text-danger"><i
                                                                 class='bx bxs-trash'></i></a>
-                                                    </template>
+                                                    </template> -->
                                                 </div>
                                             </td>
                                         </tr>

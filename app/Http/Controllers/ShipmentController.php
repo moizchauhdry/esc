@@ -59,10 +59,10 @@ class ShipmentController extends Controller
             'sender' => 'required|string|max:50',
             'destination' => 'required|string|max:50',
 
-            'items' => 'required|array',
-            'items.*.particular' => 'required|max:150',
-            'items.*.amount' => 'required|numeric|gte:0',
-            'items.*.qty' => 'required|numeric|gte:1',
+            // 'items' => 'required|array',
+            // 'items.*.particular' => 'required|max:150',
+            // 'items.*.amount' => 'required|numeric|gte:0',
+            // 'items.*.qty' => 'required|numeric|gte:1',
         ];
 
         $messages = [
@@ -97,22 +97,22 @@ class ShipmentController extends Controller
             $invoice = Invoice::create($data);
         }
 
-        InvoiceItem::where('invoice_id', $invoice->id)->delete();
-        foreach ($request->items as $key => $item) {
-            InvoiceItem::create([
-                'invoice_id' => $invoice->id,
-                'particular' => $item['particular'],
-                'amount' => $item['amount'],
-                'qty' => $item['qty'],
-                'total' =>  $item['amount'] * $item['qty'],
-            ]);
-        }
+        // InvoiceItem::where('invoice_id', $invoice->id)->delete();
+        // foreach ($request->items as $key => $item) {
+        //     InvoiceItem::create([
+        //         'invoice_id' => $invoice->id,
+        //         'particular' => $item['particular'],
+        //         'amount' => $item['amount'],
+        //         'qty' => $item['qty'],
+        //         'total' =>  $item['amount'] * $item['qty'],
+        //     ]);
+        // }
 
-        $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('total');
-        $invoice->update([
-            'subtotal' => $invoice_total,
-            'total' => $invoice_total,
-        ]);
+        // $invoice_total = InvoiceItem::where('invoice_id', $invoice->id)->sum('total');
+        // $invoice->update([
+        //     'subtotal' => $invoice_total,
+        //     'total' => $invoice_total,
+        // ]);
     }
 
     public function create()

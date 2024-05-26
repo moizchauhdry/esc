@@ -68,7 +68,7 @@ const submit = () => {
     console.log(page_type)
 
     if (page_type == 'shipment') {
-        
+
         if (edit_mode) {
             form.post(route("shipment.update"), {
                 preserveScroll: true,
@@ -208,7 +208,7 @@ onMounted(() => {
                                     <h6 class="invoice-heading">INVOICE TO</h6>
                                     <hr>
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-2" v-if="page_type == 'invoice'">
                                         <InputLabel for="" value="Invoice Date" class="mb-1" />
                                         <VueDatePicker v-model="form.invoice_at" :teleport="true"></VueDatePicker>
                                         <InputError :message="form.errors.invoice_at" />
@@ -353,70 +353,73 @@ onMounted(() => {
                                     </div>
                                 </div>
 
-                                <div class="my-3"></div>
+                                <template v-if="page_type == 'invoice'">
+                                    <div class="my-3"></div>
 
-                                <h6 class="invoice-heading">PARTICULARS</h6>
-                                <hr>
+                                    <h6 class="invoice-heading">PARTICULARS</h6>
+                                    <hr>
 
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <button type="button" @click="addItem()"
-                                                    class="ms-1 text-sucess btn btn-success btn-sm"><i
-                                                        class='bx bx-plus'></i>Add
-                                                    Item</button>
-                                            </th>
-                                            <th class="text-left" colspan="3">PARTICULARS</th>
-                                            <th class="text-left">UNIT PRICE</th>
-                                            <th class="text-left">QUANTITY</th>
-                                            <th class="text-left">TOTAL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        <template v-for="(item, index) in form.items" :key="item.id">
+                                    <table>
+                                        <thead>
                                             <tr>
-                                                <td class="no">
-                                                    <span>
-                                                        Item #{{ index }}
-
-                                                        <button type="button" @click="removeItem(index)"
-                                                            class="ms-1 text-danger"><i
-                                                                class='bx bxs-trash'></i></button>
-                                                    </span>
-
-                                                </td>
-                                                <td class="text-left" colspan="3">
-                                                    <input type="text" class="form-control" v-model="item.particular">
-                                                </td>
-                                                <td class="text-left">
-                                                    <input type="number" class="form-control" v-model="item.amount"
-                                                        @keyup="getLineTotal(index)">
-                                                </td>
-                                                <td class="text-left">
-                                                    <input type="number" class="form-control" v-model="item.qty"
-                                                        @keyup="getLineTotal(index)">
-                                                </td>
-
-                                                <td class="total">PKR {{ item.total }}</td>
+                                                <th>
+                                                    <button type="button" @click="addItem()"
+                                                        class="ms-1 text-sucess btn btn-success btn-sm"><i
+                                                            class='bx bx-plus'></i>Add
+                                                        Item</button>
+                                                </th>
+                                                <th class="text-left" colspan="3">PARTICULARS</th>
+                                                <th class="text-left">UNIT PRICE</th>
+                                                <th class="text-left">QUANTITY</th>
+                                                <th class="text-left">TOTAL</th>
                                             </tr>
-                                        </template>
+                                        </thead>
+                                        <tbody>
 
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="4"></td>
-                                            <td colspan="2">SUBTOTAL</td>
-                                            <td>PKR {{ form.subtotal }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="4"></td>
-                                            <td colspan="2">GRAND TOTAL</td>
-                                            <td>PKR {{ form.total }}</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                            <template v-for="(item, index) in form.items" :key="item.id">
+                                                <tr>
+                                                    <td class="no">
+                                                        <span>
+                                                            Item #{{ index }}
+
+                                                            <button type="button" @click="removeItem(index)"
+                                                                class="ms-1 text-danger"><i
+                                                                    class='bx bxs-trash'></i></button>
+                                                        </span>
+
+                                                    </td>
+                                                    <td class="text-left" colspan="3">
+                                                        <input type="text" class="form-control"
+                                                            v-model="item.particular">
+                                                    </td>
+                                                    <td class="text-left">
+                                                        <input type="number" class="form-control" v-model="item.amount"
+                                                            @keyup="getLineTotal(index)">
+                                                    </td>
+                                                    <td class="text-left">
+                                                        <input type="number" class="form-control" v-model="item.qty"
+                                                            @keyup="getLineTotal(index)">
+                                                    </td>
+
+                                                    <td class="total">PKR {{ item.total }}</td>
+                                                </tr>
+                                            </template>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td colspan="2">SUBTOTAL</td>
+                                                <td>PKR {{ form.subtotal }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td colspan="2">GRAND TOTAL</td>
+                                                <td>PKR {{ form.total }}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </template>
                             </div>
                         </div>
 
@@ -441,7 +444,7 @@ onMounted(() => {
                                     </DangerButton>
                                     </Link>
                                 </template>
-                                
+
                             </div>
                         </div>
                     </form>
