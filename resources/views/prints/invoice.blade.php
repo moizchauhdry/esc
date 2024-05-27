@@ -231,7 +231,7 @@
                         {{$shipper->address_2}}
                     </p>
                     <p style="margin: 5px 0;">Phone: {{$shipper->phone}}</p>
-                    <p style="margin: 5px 0;">Email: {{$shipper->email}}</p>
+                    {{-- <p style="margin: 5px 0;">Email: {{$shipper->email}}</p> --}}
                 </div>
 
             </div>
@@ -244,7 +244,7 @@
                         {{$consignee->address_2}}
                     </p>
                     <p style="margin: 5px 0;">Phone: {{$consignee->phone}}</p>
-                    <p style="margin: 5px 0;">Email: {{$consignee->email}}</p>
+                    {{-- <p style="margin: 5px 0;">Email: {{$consignee->email}}</p> --}}
                 </div>
             </div>
             <div style="float: left;padding-left:50px;">

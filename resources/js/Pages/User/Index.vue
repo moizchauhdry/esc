@@ -61,7 +61,11 @@ const edit = (user) => {
                                         <tr>
                                             <td>{{ user.id }}</td>
                                             <td>{{ user.name }}</td>
-                                            <td>{{ user.email }}</td>
+                                            <td>
+                                                <template v-if="!([3, 4].includes(user.role_id))">
+                                                    {{ user.email }}
+                                                </template>
+                                            </td>
                                             <td>{{ user.role }}</td>
                                             <td>{{ user.created_at }}</td>
                                             <td>
