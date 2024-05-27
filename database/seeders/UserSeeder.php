@@ -34,6 +34,13 @@ class UserSeeder extends Seeder
         ]);
         $admin->assignRole('admin');
 
+        $admin2 = User::updateOrCreate(['email' => 'Habib362@gmail.com',], [
+            'name' => 'Habib Haseeb',
+            'email' => 'Habib362@gmail.com',
+            'password' => Hash::make('ESC12345'),
+        ]);
+        $admin2->assignRole('admin');
+
         $employee = User::updateOrCreate(['email' => 'employee@gmail.com',], [
             'name' => 'Employee',
             'email' => 'employee@gmail.com',
