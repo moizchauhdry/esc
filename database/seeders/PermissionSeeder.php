@@ -15,30 +15,46 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
 
-            // Basic
-            'dashboard',
+            // Dashboard
+            ['name' =>  'dashboard', 'level' =>  1],
 
             // Role
-            'role-list',
-            'role-create',
-            'role-update',
+            ['name' => 'role', 'level' => 1],
+            ['name' => 'role_list', 'level' => 2],
+            ['name' => 'role_create', 'level' => 2],
+            ['name' => 'role_update', 'level' => 2],
 
             // User
-            'user-list',
-            'user-create',
-            'user-update',
-            'user-delete',
+            ['name' => 'user', 'level' => 1],
+            ['name' => 'user_list', 'level' => 2],
+            ['name' => 'user_create', 'level' => 2],
+            ['name' => 'user_update', 'level' => 2],
 
-            // Invoice
-            'invoice-list',
-            'invoice-create',
-            'invoice-update',
-            'invoice-delete',
-            'invoice-print',
+            // Shipment
+            ['name' => 'shipment', 'level' => 1],
+            ['name' => 'shipment_list', 'level' => 2],
+            ['name' => 'shipment_create', 'level' => 2],
+            ['name' => 'shipment_update', 'level' => 2],
+
+            // Invoices
+            ['name' => 'invoice', 'level' => 1],
+            ['name' => 'invoice_list', 'level' => 2],
+            ['name' => 'invoice_create', 'level' => 2],
+            ['name' => 'invoice_update', 'level' => 2],
+            ['name' => 'invoice_print', 'level' => 2],
+
+            
+            // Ledger
+            ['name' => 'ledger', 'level' => 1],
+            ['name' => 'ledger_list', 'level' => 2],
+
         ];
 
         foreach ($permissions as $permission) {
-            Permission::updateOrCreate(['name' => $permission], ['name' => $permission]);
+            Permission::updateOrCreate(['name' => $permission], [
+                'name' => $permission['name'],
+                'level' => $permission['level'],
+            ]);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Spatie\Permission\Models\Permission;
 use Tightenco\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
@@ -33,15 +34,19 @@ class HandleInertiaRequests extends Middleware
         $user = auth()->user();
 
         $data = [];
-        
         if ($user) {
+
+            $can = [];
+            $permissions = Permission::get();
+            foreach ($permissions as $permission) {
+                $can[$permission->name] = $user->can($permission->name);
+            }
+
             $data = [
                 'auth' => [
                     'user' => $request->user(),
                 ],
-                'can' => [
-                    'invoice_list' => $user->can('invoice-list'),
-                ],
+                'can' => $can,
                 'ziggy' => function () use ($request) {
                     return array_merge((new Ziggy)->toArray(), [
                         'location' => $request->url(),
