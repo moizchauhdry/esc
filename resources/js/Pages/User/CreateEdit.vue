@@ -54,20 +54,27 @@ const submit = () => {
 
 
 const edit = (user) => {
-    console.log(user);
-    modal.value = true;
-    edit_mode.value = true;
-    form.user_id = user.id
-    form.role = user.role_id
-    form.name = user.name
-    form.phone = user.phone
-    form.email = user.email
-    form.address_1 = user.address_1
-    form.address_2 = user.address_2
-    form.city = user.city
-    form.state = user.state
-    form.country = user.country
-    form.zipcode = user.zipcode
+    if (user) {
+
+        if (props.selected_role) {
+            form.role = user.roles[0].id
+        } else {
+            form.role = user.role_id
+        }
+
+        modal.value = true;
+        edit_mode.value = true;
+        form.user_id = user.id
+        form.name = user.name
+        form.phone = user.phone
+        form.email = user.email
+        form.address_1 = user.address_1
+        form.address_2 = user.address_2
+        form.city = user.city
+        form.state = user.state
+        form.country = user.country
+        form.zipcode = user.zipcode
+    }
 };
 
 const update = () => {
