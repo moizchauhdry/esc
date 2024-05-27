@@ -252,7 +252,8 @@ onMounted(() => {
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
                                                     Number
-                                                    <UserCreateEdit :roles="roles" ref="create_edit_ref">
+                                                    <UserCreateEdit :roles="roles" :selected_role="4"
+                                                        ref="create_edit_ref">
                                                     </UserCreateEdit>
 
                                                     <PrimaryButton @click="edit(selected_shipper)" type="button">Edit
@@ -277,7 +278,8 @@ onMounted(() => {
                                         <div class="row g-2">
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
-                                                    Number <UserCreateEdit :roles="roles" ref="create_edit_ref">
+                                                    Number <UserCreateEdit :roles="roles" :selected_role="4"
+                                                        ref="create_edit_ref">
                                                     </UserCreateEdit>
 
                                                     <PrimaryButton @click="edit(selected_consignee)" type="button">Edit

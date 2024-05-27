@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -41,10 +42,11 @@ class UserController extends Controller
 
     public function save($request, $edit_mode = false)
     {
+        // dd($request->all());
+
         $rules = [
-            'name' => 'required|string|min:5|max:50',
-            'email' => 'required|max:50|unique:users,email,' . ($edit_mode ? $request->user_id : NULL) . ',id',
-            'phone' => 'required|max:50|unique:users,phone,' . ($edit_mode ? $request->user_id : NULL) . ',id',
+            'name' => 'required|string|min:3|max:50',
+            'phone' => 'nullable|max:25|unique:users,phone,' . ($edit_mode ? $request->user_id : NULL) . ',id',
             'address_1' => 'nullable',
             'address_2' => 'nullable',
             'city' => 'nullable',
@@ -53,18 +55,28 @@ class UserController extends Controller
             'zipcode' => 'nullable',
         ];
 
+        if (!in_array($request->role, [3, 4])) {
+            $rules += [
+                'email' => 'required|max:50|unique:users,email,' . ($edit_mode ? $request->user_id : NULL) . ',id',
+            ];
+        }
+
         if (!$edit_mode) {
             $rules += [
-                'password' => 'required|string|min:8|confirmed',
                 'role' => 'required',
             ];
+
+            if (!in_array($request->role, [3, 4])) {
+                $rules += [
+                    'password' => ['string', 'min:8', 'confirmed', 'required'],
+                ];
+            }
         }
 
         $validate = $request->validate($rules);
 
         $data = [
             'name' => $request->name,
-            'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'address_1' => $request->address_1,
@@ -74,6 +86,16 @@ class UserController extends Controller
             'country' => $request->country,
             'zipcode' => $request->zipcode,
         ];
+
+        if (in_array($request->role, [3, 4])) {
+            $data += [
+                'email' => Hash::make(123),
+            ];
+        } else {
+            $data += [
+                'email' => $request->email,
+            ];
+        }
 
         if ($request->user_id) {
             $user = User::find($request->user_id);

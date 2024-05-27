@@ -128,7 +128,8 @@ defineExpose({ edit: (user) => edit(user) });
                             </div>
                             <InputError :message="form.errors.phone" />
                         </div>
-                        <div class="col-md-6">
+
+                        <div class="col-md-6" v-if="!([3, 4].includes(form.role))">
                             <label for="input16" class="form-label">Email</label>
                             <div class="position-relative input-icon">
                                 <input type="text" class="form-control" id="input16" placeholder="Email"
@@ -139,7 +140,7 @@ defineExpose({ edit: (user) => edit(user) });
                             <InputError :message="form.errors.email" />
                         </div>
 
-                        <template v-if="!edit_mode">
+                        <template v-if="!edit_mode && !([3, 4].includes(form.role))">
                             <div class="col-md-6">
                                 <label for="input17" class="form-label">Password</label>
                                 <div class="position-relative input-icon">
@@ -161,39 +162,40 @@ defineExpose({ edit: (user) => edit(user) });
                                 </div>
                             </div>
                         </template>
+                    </div>
 
+                    <div class="row g-3 mt-2">
                         <div class="col-md-6">
-                            <label for="">Address Line 1</label>
+                            <label for="" class="form-label">Address Line 1</label>
                             <input type="text" v-model="form.address_1" class="form-control">
                             <InputError :message="form.errors.address_1" />
                         </div>
                         <div class="col-md-6">
-                            <label for="">Address Line 2</label>
+                            <label for="" class="form-label">Address Line 2</label>
                             <input type="text" v-model="form.address_2" class="form-control">
                             <InputError :message="form.errors.address_2" />
                         </div>
                         <div class="col-md-3">
-                            <label for="">City</label>
+                            <label for="" class="form-label">City</label>
                             <input type="text" v-model="form.city" class="form-control">
                             <InputError :message="form.errors.city" />
                         </div>
                         <div class="col-md-3">
-                            <label for="">State</label>
+                            <label for="" class="form-label">State</label>
                             <input type="text" v-model="form.state" class="form-control">
                             <InputError :message="form.errors.state" />
                         </div>
                         <div class="col-md-3">
-                            <label for="">Country</label>
+                            <label for="" class="form-label">Country</label>
                             <input type="text" v-model="form.country" class="form-control">
                             <InputError :message="form.errors.country" />
                         </div>
                         <div class="col-md-3">
-                            <label for="">Zipcode</label>
+                            <label for="" class="form-label">Zipcode</label>
                             <input type="text" v-model="form.zipcode" class="form-control">
                             <InputError :message="form.errors.zipcode" />
                         </div>
                     </div>
-
                 </div>
 
                 <div class="mt-6 flex justify-end">
