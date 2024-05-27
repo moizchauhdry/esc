@@ -126,10 +126,11 @@ class UserController extends Controller
 
     public function fetchShipper($id)
     {
-        $selected_shipper = User::find($id);
+        $user = User::find($id);
 
         $data = [
-            'selected_shipper' => $selected_shipper
+            'selected_shipper' => $user,
+            'role' => $user->roles[0]->id,
         ];
 
         return response()->json($data);
@@ -137,10 +138,11 @@ class UserController extends Controller
 
     public function fetchConsignee($id)
     {
-        $selected_consignee = User::find($id);
+        $user = User::find($id);
 
         $data = [
-            'selected_consignee' => $selected_consignee
+            'selected_consignee' => $user,
+            'role' => $user->roles[0]->id,
         ];
 
         return response()->json($data);

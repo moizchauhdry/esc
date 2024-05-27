@@ -7,8 +7,9 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 import InputError from '@/Components/InputError.vue';
 
-defineProps({
+const props = defineProps({
     roles: Object,
+    selected_role: Number
 });
 
 const modal = ref(false);
@@ -33,6 +34,9 @@ const form = useForm({
 const create = () => {
     modal.value = true;
     edit_mode.value = false;
+    if (props.selected_role) {
+        form.role = props.selected_role;
+    }
 };
 
 const submit = () => {
@@ -53,7 +57,6 @@ const edit = (user) => {
     console.log(user);
     modal.value = true;
     edit_mode.value = true;
-
     form.user_id = user.id
     form.role = user.role_id
     form.name = user.name
