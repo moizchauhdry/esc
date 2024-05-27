@@ -33,7 +33,7 @@ const create = () => {
     if (saved_filters) {
         saved_filters = JSON.parse(saved_filters);
         form.company = saved_filters.company
-        form.date = saved_filters.date
+        // form.date = saved_filters.date
     }
 };
 
@@ -93,7 +93,7 @@ const closeModal = () => {
 
                         <div class="col-md-6">
                             <InputLabel for="" value="Date" class="mb-1" />
-                            <VueDatePicker v-model="form.date" :teleport="true" range></VueDatePicker>
+                            <VueDatePicker v-model="form.date" :teleport="true" :enable-time-picker="false" range></VueDatePicker>
                             <InputError :message="form.errors.date" />
                         </div>
                     </div>

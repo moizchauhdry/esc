@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\User;
 use Carbon\Carbon;
-use Faker\Provider\ar_EG\Company;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use PDF;
@@ -15,11 +14,11 @@ class LedgerController extends Controller
     public function index(Request $request)
     {
         $from = isset($request->date[0]) ? Carbon::parse($request->date[0])->format('Y-m-d') : Carbon::now()->format('Y-m-d');
-        $to = isset($request->date[0]) ? Carbon::parse($request->date[1])->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+        $to = isset($request->date[1]) ? Carbon::parse($request->date[1])->format('Y-m-d') : Carbon::now()->format('Y-m-d');
 
         $company_name = NULL;
         if (!empty($request->company)) {
-            $company = User::where('id', $request->company)->first();
+            $company = User::role('company')->where('id', $request->company)->first();
             $company_name = $company->name;
         }
 
@@ -48,7 +47,7 @@ class LedgerController extends Controller
                 'data' => $invoice,
             ]);
 
-        $companies = User::get();
+        $companies = User::role('company')->get();
 
         return Inertia::render('Ledger/Index', [
             'invoices' => $invoices,
