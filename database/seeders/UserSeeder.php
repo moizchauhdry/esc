@@ -26,10 +26,10 @@ class UserSeeder extends Seeder
         Role::updateOrCreate(['name' => 'Consignee']);
         Role::updateOrCreate(['name' => 'Manager']);
         Role::updateOrCreate(['name' => 'Employee']);
-        
-        $admin = User::updateOrCreate(['email' => 'admin@gmail.com',], [
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+
+        $admin = User::updateOrCreate(['email' => 'moizchauhdry@gmail.com',], [
+            'name' => 'Moiz Chauhdry',
+            'email' => 'moizchauhdry@gmail.com',
             'password' => Hash::make('12345678'),
         ]);
         $admin->assignRole('admin');
@@ -76,14 +76,12 @@ class UserSeeder extends Seeder
         ]);
         $consignee->assignRole('consignee');
 
-        
+
         $consignee2 = User::updateOrCreate(['email' => 'consignee2@gmail.com',], [
             'name' => 'consignee2',
             'email' => 'consignee2@gmail.com',
             'password' => Hash::make('12345678'),
         ]);
         $consignee2->assignRole('consignee');
-
-
     }
 }
