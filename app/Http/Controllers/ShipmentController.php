@@ -7,6 +7,7 @@ use App\Models\InvoiceItem;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -15,7 +16,19 @@ class ShipmentController extends Controller
 {
     public function index()
     {
-        $invoices = Invoice::with(['shipper', 'consignee', 'company'])
+        $user = Auth::user();
+
+        $user_role_id = NULL;
+        if ($user && isset($user->roles[0])) {
+            $user_role_id = $user->roles[0]->id;
+        }
+
+        $query = Invoice::with(['shipper', 'consignee', 'company']);
+        $query->when($user_role_id == 2, function ($qry) use ($user) {
+            $qry->where('company_id', $user->id);
+        });
+
+        $invoices = $query
             ->orderBy('id', 'desc')
             ->paginate(10)
             ->withQueryString()
