@@ -27,49 +27,52 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified', 'permission:dashboard'])->name('dashboard');
+Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified', 'permission:dashboard'])->name('dashboard');
 
-    Route::prefix('users')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('user.index')->middleware('permission:user_list');
-        Route::get('/create', [UserController::class, 'create'])->name('user.create')->middleware('permission:user_create');
-        Route::post('/store', [UserController::class, 'store'])->name('user.store')->middleware('permission:user_create');
-        Route::get('/edit', [UserController::class, 'edit'])->name('user.edit')->middleware('permission:user_update');
-        Route::post('/update', [UserController::class, 'update'])->name('user.update')->middleware('permission:user_update');
-        Route::get('/fetch/shipper/{id}', [UserController::class, 'fetchShipper'])->name('user.fetch-shipper');
-        Route::get('/fetch/consignee/{id}', [UserController::class, 'fetchConsignee'])->name('user.fetch-consignee');
-    });
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('roles')->group(function () {
-        Route::get('/', [RoleController::class, 'index'])->name('role.index')->middleware('permission:role_list');
-        Route::post('/create', [RoleController::class, 'create'])->name('role.create')->middleware('permission:role_create');
-        Route::post('/update', [RoleController::class, 'update'])->name('role.update')->middleware('permission:role_update');
-    });
+        Route::prefix('users')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('user.index')->middleware('permission:user_list');
+            Route::get('/create', [UserController::class, 'create'])->name('user.create')->middleware('permission:user_create');
+            Route::post('/store', [UserController::class, 'store'])->name('user.store')->middleware('permission:user_create');
+            Route::get('/edit', [UserController::class, 'edit'])->name('user.edit')->middleware('permission:user_update');
+            Route::post('/update', [UserController::class, 'update'])->name('user.update')->middleware('permission:user_update');
+            Route::get('/fetch/shipper/{id}', [UserController::class, 'fetchShipper'])->name('user.fetch-shipper');
+            Route::get('/fetch/consignee/{id}', [UserController::class, 'fetchConsignee'])->name('user.fetch-consignee');
+        });
 
-    Route::prefix('shipments')->group(function () {
-        Route::get('/', [ShipmentController::class, 'index'])->name('shipment.index');
-        Route::get('/create', [ShipmentController::class, 'create'])->name('shipment.create')->middleware('permission:shipment_create');
-        Route::post('/store', [ShipmentController::class, 'store'])->name('shipment.store')->middleware('permission:shipment_create');
-        Route::get('/edit/{id}', [ShipmentController::class, 'edit'])->name('shipment.edit')->middleware('permission:shipment_update');
-        Route::post('/update', [ShipmentController::class, 'update'])->name('shipment.update')->middleware('permission:shipment_update');
-    });
+        Route::prefix('roles')->group(function () {
+            Route::get('/', [RoleController::class, 'index'])->name('role.index')->middleware('permission:role_list');
+            Route::post('/create', [RoleController::class, 'create'])->name('role.create')->middleware('permission:role_create');
+            Route::post('/update', [RoleController::class, 'update'])->name('role.update')->middleware('permission:role_update');
+        });
 
-    Route::prefix('invoices')->group(function () {
-        Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice_list');
-        Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice_create');
-        Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store')->middleware('permission:invoice_create');
-        Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:invoice_update');
-        Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice_update');
-        Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice_print');
-    });
+        Route::prefix('shipments')->group(function () {
+            Route::get('/', [ShipmentController::class, 'index'])->name('shipment.index');
+            Route::get('/create', [ShipmentController::class, 'create'])->name('shipment.create')->middleware('permission:shipment_create');
+            Route::post('/store', [ShipmentController::class, 'store'])->name('shipment.store')->middleware('permission:shipment_create');
+            Route::get('/edit/{id}', [ShipmentController::class, 'edit'])->name('shipment.edit')->middleware('permission:shipment_update');
+            Route::post('/update', [ShipmentController::class, 'update'])->name('shipment.update')->middleware('permission:shipment_update');
+        });
 
-    Route::prefix('ledgers')->group(function () {
-        Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');
-        Route::get('/print', [LedgerController::class, 'print'])->name('ledger.print');
+        Route::prefix('invoices')->group(function () {
+            Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice_list');
+            Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice_create');
+            Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store')->middleware('permission:invoice_create');
+            Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:invoice_update');
+            Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice_update');
+            Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice_print');
+        });
+
+        Route::prefix('ledgers')->group(function () {
+            Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');
+            Route::get('/print', [LedgerController::class, 'print'])->name('ledger.print');
+        });
     });
 });
 
