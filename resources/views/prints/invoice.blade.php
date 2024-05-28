@@ -65,7 +65,7 @@
         }
 
         .particulars-table {
-            padding-top: 130px;
+            padding-top: 170px;
             border: none;
         }
 
@@ -105,11 +105,12 @@
             margin-top: 180px;
         }
 
-
-        .invoice-ref>div:last-child {
-            width: 33.33%;
+        .invoice-ref>div {
+            width: 32%;
             margin: 0;
+            padding: 0;
         }
+       
 
         .invoice-pay {
             display: flex;
@@ -199,10 +200,10 @@
             </div>
             <div class="invoice-info" style="float: right;">
                 <h2 class="invoice_heading">INVOICE</h2>
-                <div style="font-size: 12px;padding-left:70px;margin-top:-10px;">
+                <div style="font-size: 12px;padding-left:35px;margin-top:-10px;">
                     <div>
                         <p style="float: left;"><b>INVOICE NO:</b></p>
-                        <p style="float: right;">000{{$invoice->id}}</p>
+                        <p style="float: right;"> 000{{$invoice->id}}</p>
                     </div>
                     <div style="margin-top: 20px;">
                         <p style="float: left;"><b>MAWB NO:</b></p>
@@ -235,7 +236,7 @@
                 </div>
 
             </div>
-            <div style="float: left;padding-left:50px;">
+            <div style="float: left;padding-left:15px;">
                 <p style="margin: 0;color: #0D8FCC;"><b>CONSIGNEE:</b></p>
                 <h4 style="margin: 0;font-size: 15px;">{{$consignee->name}}</h4>
                 <div style="font-size: 12px;">
@@ -247,7 +248,7 @@
                     {{-- <p style="margin: 5px 0;">Email: {{$consignee->email}}</p> --}}
                 </div>
             </div>
-            <div style="float: left;padding-left:50px;">
+            <div style="float: left;padding-left:15px;">
                 <p style="margin: 0;color: #0D8FCC;"><b>SHIPMENT:</b></p>
                 {{-- <h4 style="margin: 0;font-size: 15px;">Moiz Chauhdry</h4> --}}
                 <div style="font-size: 12px;">
