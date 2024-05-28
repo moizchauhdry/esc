@@ -1,18 +1,11 @@
 <script setup>
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
 
 const dropdownOpen = ref(false);
 
-const form = useForm({
-    application_token: "",
-});
-
-const logout = () => {
-    form.post(route("logout"));
-};
-
-const toggleDropdown =() => {
+const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value;
 }
 </script>
@@ -199,10 +192,9 @@ const toggleDropdown =() => {
                         <li>
                             <div class="dropdown-divider mb-0"></div>
                         </li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="" @click="logout">
-                                <i class="bx bx-log-out-circle"></i><span>Logout</span></a>
-                        </li>
+                        <DropdownLink :href="route('logout')" method="post" as="button">
+                            <i class="bx bx-log-out-circle"></i> Log Out
+                        </DropdownLink>
                     </ul>
                 </div>
             </nav>
