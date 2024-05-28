@@ -189,6 +189,12 @@ class InvoiceController extends Controller
         $shipper = User::where('id', $invoice->shipper_id)->first();
         $consignee = User::where('id', $invoice->consignee_id)->first();
 
+
+        $user = Auth::user();
+        if ($user->roles[0]->id == 2 && $user->id != $invoice->company_id) {
+            abort(403);
+        }
+
         view()->share([
             'invoice' => $invoice,
             'shipper' => $shipper,
