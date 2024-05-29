@@ -210,11 +210,11 @@ onMounted(() => {
 
                                     <div class="col-md-2" v-if="page_type == 'invoice'">
                                         <InputLabel for="" value="Invoice Date" class="mb-1" />
-                                        <VueDatePicker v-model="form.invoice_at" :teleport="true"></VueDatePicker>
+                                        <VueDatePicker v-model="form.invoice_at" :teleport="true" :enable-time-picker="false"></VueDatePicker>
                                         <InputError :message="form.errors.invoice_at" />
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <InputLabel for="" value="Company Account" class="mb-1" />
                                         <select class="form-control" v-model="form.company_id"
                                             @change="fetchAddress('company')">
@@ -370,7 +370,7 @@ onMounted(() => {
                                                             class='bx bx-plus'></i>Add
                                                         Item</button>
                                                 </th>
-                                                <th class="text-left" colspan="3">PARTICULARS</th>
+                                                <th class="text-left" colspan="3" style="width:65%">PARTICULARS</th>
                                                 <th class="text-left">UNIT PRICE</th>
                                                 <th class="text-left">QUANTITY</th>
                                                 <th class="text-left">TOTAL</th>

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('mawb_no', 100)->nullable();
             $table->string('quantity', 100)->nullable();
             $table->string('weight', 100)->nullable();
-            $table->string('commodity', 100)->nullable();
+            $table->string('commodity')->nullable();
 
             $table->dateTime('departure_at')->nullable();
             $table->dateTime('landing_at')->nullable();
@@ -31,8 +31,8 @@ return new class extends Migration
             $table->string('sender', 100)->nullable();
             $table->string('destination', 100)->nullable();
 
-            $table->decimal('subtotal', 8, 2)->default(0);
-            $table->decimal('total', 8, 2)->default(0);
+            $table->double('subtotal')->default(0);
+            $table->double('total')->default(0);
             $table->integer('created_by')->unsigned();
             $table->timestamps();
         });

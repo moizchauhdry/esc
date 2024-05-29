@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
             $table->integer('invoice_id')->unsigned();
-            $table->string('particular', 100);
-            $table->decimal('amount', 8, 2)->default(0);
+            $table->string('particular');
+            $table->double('amount')->default(0);
             $table->integer('qty')->unsigned()->default(1);
-            $table->decimal('total', 8, 2)->nullable();
+            $table->double('total')->default(0);
             $table->timestamps();
         });
     }

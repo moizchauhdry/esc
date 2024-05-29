@@ -91,7 +91,7 @@
 
 
         .invoice_heading {
-            font-size: 55px;
+            font-size: 45px;
             color: #0D8FCC;
             margin: 0;
             margin-top: -15px;
@@ -110,7 +110,7 @@
             margin: 0;
             padding: 0;
         }
-       
+
 
         .invoice-pay {
             display: flex;
@@ -200,7 +200,7 @@
             </div>
             <div class="invoice-info" style="float: right;">
                 <h2 class="invoice_heading">INVOICE</h2>
-                <div style="font-size: 12px;padding-left:35px;margin-top:-10px;">
+                <div style="font-size: 12px;padding-left:10px;margin-top:-10px;">
                     <div>
                         <p style="float: left;"><b>INVOICE NO:</b></p>
                         <p style="float: right;"> 000{{$invoice->id}}</p>
@@ -253,7 +253,8 @@
                 {{-- <h4 style="margin: 0;font-size: 15px;">Moiz Chauhdry</h4> --}}
                 <div style="font-size: 12px;">
                     <p style="margin: 5px 0;"><b>Commodity</b>: {{$invoice->commodity}}</p>
-                    <p style="margin: 5px 0;"><b>Departure</b>: {{$invoice->sender}} | <b>Landing</b>: {{$invoice->destination}}</p>
+                    <p style="margin: 5px 0;"><b>Departure</b>: {{$invoice->sender}} | <b>Landing</b>:
+                        {{$invoice->destination}}</p>
                     <p style="margin: 5px 0;"><b>Quantity</b>: {{$invoice->quantity}}</p>
                     <p style="margin: 5px 0;"><b>Weight (KGS)</b>: {{$invoice->weight}}</p>
                     <p style="margin: 5px 0;"><b>AFC Rate/KG</b>: {{$invoice->total}}</p>
@@ -325,7 +326,7 @@
 
             <div style="float: left;font-size: 12px;margin: 0;text-align:center;">
                 <div>
-                    <h4 style="margin-top:20px;margin-bottom:5px;"><b>Moiz Chauhdry</b> </h4>
+                    <h4 style="margin-top:20px;margin-bottom:5px;"><b></b> </h4>
                     <img style="max-width:140px" src="" alt="signature">
                     <hr style="max-width:140px;border-color: gray;background:gray;">
                 </div>
@@ -344,21 +345,26 @@
                                 style="height:25px;width:25px;"
                                 src="https://flypakistan.s3.us-west-2.amazonaws.com/call-icon-removebg-preview.png"
                                 alt=""></p>
-                        <p style="float: left;padding-left:40px;">+92 321 4208852</p>
+                        <p style="float: left;padding-left:40px;">+923214208852 <br> +923214487971</p>
                     </div>
-                    <div style="margin-top: 30px;">
+                    <div style="margin-top: 40px;">
                         <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
                                 style="height:25px;width:25px;transform:scale(.6);"
                                 src="https://flypakistan.s3.us-west-2.amazonaws.com/email-removebg-preview.png" alt="">
                         </p>
-                        <p style="float: left;padding-left:40px;">info@esavercargo.com</p>
+                        <p style="float: left;padding-left:40px;">
+                            hammad.ali@esavercargo.com <br>
+                            habibur.haseeb@esavercargo.com
+                        </p>
                     </div>
-                    <div style="margin-top: 30px;">
+                    <div style="margin-top: 40px;">
                         <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
                                 style="height:25px;width:25px;transform:scale(.5);"
                                 src="https://flypakistan.s3.us-west-2.amazonaws.com/location-removebg-preview.png"
                                 alt=""></p>
-                        <p style="float: left;padding-left:40px;">Lahore, Pakistan</p>
+                        <p style="float: left;padding-left:40px;">
+                            House #23 Basti Chiragh Shah Airport Road Lahore, Pakistan
+                        </p>
                     </div>
                 </div>
             </div>

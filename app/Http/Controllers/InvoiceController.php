@@ -62,11 +62,11 @@ class InvoiceController extends Controller
             'consignee_id' => 'required',
 
             'carrier' => 'required|string|max:50',
-            'mawb_no' => 'required|string|max:50',
+            'mawb_no' => 'required|string|max:20',
             'quantity' => 'required|numeric',
             'weight' => 'required|numeric',
             'afc_rate' => 'nullable|numeric',
-            'commodity' => 'required|string|max:50',
+            'commodity' => 'required|string|max:250',
 
             'departure_at' => 'required',
             'landing_at' => 'required',
@@ -74,7 +74,7 @@ class InvoiceController extends Controller
             'destination' => 'required|string|max:50',
 
             'items' => 'required|array',
-            'items.*.particular' => 'required|max:150',
+            'items.*.particular' => 'required|max:250',
             'items.*.amount' => 'required|numeric|gte:0',
             'items.*.qty' => 'required|numeric|gte:1',
         ];
@@ -118,7 +118,7 @@ class InvoiceController extends Controller
                 'particular' => $item['particular'],
                 'amount' => $item['amount'],
                 'qty' => $item['qty'],
-                'total' =>  $item['amount'] * $item['qty'],
+                'total' =>  (float) $item['amount'] * (float) $item['qty'],
             ]);
         }
 
