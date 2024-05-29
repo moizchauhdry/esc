@@ -50,10 +50,18 @@
             margin-bottom: 20px;
         }
 
+        .invoice-header span{
+            font-size: 18px;
+        }
+
 
         .invoice-header img {
             max-width: 200px;
             height: auto;
+        }
+
+        .invoice-info{
+            width: 33.33%;
         }
 
         .invoice-info p {
@@ -91,7 +99,7 @@
 
 
         .invoice_heading {
-            font-size: 45px;
+            font-size: 25px;
             color: #0D8FCC;
             margin: 0;
             margin-top: -15px;
@@ -196,11 +204,11 @@
         <div class="invoice-header">
             <div style="float: left;">
                 <img src="https://esavercargo.com/wp-content/uploads/2022/11/png-01-3.png" alt="Logo"> <br>
-                {{-- <span>Express Saver Cargo</span> --}}
+                <div style="padding-left: 14px;"><span>Express Saver Cargo</span></div>
             </div>
             <div class="invoice-info" style="float: right;">
                 <h2 class="invoice_heading">INVOICE</h2>
-                <div style="font-size: 12px;padding-left:10px;margin-top:-10px;">
+                <div style="font-size: 12px;margin-top:0px;">
                     <div>
                         <p style="float: left;"><b>INVOICE NO:</b></p>
                         <p style="float: right;"> 000{{$invoice->id}}</p>
