@@ -265,7 +265,7 @@
                         {{$invoice->destination}}</p>
                     <p style="margin: 5px 0;"><b>Quantity</b>: {{$invoice->quantity}}</p>
                     <p style="margin: 5px 0;"><b>Weight (KGS)</b>: {{$invoice->weight}}</p>
-                    <p style="margin: 5px 0;"><b>AFC Rate/KG</b>: {{$invoice->total}}</p>
+                    <p style="margin: 5px 0;"><b>AFC Rate/KG</b>: {{$invoice->afc_rate}}</p>
                 </div>
             </div>
         </div>

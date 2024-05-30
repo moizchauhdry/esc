@@ -93,9 +93,10 @@ class InvoiceController extends Controller
 
             'carrier' => $request->carrier,
             'mawb_no' => $request->mawb_no,
+            'commodity' => $request->commodity,
             'quantity' => $request->quantity,
             'weight' => $request->weight,
-            'commodity' => $request->commodity,
+            'afc_rate' => $request->afc_rate,
 
             'departure_at' => Carbon::parse($request->departure_at)->format("Y-m-d h:i:s"),
             'landing_at' => Carbon::parse($request->landing_at)->format("Y-m-d h:i:s"),
