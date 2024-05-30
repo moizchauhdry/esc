@@ -180,14 +180,14 @@ const toggleDropdown = () => {
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end profile-dropdown" :class="{ 'show': dropdownOpen }">
-                        <li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i
-                                    class="bx bx-user fs-5"></i><span>Profile</span></a>
+                        <li><Link class="dropdown-item d-flex align-items-center" :href="route('profile.edit')"><i
+                                    class="bx bx-user fs-5"></i><span>Profile</span></Link>
                         </li>
-                        <li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i
+                        <!-- <li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i
                                     class="bx bx-cog fs-5"></i><span>Settings</span></a>
-                        </li>
-                        <li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i
-                                    class="bx bx-home-circle fs-5"></i><span>Dashboard</span></a>
+                        </li> -->
+                        <li><Link class="dropdown-item d-flex align-items-center" :href="route('dashboard')"><i
+                                    class="bx bx-home-circle fs-5"></i><span>Dashboard</span></Link>
                         </li>
                         <li>
                             <div class="dropdown-divider mb-0"></div>
@@ -208,6 +208,6 @@ const toggleDropdown = () => {
     border: 0 solid #e9ecef;
     border-radius: 10px;
     font-size: 13px;
-    margin-top: 230px;
+    margin-top: 205px;
 }
 </style>

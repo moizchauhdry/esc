@@ -370,10 +370,10 @@ onMounted(() => {
                                                             class='bx bx-plus'></i>Add
                                                         Item</button>
                                                 </th>
-                                                <th class="text-left" colspan="3" style="width:65%">PARTICULARS</th>
-                                                <th class="text-left">UNIT PRICE</th>
-                                                <th class="text-left">QUANTITY</th>
-                                                <th class="text-left">TOTAL</th>
+                                                <th class="text-left" colspan="3" style="width:45%">PARTICULARS</th>
+                                                <th class="text-left" style="width:15%">UNIT PRICE</th>
+                                                <th class="text-left" style="width:15%">QUANTITY</th>
+                                                <th class="text-left" style="width:15%">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>

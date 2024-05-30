@@ -21,9 +21,10 @@ return new class extends Migration
 
             $table->string('carrier', 100)->nullable();
             $table->string('mawb_no', 100)->nullable();
+            $table->string('commodity')->nullable();
             $table->string('quantity', 100)->nullable();
             $table->string('weight', 100)->nullable();
-            $table->string('commodity')->nullable();
+            $table->string('afc_rate',100)->nullable();
 
             $table->dateTime('departure_at')->nullable();
             $table->dateTime('landing_at')->nullable();
