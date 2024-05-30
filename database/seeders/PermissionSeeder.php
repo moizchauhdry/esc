@@ -17,6 +17,7 @@ class PermissionSeeder extends Seeder
 
             // Dashboard
             ['name' =>  'dashboard', 'level' =>  1],
+            ['name' =>  'analytics', 'level' =>  2],
 
             // Role
             ['name' => 'role', 'level' => 1],
@@ -43,7 +44,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'invoice_update', 'level' => 2],
             ['name' => 'invoice_print', 'level' => 2],
 
-            
+
             // Ledger
             ['name' => 'ledger', 'level' => 1],
             ['name' => 'ledger_list', 'level' => 2],

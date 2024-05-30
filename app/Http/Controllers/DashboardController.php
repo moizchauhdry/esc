@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\CustomerAccount;
-use App\Models\WorkOrder;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Invoice;
+use App\Models\User;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $data = [];
+        $shipments = Invoice::count();
+        $revenue = Invoice::sum('total');
+        $companies = User::role('company')->count();
+        $users = User::count();
+
+        $data = [
+            'shipments' => $shipments,
+            'revenue' => $revenue,
+            'companies' => $companies,
+            'users' => $users,
+        ];
+
+        // dd($data);
 
         return Inertia::render('Dashboard/Index', [
             'data' => $data,

@@ -1,6 +1,10 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, usePage } from "@inertiajs/vue3";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+
+const permission = usePage().props.can;
+
 defineProps({
     data: Array,
 });
@@ -9,82 +13,106 @@ defineProps({
 <template>
 
     <Head title="Dashboard" />
-    
+
     <AuthenticatedLayout>
         <!--start page wrapper -->
         <div class="page-wrapper">
             <div class="page-content">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-4">
-                    <div class="col">
-                        <div class="card radius-10">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <p class="mb-0 text-secondary">Revenue</p>
-                                        <h4 class="my-1">$4805</h4>
-                                        <p class="mb-0 font-13 text-success"><i
-                                                class="bx bxs-up-arrow align-middle"></i>$34
-                                            from last week</p>
-                                    </div>
-                                    <div class="widgets-icons bg-light-success text-success ms-auto"><i
-                                            class='bx bx-dollar'></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card radius-10">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <p class="mb-0 text-secondary">Total Customers</p>
-                                        <h4 class="my-1">58K</h4>
-                                        <p class="mb-0 font-13 text-danger"><i
-                                                class="bx bxs-down-arrow align-middle"></i>2.6% from last week</p>
-                                    </div>
-                                    <div class="widgets-icons bg-light-info text-info ms-auto"><i
-                                            class="bx bxs-group"></i>
+
+                <template v-if="permission.analytics">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-4">
+                        <div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">Total Shipments</p>
+                                            <h4 class="my-1">{{ data.shipments }}</h4>
+                                            <!-- <p class="mb-0 font-13 text-danger">
+                                            <i class="bx bxs-down-arrow align-middle"></i>2.6% from last week
+                                        </p> -->
+                                        </div>
+                                        <div class="widgets-icons bg-light-danger text-danger ms-auto"><i
+                                                class="bx bxs-box"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="card radius-10">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <p class="mb-0 text-secondary">Total Visitors</p>
-                                        <h4 class="my-1">8.6K</h4>
-                                        <p class="mb-0 font-13 text-success"><i
-                                                class="bx bxs-up-arrow align-middle"></i>3.2% from last week</p>
-                                    </div>
-                                    <div class="widgets-icons bg-light-danger text-danger ms-auto"><i
-                                            class="bx bxs-binoculars"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card radius-10">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <p class="mb-0 text-secondary">Bounce Rate</p>
-                                        <h4 class="my-1">24.6%</h4>
-                                        <p class="mb-0 font-13 text-danger"><i
-                                                class="bx bxs-down-arrow align-middle"></i>12.2% from last week</p>
-                                    </div>
-                                    <div class="widgets-icons bg-light-warning text-warning ms-auto"><i
-                                            class="bx bx-line-chart-down"></i>
+                        <div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">Revenue</p>
+                                            <h4 class="my-1">${{ data.revenue }}</h4>
+                                            <!-- <p class="mb-0 font-13 text-success">
+                                            <i class="bx bxs-up-arrow align-middle"></i>$34
+                                            from last week
+                                        </p> -->
+                                        </div>
+                                        <div class="widgets-icons bg-light-success text-success ms-auto"><i
+                                                class='bx bx-dollar'></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">Total Clients</p>
+                                            <h4 class="my-1">{{ data.companies }}</h4>
+                                            <!-- <p class="mb-0 font-13 text-success">
+                                            <i class="bx bxs-up-arrow align-middle"></i>3.2% from last week
+                                        </p> -->
+                                        </div>
+                                        <div class="widgets-icons bg-light-info text-info ms-auto"><i
+                                                class="bx bxs-user-check"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card radius-10">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <p class="mb-0 text-secondary">Total Users</p>
+                                            <h4 class="my-1">{{ data.users }}</h4>
+                                            <!-- <p class="mb-0 font-13 text-danger">
+                                            <i class="bx bxs-down-arrow align-middle"></i>12.2% from last week
+                                        </p> -->
+                                        </div>
+                                        <div class="widgets-icons bg-light-warning text-warning ms-auto"><i
+                                                class="bx bx-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
+                </template>
+
+                <template v-else>
+                    <div class="text-center flex flex-col items-center justify-center">
+                        <ApplicationLogo class="h-20 fill-current text-gray-500" /> <br>
+
+                        <h1 class="font-bold text-2xl">Account ID: {{ $page.props.auth.user.id }}</h1>
+                        <h5 class="mb-2 text-3xl font-bold text-gray-900">Welcome, {{ $page.props.auth.user.name }}</h5>
+                        <h1 class="font-bold text-2xl">
+                            <span>{{ $page.props.auth.user.email }}</span>
+                        </h1>
+                        <br>
+                    </div>
+                </template>
+
 
                 <!-- <div class="row">
                     <div class="col-12 col-lg-8 d-flex">
