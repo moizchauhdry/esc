@@ -58,7 +58,7 @@ const form = useForm({
 const addItem = () => {
     form.items.push({
         particular: "",
-        amount: 0,
+        amount: "",
         qty: 1,
         total: 0,
     });
@@ -210,7 +210,8 @@ onMounted(() => {
 
                                     <div class="col-md-2" v-if="page_type == 'invoice'">
                                         <InputLabel for="" value="Invoice Date" class="mb-1" />
-                                        <VueDatePicker v-model="form.invoice_at" :teleport="true" :enable-time-picker="false"></VueDatePicker>
+                                        <VueDatePicker v-model="form.invoice_at" :teleport="true"
+                                            :enable-time-picker="false"></VueDatePicker>
                                         <InputError :message="form.errors.invoice_at" />
                                     </div>
 
@@ -364,7 +365,7 @@ onMounted(() => {
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>
+                                                <th style="width:5%">
                                                     <button type="button" @click="addItem()"
                                                         class="ms-1 text-sucess btn btn-success btn-sm"><i
                                                             class='bx bx-plus'></i>Add
@@ -372,7 +373,7 @@ onMounted(() => {
                                                 </th>
                                                 <th class="text-left" colspan="3" style="width:45%">PARTICULARS</th>
                                                 <th class="text-left" style="width:15%">UNIT PRICE</th>
-                                                <th class="text-left" style="width:15%">QUANTITY</th>
+                                                <th class="text-left" style="width:10%">QUANTITY</th>
                                                 <th class="text-left" style="width:15%">TOTAL</th>
                                             </tr>
                                         </thead>
@@ -380,7 +381,7 @@ onMounted(() => {
 
                                             <template v-for="(item, index) in form.items" :key="item.id">
                                                 <tr>
-                                                    <td class="no">
+                                                    <td class="no" style="width:5%">
                                                         <span>
                                                             Item #{{ index }}
 
@@ -390,20 +391,19 @@ onMounted(() => {
                                                         </span>
 
                                                     </td>
-                                                    <td class="text-left" colspan="3">
+                                                    <td class="text-left" colspan="3" style="width:45%">
                                                         <input type="text" class="form-control"
                                                             v-model="item.particular">
                                                     </td>
-                                                    <td class="text-left">
+                                                    <td class="text-left" style="width:15%">
                                                         <input type="number" class="form-control" v-model="item.amount"
                                                             @keyup="getLineTotal(index)">
                                                     </td>
-                                                    <td class="text-left">
+                                                    <td class="text-left" style="width:10%">
                                                         <input type="number" class="form-control" v-model="item.qty"
                                                             @keyup="getLineTotal(index)">
                                                     </td>
-
-                                                    <td class="total">PKR {{ item.total }}</td>
+                                                    <td class="total" style="width:15%">PKR {{ item.total }}</td>
                                                 </tr>
                                             </template>
 

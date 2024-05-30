@@ -46,7 +46,7 @@ class UserController extends Controller
 
         $rules = [
             'name' => 'required|string|min:3|max:50',
-            'phone' => 'nullable|max:25|unique:users,phone,' . ($edit_mode ? $request->user_id : NULL) . ',id',
+            'phone' => 'nullable|max:25',
             'address_1' => 'nullable',
             'address_2' => 'nullable',
             'city' => 'nullable',
