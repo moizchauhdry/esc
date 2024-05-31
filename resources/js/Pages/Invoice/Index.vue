@@ -55,9 +55,8 @@ const permission = usePage().props.can;
                                 <thead class="table-light">
                                     <tr>
                                         <th>SR #</th>
-                                        <th>Shipment</th>
-                                        <th>Shipper</th>
-                                        <th>Consignee</th>
+                                        <th>AWB/Shipment #</th>
+                                        <th>Shipper/Consignee</th>
 
                                         <th v-if="page_type == 'shipment'">Departure</th>
                                         <th v-if="page_type == 'shipment'">Landing</th>
@@ -87,12 +86,11 @@ const permission = usePage().props.can;
                                                 <b>Company:</b> {{ invoice.company_name }} <br>
                                             </td>
                                             <td>
-                                                <b>Account #:</b> {{ invoice.shipper_id }} <br>
-                                                <b>Name:</b> {{ invoice.consignee_name }} <br>
-                                            </td>
-                                            <td>
-                                                <b>Account #:</b> {{ invoice.consignee_id }} <br>
-                                                <b>Name:</b> {{ invoice.consignee_name }} <br>
+                                                <!-- <b>Account #:</b> {{ invoice.shipper_id }} <br> -->
+                                                <b>Shipper:</b> {{ invoice.shipper_name }} <br>
+
+                                                <!-- <b>Account #:</b> {{ invoice.consignee_id }} <br> -->
+                                                <b>Consignee:</b> {{ invoice.consignee_name }} <br>
                                             </td>
 
                                             <td v-if="page_type == 'shipment'">
