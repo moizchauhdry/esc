@@ -55,9 +55,7 @@ const permission = usePage().props.can;
                                 <thead class="table-light">
                                     <tr>
                                         <th>SR #</th>
-
-                                        <th>AWB #</th>
-                                        <th>Company</th>
+                                        <th>Shipment</th>
                                         <th>Shipper</th>
                                         <th>Consignee</th>
 
@@ -67,7 +65,7 @@ const permission = usePage().props.can;
                                         <th v-if="page_type == 'invoice'">Total</th>
                                         <th v-if="page_type == 'invoice'">Invoice Date</th>
 
-                                        <th>Type/Status</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -85,9 +83,9 @@ const permission = usePage().props.can;
                                             </td>
                                             <td>
                                                 <b>AWB #:</b> {{ invoice.mawb_no }} <br>
-                                                <b>Shipment #:</b> {{ invoice.id }}
+                                                <b>Shipment #:</b> {{ invoice.id }} <br>
+                                                <b>Company:</b> {{ invoice.company_name }} <br>
                                             </td>
-                                            <td>{{ invoice.company_name }}</td>
                                             <td>
                                                 <b>Account #:</b> {{ invoice.shipper_id }} <br>
                                                 <b>Name:</b> {{ invoice.consignee_name }} <br>
@@ -110,13 +108,13 @@ const permission = usePage().props.can;
                                             <td v-if="page_type == 'invoice'">{{ invoice.invoice_at }}</td>
 
                                             <td>
-                                                <div
+                                                <!-- <div
                                                     class="badge text-primary bg-light-primary p-2 text-uppercase px-2 mx-1">
                                                     <i class='bx bxs-circle me-1'></i>{{page_type}}
-                                                </div>
+                                                </div> -->
                                                 <div
                                                     class="badge text-warning bg-light-warning p-2 text-uppercase px-2">
-                                                    <i class='bx bxs-circle me-1'></i>open
+                                                    <i class='bx bxs-circle me-1'></i>Pending
                                                 </div>
                                             </td>
 
@@ -135,8 +133,8 @@ const permission = usePage().props.can;
                                                         </Link>
                                                     </template>
 
-                                                    <a href="#" title="Detail" class="ms-1"><i
-                                                            class='bx bxs-collection'></i></a>
+                                                    <!-- <a href="#" title="Detail" class="ms-1"><i
+                                                            class='bx bxs-collection'></i></a> -->
 
                                                     <template v-if="page_type == 'invoice' && permission.invoice_print">
                                                         <a :href="route('invoice.print', invoice.id)" title="Print"
