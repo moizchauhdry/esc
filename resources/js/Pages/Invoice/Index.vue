@@ -35,8 +35,8 @@ const format_number = (number) => {
                                 <li class="breadcrumb-item"><a href="javascript:;">
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page"><span
-                                        class="text-capitalize">{{ page_type }}</span> List</li>
+                                <li class="breadcrumb-item active" aria-current="page"><span class="text-capitalize">{{
+                                        page_type }}</span> List</li>
                             </ol>
                         </nav>
                     </div>
@@ -61,18 +61,18 @@ const format_number = (number) => {
                             <table class="table">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>SR #</th>
-                                        <th>AWB/Shipment #</th>
-                                        <th>Shipper/Consignee</th>
+                                        <th style="width: 5px;">SR #</th>
+                                        <th style="width: 10px;">AWB/Shipment #</th>
+                                        <th style="width: 30px;">Shipper/Consignee</th>
 
-                                        <th v-if="page_type == 'shipment'">Departure</th>
-                                        <th v-if="page_type == 'shipment'">Landing</th>
+                                        <th style="width: 10px;" v-if="page_type == 'shipment'">Departure</th>
+                                        <th style="width: 10px;" v-if="page_type == 'shipment'">Landing</th>
 
-                                        <th v-if="page_type == 'invoice'">Total</th>
-                                        <th v-if="page_type == 'invoice'">Invoice Date</th>
+                                        <th style="width: 10px;" v-if="page_type == 'invoice'">Total</th>
+                                        <th style="width: 10px;" v-if="page_type == 'invoice'">Invoice Date</th>
 
-                                        <th>Status</th>
-                                        <th>Actions</th>
+                                        <th style="width: 10px;">Status</th>
+                                        <th style="width: 10px;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,7 +109,8 @@ const format_number = (number) => {
                                                 <b>Date:</b> {{ invoice.landing_at }}
                                             </td>
 
-                                            <td v-if="page_type == 'invoice'">PKR {{ format_number(invoice.total) }}</td>
+                                            <td v-if="page_type == 'invoice'">PKR {{ format_number(invoice.total) }}
+                                            </td>
                                             <td v-if="page_type == 'invoice'">{{ invoice.invoice_at }}</td>
 
                                             <td>
@@ -126,13 +127,15 @@ const format_number = (number) => {
                                             <td>
                                                 <div class="d-flex order-actions">
 
-                                                    <template v-if="page_type == 'shipment' && permission.shipment_update">
+                                                    <template
+                                                        v-if="page_type == 'shipment' && permission.shipment_update">
                                                         <Link :href="route('shipment.edit', invoice.id)">
                                                         <i class='bx bxs-edit'></i>
                                                         </Link>
                                                     </template>
 
-                                                    <template v-if="page_type == 'invoice' && permission.invoice_update">
+                                                    <template
+                                                        v-if="page_type == 'invoice' && permission.invoice_update">
                                                         <Link :href="route('invoice.edit', invoice.id)">
                                                         <i class='bx bxs-edit'></i>
                                                         </Link>
