@@ -12,16 +12,18 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import { onMounted } from "vue";
 
 defineProps({
-    companies: Array
+    companies: Array,
+    balance: Array,
 });
 
 const modal = ref(false);
 const edit = ref(false);
 const companies = usePage().props.companies;
+const balance = usePage().props.balance;
 
 const form = useForm({
     company_id: "",
-    balance: "",
+    balance_total: balance.balance_total,
     credit: "",
 });
 
@@ -74,9 +76,9 @@ const closeModal = () => {
                             <InputError :message="form.errors.company_id" />
                         </div>
                         <div class="col-md-3">
-                            <InputLabel for="" value="Total Balance" class="mb-1" />
-                            <input type="text" class="form-control" v-model="form.balance">
-                            <InputError :message="form.errors.balance" />
+                            <InputLabel for="" value="Balance" class="mb-1" />
+                            <input type="text" class="form-control" v-model="form.balance_total">
+                            <InputError :message="form.errors.balance_total" />
                         </div>
                         <div class="col-md-3">
                             <InputLabel for="" value="Credit Amount" class="mb-1" />

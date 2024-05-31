@@ -140,9 +140,7 @@ class InvoiceController extends Controller
                 'invoice_at' => $invoice->invoice_at,
                 'debit_amount' => $invoice->total,
                 'credit_amount' => 0,
-                'opening_balance' => 0,
-                'closing_balance' => 0,
-                'invoice_total' => $invoice->total,
+                'balance_amount' => $invoice->total,
             ]);
         }
     }

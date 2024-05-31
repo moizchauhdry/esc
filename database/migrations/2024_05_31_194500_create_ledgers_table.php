@@ -18,9 +18,7 @@ return new class extends Migration
             $table->dateTime('invoice_at')->nullable();
             $table->decimal('debit_amount', 50, 2)->default(0);
             $table->decimal('credit_amount', 50, 2)->default(0);
-            $table->decimal('opening_balance', 50, 2)->default(0);
-            $table->decimal('closing_balance', 50, 2)->default(0);
-            $table->decimal('invoice_total', 50, 2)->default(0);
+            $table->decimal('balance_amount', 50, 2)->default(0);
             $table->timestamps();
         });
     }

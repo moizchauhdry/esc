@@ -50,7 +50,7 @@ class LedgerController extends Controller
                 'invoice_at' => $ledger->invoice_at,
                 'debit' => $ledger->debit_amount,
                 'credit' => $ledger->credit_amount,
-                'balance' => $ledger->debit_amount - $ledger->credit_amount,
+                'balance' => $ledger->balance_amount,
                 'invoice' => $ledger->invoice,
             ]);
 
@@ -63,7 +63,7 @@ class LedgerController extends Controller
         $balance = [
             'debit_total' => $debit_total,
             'credit_total' => $credit_total,
-            'balance_total' => $balance_total,
+            'balance_total' => $balance_total - $credit_total,
         ];
 
         return Inertia::render('Ledger/Index', [
@@ -110,7 +110,7 @@ class LedgerController extends Controller
 
         $rules = [
             'company_id' => 'required',
-            'balance' => 'required',
+            'balance_total' => 'required',
             'credit' => 'required',
         ];
 
@@ -120,15 +120,11 @@ class LedgerController extends Controller
 
         $request->validate($rules, $messages);
 
-        Ledger::create([
+        $ledger = Ledger::create([
             'company_id' => $request->company_id,
-            // 'invoice_id' => $invoice->id,
-            // 'invoice_at' => $invoice->invoice_at,
             'debit_amount' => 0,
             'credit_amount' => $request->credit,
-            'opening_balance' => 0,
-            'closing_balance' => $request->balance - $request->credit,
-            // 'invoice_total' => $invoice->total,
+            'balance_amount' => $request->balance_total - $request->credit
         ]);
     }
 }

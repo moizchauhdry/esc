@@ -106,7 +106,7 @@ const format_number = (number) => {
                                             <td>{{ format_number(ledger.debit) }}</td>
                                             <td>{{ format_number(ledger.credit) }}</td>
                                             <td>{{ format_number(ledger.balance) }}</td>
-                                            <td>DR</td>
+                                            <td>{{ ledger.credit > 0 ? 'CR': 'DR' }}</td>
                                         </tr>
                                     </template>
                                     <tr>
