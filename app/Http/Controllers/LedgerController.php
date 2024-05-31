@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,8 +14,8 @@ class LedgerController extends Controller
 {
     public function index(Request $request)
     {
-        $from = isset($request->date[0]) ? Carbon::parse($request->date[0])->format('Y-m-d') : Carbon::now()->format('Y-m-d');
-        $to = isset($request->date[1]) ? Carbon::parse($request->date[1])->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+        $from = isset($request->date[0]) ? Carbon::parse($request->date[0])->addDay()->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d');
+        $to = isset($request->date[1]) ? Carbon::parse($request->date[1])->addDay()->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d');
 
         $company_name = NULL;
         if (!empty($request->company)) {
@@ -30,29 +31,46 @@ class LedgerController extends Controller
             'to' => $to,
         ];
 
-        $query = Invoice::query();
+        $query = Ledger::query();
+
         $query->when($filter['company'], function ($q) use ($filter) {
             $q->where('company_id', $filter['company']);
         });
-        $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->whereDate('created_at', '>=', $filter['from']);
-            $q->whereDate('created_at', '<=', $filter['to']);
-        });
 
-        $invoices = $query->orderBy('id', 'desc')
+        $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
+            $q->whereDate('invoice_at', '>=', $filter['from']);
+            $q->whereDate('invoice_at', '<=', $filter['to']);
+        });
+        
+        $ledgers = $query->orderBy('id', 'desc')
             ->paginate(10)
             ->withQueryString()
-            ->through(fn ($invoice) => [
-                'id' => $invoice->id,
-                'data' => $invoice,
+            ->through(fn ($ledger) => [
+                'id' => $ledger->id,
+                'invoice_at' => $ledger->invoice_at,
+                'debit' => $ledger->debit_amount,
+                'credit' => $ledger->credit_amount,
+                'balance' => $ledger->debit_amount - $ledger->credit_amount,
+                'invoice' => $ledger->invoice,
             ]);
 
         $companies = User::role('company')->get();
 
+        $debit_total = $query->sum('debit_amount');
+        $credit_total = $query->sum('credit_amount');
+        $balance_total = $query->sum('debit_amount');
+
+        $balance = [
+            'debit_total' => $debit_total,
+            'credit_total' => $credit_total,
+            'balance_total' => $balance_total,
+        ];
+
         return Inertia::render('Ledger/Index', [
-            'invoices' => $invoices,
+            'ledgers' => $ledgers,
             'companies' => $companies,
             'filter' => $filter,
+            'balance' => $balance,
         ]);
     }
 
@@ -68,7 +86,7 @@ class LedgerController extends Controller
         $query->when($company, function ($q) use ($company) {
             $q->where('company_id', $company);
         });
-        
+
         $query->when($from && $to, function ($q) use ($from, $to) {
             $q->whereDate('created_at', '>=', $from);
             $q->whereDate('created_at', '<=', $to);

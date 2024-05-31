@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('commodity')->nullable();
             $table->string('quantity', 100)->nullable();
             $table->string('weight', 100)->nullable();
-            $table->string('afc_rate',100)->nullable();
+            $table->string('afc_rate', 100)->nullable();
 
             $table->dateTime('departure_at')->nullable();
             $table->dateTime('landing_at')->nullable();
@@ -35,6 +35,7 @@ return new class extends Migration
             $table->double('subtotal')->default(0);
             $table->double('total')->default(0);
             $table->integer('created_by')->unsigned();
+            $table->integer('status_id')->unsigned()->default(1);
             $table->timestamps();
         });
     }

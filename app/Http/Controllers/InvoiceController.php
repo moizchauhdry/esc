@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
 use Spatie\Permission\Models\Role;
@@ -77,6 +76,8 @@ class InvoiceController extends Controller
             'items.*.particular' => 'required|max:250',
             'items.*.amount' => 'required|numeric|gte:0',
             'items.*.qty' => 'required|numeric|gte:1',
+
+            'status_id' => 'required',
         ];
 
         $messages = [
@@ -103,6 +104,8 @@ class InvoiceController extends Controller
             'sender' => $request->sender,
             'destination' => $request->destination,
             'created_by' => auth()->id(),
+
+            'status_id' => $request->status_id,
         ];
 
         if ($request->invoice_id) {
@@ -128,6 +131,20 @@ class InvoiceController extends Controller
             'subtotal' => $invoice_total,
             'total' => $invoice_total,
         ]);
+
+
+        if ($invoice->status_id == 2) {
+            Ledger::create([
+                'company_id' => $invoice->company_id,
+                'invoice_id' => $invoice->id,
+                'invoice_at' => $invoice->invoice_at,
+                'debit_amount' => $invoice->total,
+                'credit_amount' => 0,
+                'opening_balance' => 0,
+                'closing_balance' => 0,
+                'invoice_total' => $invoice->total,
+            ]);
+        }
     }
 
     public function create()

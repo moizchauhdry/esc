@@ -14,10 +14,9 @@ class InvoiceStatusSeeder extends Seeder
     public function run(): void
     {
         $types = [
-            'Open',
-            'Draft',
-            'Close',
-            'Reject',
+            'Pending',
+            'Approved',
+            'Rejected',
         ];
 
         foreach ($types as $type) {
