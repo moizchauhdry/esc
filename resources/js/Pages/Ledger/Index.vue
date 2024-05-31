@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
 import Filter from "@/Pages/Ledger/Filter.vue";
+import Payment from "@/Pages/Ledger/Payment.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
@@ -43,6 +44,7 @@ const format_number = (number) => {
                     </div>
 
                     <div class="ms-auto">
+                        <Payment v-bind="$props"></Payment>
                         <Filter v-bind="$props"></Filter>
                         <a :href="route('ledger.print', filter)" title="Print" class="ms-1" target="_blank">
                             <PrimaryButton>
@@ -94,13 +96,13 @@ const format_number = (number) => {
                                     <template v-for="(ledger, index) in ledgers.data">
                                         <tr>
                                             <td>{{ ledger.invoice_at }}</td>
-                                            <td>{{ ledger.invoice.carrier }}</td>
-                                            <td>{{ ledger.invoice.mawb_no }}</td>
-                                            <td>{{ ledger.invoice.sender }}</td>
-                                            <td>{{ ledger.invoice.destination }}</td>
-                                            <td>{{ ledger.invoice.quantity }}</td>
-                                            <td>{{ ledger.invoice.weight }}</td>
-                                            <td>{{ ledger.invoice.id }}</td>
+                                            <td>{{ ledger.invoice?.carrier }}</td>
+                                            <td>{{ ledger.invoice?.mawb_no }}</td>
+                                            <td>{{ ledger.invoice?.sender }}</td>
+                                            <td>{{ ledger.invoice?.destination }}</td>
+                                            <td>{{ ledger.invoice?.quantity }}</td>
+                                            <td>{{ ledger.invoice?.weight }}</td>
+                                            <td>{{ ledger.invoice?.id }}</td>
                                             <td>{{ format_number(ledger.debit) }}</td>
                                             <td>{{ format_number(ledger.credit) }}</td>
                                             <td>{{ format_number(ledger.balance) }}</td>

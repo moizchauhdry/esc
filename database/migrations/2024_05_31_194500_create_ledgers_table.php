@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('ledgers', function (Blueprint $table) {
             $table->id();
-            $table->integer('company_id')->unsigned();
-            $table->integer('invoice_id')->unsigned();
+            $table->integer('company_id')->unsigned()->nullable();
+            $table->integer('invoice_id')->unsigned()->nullable();
             $table->dateTime('invoice_at')->nullable();
             $table->decimal('debit_amount', 50, 2)->default(0);
             $table->decimal('credit_amount', 50, 2)->default(0);

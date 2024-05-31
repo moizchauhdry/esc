@@ -71,6 +71,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
 
         Route::prefix('ledgers')->group(function () {
             Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');
+            Route::post('/payment', [LedgerController::class, 'payment'])->name('ledger.payment');
             Route::get('/print', [LedgerController::class, 'print'])->name('ledger.print');
         });
     });

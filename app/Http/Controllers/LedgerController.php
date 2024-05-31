@@ -38,11 +38,11 @@ class LedgerController extends Controller
         });
 
         $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->whereDate('invoice_at', '>=', $filter['from']);
-            $q->whereDate('invoice_at', '<=', $filter['to']);
+            $q->whereDate('created_at', '>=', $filter['from']);
+            $q->whereDate('created_at', '<=', $filter['to']);
         });
-        
-        $ledgers = $query->orderBy('id', 'desc')
+
+        $ledgers = $query->orderBy('id', 'asc')
             ->paginate(10)
             ->withQueryString()
             ->through(fn ($ledger) => [
@@ -102,5 +102,33 @@ class LedgerController extends Controller
         $pdf = PDF::loadView('prints.ledger');
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream('invoice.pdf');
+    }
+
+    public function payment(Request $request)
+    {
+        // dd($request->all());
+
+        $rules = [
+            'company_id' => 'required',
+            'balance' => 'required',
+            'credit' => 'required',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        Ledger::create([
+            'company_id' => $request->company_id,
+            // 'invoice_id' => $invoice->id,
+            // 'invoice_at' => $invoice->invoice_at,
+            'debit_amount' => 0,
+            'credit_amount' => $request->credit,
+            'opening_balance' => 0,
+            'closing_balance' => $request->balance - $request->credit,
+            // 'invoice_total' => $invoice->total,
+        ]);
     }
 }
