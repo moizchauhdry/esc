@@ -73,7 +73,7 @@
         }
 
         .particulars-table {
-            padding-top: 170px;
+            padding-top: 150px;
             border: none;
         }
 
@@ -88,7 +88,7 @@
 
         .particulars-table td,
         {
-        padding: 12px;
+        padding: 4px;
         text-align: left;
         }
 
@@ -110,7 +110,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            margin-top: 180px;
+            margin-top: 140px;
         }
 
         .invoice-ref>div {
