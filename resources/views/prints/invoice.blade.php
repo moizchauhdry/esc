@@ -230,10 +230,11 @@
 
             </div>
         </div>
+
         <div class="invoice-ref">
             <div style="float: left;">
                 <p style="margin: 0;color: #0D8FCC;"><b>SHIPPER:</b></p>
-                <h4 style="margin: 0;font-size: 15px;">{{$shipper->name}}</h4>
+                <h4 style="margin-top: 4px;font-size: 12px;">{{$shipper->name}}</h4>
                 <div style="font-size: 12px;">
                     <p style="margin: 5px 0;">
                         {{$shipper->address_1}} <br>
@@ -246,7 +247,7 @@
             </div>
             <div style="float: left;padding-left:15px;">
                 <p style="margin: 0;color: #0D8FCC;"><b>CONSIGNEE:</b></p>
-                <h4 style="margin: 0;font-size: 15px;">{{$consignee->name}}</h4>
+                <h4 style="margin-top: 4px;font-size: 12px;">{{$consignee->name}}</h4>
                 <div style="font-size: 12px;">
                     <p style="margin: 5px 0;">
                         {{$consignee->address_1}} <br>
