@@ -152,6 +152,13 @@ const edit = (user) => {
     create_edit_ref.value.edit(user)
 };
 
+const format_number = (number) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
+};
+
 onMounted(() => {
     if (!edit_mode) {
         form.items = [
@@ -403,7 +410,8 @@ onMounted(() => {
                                                         <input type="number" class="form-control" v-model="item.qty"
                                                             @keyup="getLineTotal(index)">
                                                     </td>
-                                                    <td class="total" style="width:15%">PKR {{ item.total }}</td>
+                                                    <td class="total" style="width:15%">PKR {{ format_number(item.total)
+                                                        }}</td>
                                                 </tr>
                                             </template>
 
@@ -412,12 +420,12 @@ onMounted(() => {
                                             <tr>
                                                 <td colspan="4"></td>
                                                 <td colspan="2">SUBTOTAL</td>
-                                                <td>PKR {{ form.subtotal }}</td>
+                                                <td>PKR {{ format_number(form.subtotal) }}</td>
                                             </tr>
                                             <tr>
                                                 <td colspan="4"></td>
                                                 <td colspan="2">GRAND TOTAL</td>
-                                                <td>PKR {{ form.total }}</td>
+                                                <td>PKR {{ format_number(form.total) }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>

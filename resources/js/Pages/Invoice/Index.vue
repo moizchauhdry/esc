@@ -10,6 +10,13 @@ defineProps({
 });
 
 const permission = usePage().props.can;
+
+const format_number = (number) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
+};
 </script>
 
 <template>
@@ -102,7 +109,7 @@ const permission = usePage().props.can;
                                                 <b>Date:</b> {{ invoice.landing_at }}
                                             </td>
 
-                                            <td v-if="page_type == 'invoice'">PKR {{ invoice.total }}</td>
+                                            <td v-if="page_type == 'invoice'">PKR {{ format_number(invoice.total) }}</td>
                                             <td v-if="page_type == 'invoice'">{{ invoice.invoice_at }}</td>
 
                                             <td>
