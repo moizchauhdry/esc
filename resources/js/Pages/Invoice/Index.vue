@@ -63,7 +63,7 @@ const format_number = (number) => {
                                     <tr>
                                         <th style="width: 5px;">SR #</th>
                                         <th style="width: 10px;">AWB/Shipment #</th>
-                                        <th style="width: 30px;">Shipper/Consignee</th>
+                                        <th style="width: 10px;">Shipper/Consignee</th>
 
                                         <th style="width: 10px;" v-if="page_type == 'shipment'">Departure</th>
                                         <th style="width: 10px;" v-if="page_type == 'shipment'">Landing</th>
