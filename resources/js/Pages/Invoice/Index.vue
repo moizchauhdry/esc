@@ -78,7 +78,7 @@ const format_number = (number) => {
                                 <tbody>
                                     <template v-for="(invoice, index) in invoices.data">
                                         <tr>
-                                            <td>
+                                            <td style="width: 10px;">
                                                 <div class="d-flex align-items-center">
                                                     <div>
                                                         <input class="form-check-input me-3" type="checkbox" value="1"
@@ -87,12 +87,12 @@ const format_number = (number) => {
                                                     {{ ++index }}
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td style="width: 10px;">
                                                 <b>AWB #:</b> {{ invoice.mawb_no }} <br>
                                                 <b>Shipment #:</b> {{ invoice.id }} <br>
                                                 <b>Company:</b> {{ invoice.company_name }} <br>
                                             </td>
-                                            <td>
+                                            <td style="width: 10px;">
                                                 <!-- <b>Account #:</b> {{ invoice.shipper_id }} <br> -->
                                                 <b>Shipper:</b> {{ invoice.shipper_name }} <br>
 
@@ -100,20 +100,20 @@ const format_number = (number) => {
                                                 <b>Consignee:</b> {{ invoice.consignee_name }} <br>
                                             </td>
 
-                                            <td v-if="page_type == 'shipment'">
+                                            <td style="width: 10px;" v-if="page_type == 'shipment'">
                                                 <b>Port:</b> {{ invoice.sender }} <br>
                                                 <b>Date:</b> {{ invoice.departure_at }}
                                             </td>
-                                            <td v-if="page_type == 'shipment'">
+                                            <td style="width: 10px;" v-if="page_type == 'shipment'">
                                                 <b>Port:</b> {{ invoice.destination }} <br>
                                                 <b>Date:</b> {{ invoice.landing_at }}
                                             </td>
 
-                                            <td v-if="page_type == 'invoice'">PKR {{ format_number(invoice.total) }}
+                                            <td style="width: 10px;" v-if="page_type == 'invoice'">PKR {{ format_number(invoice.total) }}
                                             </td>
-                                            <td v-if="page_type == 'invoice'">{{ invoice.invoice_at }}</td>
+                                            <td style="width: 10px;" v-if="page_type == 'invoice'">{{ invoice.invoice_at }}</td>
 
-                                            <td>
+                                            <td style="width: 10px;">
                                                 <!-- <div
                                                     class="badge text-primary bg-light-primary p-2 text-uppercase px-2 mx-1">
                                                     <i class='bx bxs-circle me-1'></i>{{page_type}}
@@ -124,7 +124,7 @@ const format_number = (number) => {
                                                 </div>
                                             </td>
 
-                                            <td>
+                                            <td style="width: 10px;">
                                                 <div class="d-flex order-actions">
 
                                                     <template
