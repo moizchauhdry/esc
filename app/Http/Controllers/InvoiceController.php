@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\InvoiceUpload;
 use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
@@ -197,6 +198,15 @@ class InvoiceController extends Controller
         return Redirect::route('invoice.index')->with('success', 'Invoice updated.');
     }
 
+    public function detail($id)
+    {
+        $invoice = Invoice::with(['company', 'shipper', 'consignee', 'uploads'])->find($id);
+
+        return Inertia::render('Invoice/Detail', [
+            'invoice' => $invoice,
+        ]);
+    }
+
     public function print($id)
     {
         $invoice = Invoice::find($id);
@@ -221,5 +231,27 @@ class InvoiceController extends Controller
         $pdf = PDF::loadView('prints.invoice');
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('invoice.pdf');
+    }
+
+    public function upload(Request $request)
+    {
+        $rules = [
+            'invoice_id' => 'required',
+            'file' => 'required',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $url = $request->file('file')->store('invoice-files', 'public');
+        InvoiceUpload::create([
+            'invoice_id' => $request->invoice_id,
+            'url' => $url
+        ]);
+
+        return Redirect::route('invoice.detail', $request->invoice_id)->with('success', 'File uploaded.');
     }
 }

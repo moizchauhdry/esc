@@ -53,13 +53,13 @@ const permission = usePage().props.can;
                 </a>
                 <ul>
                     <li v-if="permission.shipment_list">
-                        <Link :href="route('shipment.index')"><i class='bx bx-radio-circle'></i>Shipment List</Link>
+                        <Link :href="route('shipment.index')"><i class='bx bx-radio-circle'></i>Pre-Shipments</Link>
                     </li>
                     <li v-if="permission.invoice_list">
-                        <Link :href="route('invoice.index')"><i class='bx bx-radio-circle'></i>Invoice List</Link>
+                        <Link :href="route('invoice.index')"><i class='bx bx-radio-circle'></i>List Invoices</Link>
                     </li>
                     <li v-if="permission.ledger_list">
-                        <Link :href="route('ledger.index')"><i class='bx bx-radio-circle'></i>Ledger List</Link>
+                        <Link :href="route('ledger.index')"><i class='bx bx-radio-circle'></i>General Ledger</Link>
                     </li>
                 </ul>
             </li>

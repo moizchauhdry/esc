@@ -36,7 +36,7 @@ const format_number = (number) => {
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page"><span class="text-capitalize">{{
-                                        page_type }}</span> List</li>
+                                    page_type }}</span> List</li>
                             </ol>
                         </nav>
                     </div>
@@ -141,8 +141,9 @@ const format_number = (number) => {
                                                         </Link>
                                                     </template>
 
-                                                    <!-- <a href="#" title="Detail" class="ms-1"><i
-                                                            class='bx bxs-collection'></i></a> -->
+                                                    <Link :href="route('invoice.detail', invoice.id)" title="Detail"
+                                                        class="ms-1">
+                                                    <i class='bx bxs-collection'></i></Link>
 
                                                     <template v-if="page_type == 'invoice' && permission.invoice_print">
                                                         <a :href="route('invoice.print', invoice.id)" title="Print"

@@ -67,6 +67,8 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
             Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:invoice_update');
             Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice_update');
             Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice_print');
+            Route::get('/detail/{id}', [InvoiceController::class, 'detail'])->name('invoice.detail')->middleware('permission:invoice_list');
+            Route::post('/upload', [InvoiceController::class, 'upload'])->name('invoice.upload')->middleware('permission:invoice_list');
         });
 
         Route::prefix('ledgers')->group(function () {
