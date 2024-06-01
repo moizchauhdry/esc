@@ -106,8 +106,6 @@ class LedgerController extends Controller
 
     public function payment(Request $request)
     {
-        // dd($request->all());
-
         $rules = [
             'company_id' => 'required',
             'balance_total' => 'required',

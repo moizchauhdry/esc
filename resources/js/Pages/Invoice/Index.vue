@@ -118,10 +118,27 @@ const format_number = (number) => {
                                                     class="badge text-primary bg-light-primary p-2 text-uppercase px-2 mx-1">
                                                     <i class='bx bxs-circle me-1'></i>{{page_type}}
                                                 </div> -->
-                                                <div
-                                                    class="badge text-warning bg-light-warning p-2 text-uppercase px-2">
-                                                    <i class='bx bxs-circle me-1'></i>Pending
-                                                </div>
+
+                                                <template v-if="invoice.status_id == 1">
+                                                    <div
+                                                        class="badge text-warning bg-light-warning p-2 text-uppercase px-2">
+                                                        <i class='bx bxs-circle me-1'></i>Pending
+                                                    </div>
+                                                </template>
+
+                                                <template v-if="invoice.status_id == 2">
+                                                    <div
+                                                        class="badge text-success bg-light-success p-2 text-uppercase px-2">
+                                                        <i class='bx bxs-circle me-1'></i>Approved
+                                                    </div>
+                                                </template>
+
+                                                <template v-if="invoice.status_id == 3">
+                                                    <div
+                                                        class="badge text-rejected bg-light-rejected p-2 text-uppercase px-2">
+                                                        <i class='bx bxs-circle me-1'></i>Approved
+                                                    </div>
+                                                </template>
                                             </td>
 
                                             <td>

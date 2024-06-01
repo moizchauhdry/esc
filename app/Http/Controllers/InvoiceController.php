@@ -45,6 +45,7 @@ class InvoiceController extends Controller
                 'consignee_name' => $invoice->consignee->name,
                 'total' => $invoice->total,
                 'invoice_at' => $invoice->invoice_at,
+                'status_id' => $invoice->status_id,
             ]);
 
         return Inertia::render('Invoice/Index', [
@@ -135,7 +136,7 @@ class InvoiceController extends Controller
 
 
         if ($invoice->status_id == 2) {
-            Ledger::create([
+            Ledger::updateOrCreate(['invoice_id' => $invoice->id], [
                 'company_id' => $invoice->company_id,
                 'invoice_id' => $invoice->id,
                 'invoice_at' => $invoice->invoice_at,
