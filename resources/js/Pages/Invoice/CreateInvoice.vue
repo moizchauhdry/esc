@@ -53,6 +53,8 @@ const form = useForm({
     total: 0,
 
     items: invoice?.items,
+
+    status_id: invoice?.status_id,
 });
 
 const addItem = () => {
@@ -245,6 +247,16 @@ onMounted(() => {
                                         <InputLabel for="" value="Carrier" class="mb-1" />
                                         <input type="text" class="form-control" v-model="form.carrier">
                                         <InputError :message="form.errors.carrier" />
+                                    </div>
+
+                                    <div class="col-md-2" v-if="page_type == 'invoice'">
+                                        <InputLabel for="" value="Invoice Status" class="mb-1" />
+                                        <select class="form-control" v-model="form.status_id">
+                                                <option :value="1">Pending</option>
+                                                <option :value="2">Approved</option>
+                                                <option :value="3">Rejected</option>
+                                        </select>
+                                        <InputError :message="form.errors.status_id" />
                                     </div>
 
                                 </div>

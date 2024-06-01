@@ -2,15 +2,22 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
 import Filter from "@/Pages/Ledger/Filter.vue";
+import Payment from "@/Pages/Ledger/Payment.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
-    invoices: Object,
+    ledgers: Object,
     companies: Object,
-    filter: Object
+    filter: Object,
+    balance: Object,
 });
 
-
+const format_number = (number) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
+};
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
@@ -37,6 +44,7 @@ defineProps({
                     </div>
 
                     <div class="ms-auto">
+                        <Payment v-bind="$props"></Payment>
                         <Filter v-bind="$props"></Filter>
                         <a :href="route('ledger.print', filter)" title="Print" class="ms-1" target="_blank">
                             <PrimaryButton>
@@ -56,7 +64,7 @@ defineProps({
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered ledger-table">
+                            <table class="table table-bordered ledger-table table-sm" style="font-size:12px">
                                 <thead class="table-light">
                                     <tr>
                                         <th colspan="12" style="text-align: center">
@@ -85,22 +93,28 @@ defineProps({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-for="(invoice, index) in invoices.data">
+                                    <template v-for="(ledger, index) in ledgers.data">
                                         <tr>
-                                            <td>{{ invoice.data.created_at }}</td>
-                                            <td>{{ invoice.data.carrier }}</td>
-                                            <td>{{ invoice.data.mawb_no }}</td>
-                                            <td>{{ invoice.data.sender }}</td>
-                                            <td>{{ invoice.data.destination }}</td>
-                                            <td>{{ invoice.data.quantity }}</td>
-                                            <td>{{ invoice.data.weight }}</td>
-                                            <td>{{ invoice.data.id }}</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>DR</td>
+                                            <td>{{ ledger.invoice_at }}</td>
+                                            <td>{{ ledger.invoice?.carrier }}</td>
+                                            <td>{{ ledger.invoice?.mawb_no }}</td>
+                                            <td>{{ ledger.invoice?.sender }}</td>
+                                            <td>{{ ledger.invoice?.destination }}</td>
+                                            <td>{{ ledger.invoice?.quantity }}</td>
+                                            <td>{{ ledger.invoice?.weight }}</td>
+                                            <td>{{ ledger.invoice?.id }}</td>
+                                            <td>{{ format_number(ledger.debit) }}</td>
+                                            <td>{{ format_number(ledger.credit) }}</td>
+                                            <td>{{ format_number(ledger.balance) }}</td>
+                                            <td>{{ ledger.credit > 0 ? 'CR': 'DR' }}</td>
                                         </tr>
                                     </template>
+                                    <tr>
+                                        <th colspan="8" class="text-right">Total</th>
+                                        <th>{{ format_number(balance.debit_total) }}</th>
+                                        <th>{{ format_number(balance.credit_total) }}</th>
+                                        <th>{{ format_number(balance.balance_total) }}</th>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

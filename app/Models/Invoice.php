@@ -30,4 +30,9 @@ class Invoice extends Model
     {
         return $this->belongsTo(User::class, 'consignee_id', 'id');
     }
+
+    public function uploads()
+    {
+        return $this->hasMany(InvoiceUpload::class, 'invoice_id', 'id');
+    }
 }

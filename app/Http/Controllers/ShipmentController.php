@@ -44,6 +44,7 @@ class ShipmentController extends Controller
                 'departure_at' => $invoice->departure_at,
                 'destination' => $invoice->destination,
                 'landing_at' => $invoice->landing_at,
+                'status_id' => $invoice->status_id,
             ]);
 
         return Inertia::render('Invoice/Index', [

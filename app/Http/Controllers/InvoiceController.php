@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\InvoiceUpload;
+use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
 use Spatie\Permission\Models\Role;
@@ -45,6 +45,7 @@ class InvoiceController extends Controller
                 'consignee_name' => $invoice->consignee->name,
                 'total' => $invoice->total,
                 'invoice_at' => $invoice->invoice_at,
+                'status_id' => $invoice->status_id,
             ]);
 
         return Inertia::render('Invoice/Index', [
@@ -77,6 +78,8 @@ class InvoiceController extends Controller
             'items.*.particular' => 'required|max:250',
             'items.*.amount' => 'required|numeric|gte:0',
             'items.*.qty' => 'required|numeric|gte:1',
+
+            'status_id' => 'required',
         ];
 
         $messages = [
@@ -103,6 +106,8 @@ class InvoiceController extends Controller
             'sender' => $request->sender,
             'destination' => $request->destination,
             'created_by' => auth()->id(),
+
+            'status_id' => $request->status_id,
         ];
 
         if ($request->invoice_id) {
@@ -128,6 +133,18 @@ class InvoiceController extends Controller
             'subtotal' => $invoice_total,
             'total' => $invoice_total,
         ]);
+
+
+        if ($invoice->status_id == 2) {
+            Ledger::updateOrCreate(['invoice_id' => $invoice->id], [
+                'company_id' => $invoice->company_id,
+                'invoice_id' => $invoice->id,
+                'invoice_at' => $invoice->invoice_at,
+                'debit_amount' => $invoice->total,
+                'credit_amount' => 0,
+                'balance_amount' => $invoice->total,
+            ]);
+        }
     }
 
     public function create()
@@ -182,6 +199,15 @@ class InvoiceController extends Controller
         return Redirect::route('invoice.index')->with('success', 'Invoice updated.');
     }
 
+    public function detail($id)
+    {
+        $invoice = Invoice::with(['company', 'shipper', 'consignee', 'uploads'])->find($id);
+
+        return Inertia::render('Invoice/Detail', [
+            'invoice' => $invoice,
+        ]);
+    }
+
     public function print($id)
     {
         $invoice = Invoice::find($id);
@@ -206,5 +232,27 @@ class InvoiceController extends Controller
         $pdf = PDF::loadView('prints.invoice');
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('invoice.pdf');
+    }
+
+    public function upload(Request $request)
+    {
+        $rules = [
+            'invoice_id' => 'required',
+            'file' => 'required',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $url = $request->file('file')->store('invoice-files', 'public');
+        InvoiceUpload::create([
+            'invoice_id' => $request->invoice_id,
+            'url' => $url
+        ]);
+
+        return Redirect::route('invoice.detail', $request->invoice_id)->with('success', 'File uploaded.');
     }
 }
