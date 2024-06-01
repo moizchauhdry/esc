@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import { ref } from "vue";
+import Paginate from "@/Components/Paginate.vue";
 
 defineProps({
     roles: Object,
@@ -177,6 +178,11 @@ const closeModal = () => {
                                     </template>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="float-right">
+                            <Paginate :links="roles.links" />
                         </div>
                     </div>
                 </div>

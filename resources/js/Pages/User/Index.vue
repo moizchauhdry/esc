@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import CreateEdit from "./CreateEdit.vue";
+import Paginate from "@/Components/Paginate.vue";
 
 defineProps({
     users: Object,
@@ -76,6 +77,11 @@ const edit = (user) => {
                                     </template>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="float-right">
+                            <Paginate :links="users.links" />
                         </div>
                     </div>
                 </div>

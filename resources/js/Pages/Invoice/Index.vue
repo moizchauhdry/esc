@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Paginate from "@/Components/Paginate.vue";
 
 defineProps({
     invoices: Object,
@@ -135,8 +136,8 @@ const format_number = (number) => {
 
                                                 <template v-if="invoice.status_id == 3">
                                                     <div
-                                                        class="badge text-rejected bg-light-rejected p-2 text-uppercase px-2">
-                                                        <i class='bx bxs-circle me-1'></i>Approved
+                                                        class="badge text-danger bg-light-danger p-2 text-uppercase px-2">
+                                                        <i class='bx bxs-circle me-1'></i>Rejected
                                                     </div>
                                                 </template>
                                             </td>
@@ -179,6 +180,11 @@ const format_number = (number) => {
 
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="float-right">
+                            <Paginate :links="invoices.links" />
                         </div>
                     </div>
                 </div>
