@@ -33,7 +33,7 @@ class InvoiceController extends Controller
 
         $invoices = $query
             ->orderBy('id', 'desc')
-            ->paginate(10)
+            ->paginate(2)
             ->withQueryString()
             ->through(fn ($invoice) => [
                 'id' => $invoice->id,
@@ -144,6 +144,10 @@ class InvoiceController extends Controller
                 'credit_amount' => 0,
                 'balance_amount' => $invoice->total,
             ]);
+        }
+
+        if ($invoice->status_id == 3) {
+            Ledger::where('invoice_id', $invoice->id)->delete();
         }
     }
 
