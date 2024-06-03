@@ -40,55 +40,5 @@ class UserSeeder extends Seeder
             'password' => Hash::make('ESC12345'),
         ]);
         $admin2->assignRole('admin');
-
-        $employee = User::updateOrCreate(['email' => 'employee@gmail.com',], [
-            'name' => 'Employee',
-            'email' => 'employee@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        $employee->assignRole('employee');
-
-        $manager = User::updateOrCreate(['email' => 'manager@gmail.com',], [
-            'name' => 'Manager',
-            'email' => 'manager@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        $manager->assignRole('manager');
-
-        $company = User::updateOrCreate(['email' => 'company@gmail.com',], [
-            'name' => 'Company',
-            'email' => 'company@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        $company->assignRole('company');
-
-        $shipper = User::updateOrCreate(['email' => 'shipper@gmail.com',], [
-            'name' => 'shipper',
-            'email' => 'shipper@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        $shipper->assignRole('shipper');
-
-        $shipper2 = User::updateOrCreate(['email' => 'shipper2@gmail.com',], [
-            'name' => 'shipper2',
-            'email' => 'shipper2@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        $shipper2->assignRole('shipper');
-
-        $consignee = User::updateOrCreate(['email' => 'consignee@gmail.com',], [
-            'name' => 'consignee',
-            'email' => 'consignee@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        $consignee->assignRole('consignee');
-
-
-        $consignee2 = User::updateOrCreate(['email' => 'consignee2@gmail.com',], [
-            'name' => 'consignee2',
-            'email' => 'consignee2@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-        $consignee2->assignRole('consignee');
     }
 }
