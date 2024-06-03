@@ -74,7 +74,9 @@ const upload_file = () => {
                     <div class="card-body">
                         <table class="table table-bordered">
                             <tr class="bg-primary text-white">
-                                <th class="text-uppercase p-1" colspan="8"><div>Invoice Detail</div></th>
+                                <th class="text-uppercase p-1" colspan="8">
+                                    <div>Invoice Detail</div>
+                                </th>
                             </tr>
                             <tr>
                                 <th>Invoice #</th>
@@ -88,12 +90,14 @@ const upload_file = () => {
                                 <td>{{ invoice?.consignee?.name }}</td>
                             </tr>
                             <tr class="bg-primary text-white">
-                                <th class="text-uppercase p-1" colspan="8"><div>Invoice Files</div></th>
+                                <th class="text-uppercase p-1" colspan="8">
+                                    <div>Invoice Files</div>
+                                </th>
                             </tr>
-                            <tr>
+                            <tr v-if="permission.invoice_upload">
                                 <td colspan="5">
                                     <div>
-                                        <input type="file" class="form-control"  @change="handle_file_change" />
+                                        <input type="file" class="form-control" @change="handle_file_change" />
 
                                     </div>
                                 </td>
@@ -135,6 +139,11 @@ const upload_file = () => {
                                             </a>
                                         </div>
                                     </td>
+                                </tr>
+                            </template>
+                            <template v-else>
+                                <tr>
+                                    <th class="p-2">No record found.</th>
                                 </tr>
                             </template>
                         </table>

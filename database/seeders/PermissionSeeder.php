@@ -43,6 +43,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'invoice_create', 'level' => 2],
             ['name' => 'invoice_update', 'level' => 2],
             ['name' => 'invoice_print', 'level' => 2],
+            ['name' => 'invoice_upload', 'level' => 2],
 
 
             // Ledger
