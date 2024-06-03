@@ -7,6 +7,7 @@ use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use PDF;
 
@@ -14,6 +15,9 @@ class LedgerController extends Controller
 {
     public function index(Request $request)
     {
+        $user = Auth::user();
+        $role_id = getRoleID($user);
+
         $from = isset($request->date[0]) ? Carbon::parse($request->date[0])->addDay()->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d');
         $to = isset($request->date[1]) ? Carbon::parse($request->date[1])->addDay()->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d');
 
@@ -37,6 +41,10 @@ class LedgerController extends Controller
             $q->where('company_id', $filter['company']);
         });
 
+        $query->when($role_id == 2, function ($q) use ($user) {
+            $q->where('company_id', $user->id);
+        });
+
         $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
             $q->whereDate('created_at', '>=', $filter['from']);
             $q->whereDate('created_at', '<=', $filter['to']);
@@ -54,7 +62,6 @@ class LedgerController extends Controller
                 'invoice' => $ledger->invoice,
             ]);
 
-        $companies = User::role('company')->get();
 
         $debit_total = $query->sum('debit_amount');
         $credit_total = $query->sum('credit_amount');
@@ -65,6 +72,10 @@ class LedgerController extends Controller
             'credit_total' => $credit_total,
             'balance_total' => $balance_total - $credit_total,
         ];
+
+        $companies = User::when($role_id == 2, function ($q) use ($user) {
+            $q->where('id', $user->id);
+        })->role('company')->get();
 
         return Inertia::render('Ledger/Index', [
             'ledgers' => $ledgers,
@@ -77,6 +88,9 @@ class LedgerController extends Controller
 
     public function print(Request $request)
     {
+        $user = Auth::user();
+        $role_id = getRoleID($user);
+        
         $from = $request->from;
         $to = $request->to;
         $company = $request->company;
@@ -85,6 +99,10 @@ class LedgerController extends Controller
 
         $query->when($company, function ($q) use ($company) {
             $q->where('company_id', $company);
+        });
+
+        $query->when($role_id == 2, function ($q) use ($user) {
+            $q->where('company_id', $user->id);
         });
 
         $query->when($from && $to, function ($q) use ($from, $to) {
