@@ -50,7 +50,7 @@
             margin-bottom: 20px;
         }
 
-        .invoice-header span{
+        .invoice-header span {
             font-size: 18px;
         }
 
@@ -60,7 +60,7 @@
             height: auto;
         }
 
-        .invoice-info{
+        .invoice-info {
             width: 33.33%;
         }
 
@@ -283,9 +283,9 @@
             <tr style="font-size:12px">
                 <td>{{$loop->iteration}}.</td>
                 <td>{{$item->particular}}</td>
-                <td>PKR {{$item->amount}}</td>
+                <td>PKR {{format_number($item->amount)}}</td>
                 <td>{{$item->qty}}</td>
-                <td>PKR {{$item->total}}</td>
+                <td>PKR {{format_number($item->total)}}</td>
             </tr>
             @endforeach
         </table>
@@ -316,7 +316,7 @@
             <div style="font-size: 12px;float: right;">
                 <div style="margin-top: 10px;padding:0 10px;">
                     <p style="float: left;">Subtotal:</p>
-                    <p style="float: right;"><b>PKR {{$invoice->subtotal}}</b></p>
+                    <p style="float: right;"><b>PKR {{format_number($invoice->subtotal)}}</b></p>
                 </div>
                 {{-- <div style="margin-top: 20px;padding:0 10px;">
                     <p style="float: left;">Discount:</p>
@@ -329,7 +329,7 @@
                 <div
                     style="margin-top: 35px;background: #0D8FCC;color:#fff;height:40px;padding:0 10px;padding-bottom:5px;height:30px;">
                     <p style="float: left;"><b>Total:</b></p>
-                    <p style="float: right;"><b>PKR {{$invoice->total}}</b></p>
+                    <p style="float: right;"><b>PKR {{format_number($invoice->total)}}</b></p>
                 </div>
             </div>
 

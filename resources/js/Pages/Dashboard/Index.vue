@@ -4,6 +4,7 @@ import { Head, usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 
 const permission = usePage().props.can;
+const role = usePage().props.auth.user.roles[0];
 
 defineProps({
     data: Array,
@@ -59,7 +60,7 @@ defineProps({
                             </div>
                         </div>
 
-                        <div class="col">
+                        <div class="col" v-if="role.id != 2">
                             <div class="card radius-10">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
@@ -78,7 +79,7 @@ defineProps({
                             </div>
                         </div>
 
-                        <div class="col">
+                        <div class="col" v-if="role.id != 2">
                             <div class="card radius-10">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">

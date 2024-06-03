@@ -5,6 +5,8 @@ import Filter from "@/Pages/Ledger/Filter.vue";
 import Payment from "@/Pages/Ledger/Payment.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
+const role = usePage().props.auth.user.roles[0];
+
 defineProps({
     ledgers: Object,
     companies: Object,
@@ -44,7 +46,7 @@ const format_number = (number) => {
                     </div>
 
                     <div class="ms-auto">
-                        <Payment v-bind="$props"></Payment>
+                        <Payment v-if="role.id !=2" v-bind="$props"></Payment>
                         <Filter v-bind="$props"></Filter>
                         <a :href="route('ledger.print', filter)" title="Print" class="ms-1" target="_blank">
                             <PrimaryButton>
