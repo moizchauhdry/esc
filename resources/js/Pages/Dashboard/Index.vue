@@ -9,6 +9,14 @@ const role = usePage().props.auth.user.roles[0];
 defineProps({
     data: Array,
 });
+
+const format_number = (number) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
+};
+
 </script>
 
 <template>
@@ -46,14 +54,14 @@ defineProps({
                                     <div class="d-flex align-items-center">
                                         <div>
                                             <p class="mb-0 text-secondary">Revenue</p>
-                                            <h4 class="my-1">${{ data.revenue }}</h4>
+                                            <h4 class="my-1">PKR {{ format_number(data.revenue) }}</h4>
                                             <!-- <p class="mb-0 font-13 text-success">
                                             <i class="bx bxs-up-arrow align-middle"></i>$34
                                             from last week
                                         </p> -->
                                         </div>
                                         <div class="widgets-icons bg-light-success text-success ms-auto"><i
-                                                class='bx bx-dollar'></i>
+                                                class='bx bx-key'></i>
                                         </div>
                                     </div>
                                 </div>

@@ -18,8 +18,8 @@ class LedgerController extends Controller
         $user = Auth::user();
         $role_id = getRoleID($user);
 
-        $from = isset($request->date[0]) ? Carbon::parse($request->date[0])->addDay()->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d');
-        $to = isset($request->date[1]) ? Carbon::parse($request->date[1])->addDay()->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d');
+        $from = $request->from_date;
+        $to = $request->to_date;
 
         $company_name = NULL;
         if (!empty($request->company)) {
@@ -90,30 +90,47 @@ class LedgerController extends Controller
     {
         $user = Auth::user();
         $role_id = getRoleID($user);
-        
+
         $from = $request->from;
         $to = $request->to;
         $company = $request->company;
 
-        $query = Invoice::query();
+        $filter = [
+            'company' => $company,
+            'from' => $from,
+            'to' => $to,
+        ];
 
-        $query->when($company, function ($q) use ($company) {
-            $q->where('company_id', $company);
+        $query = Ledger::query();
+
+        $query->when($filter['company'], function ($q) use ($filter) {
+            $q->where('company_id', $filter['company']);
         });
 
         $query->when($role_id == 2, function ($q) use ($user) {
             $q->where('company_id', $user->id);
         });
 
-        $query->when($from && $to, function ($q) use ($from, $to) {
-            $q->whereDate('created_at', '>=', $from);
-            $q->whereDate('created_at', '<=', $to);
+        $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
+            $q->whereDate('created_at', '>=', $filter['from']);
+            $q->whereDate('created_at', '<=', $filter['to']);
         });
 
-        $invoices = $query->orderBy('id', 'desc')->get();
+        $ledgers = $query->orderBy('id', 'asc')->get();
+
+        $debit_total = $ledgers->sum('debit_amount');
+        $credit_total = $ledgers->sum('credit_amount');
+        $balance_total = $ledgers->sum('debit_amount');
+
+        $balance = [
+            'debit_total' => $debit_total,
+            'credit_total' => $credit_total,
+            'balance_total' => $balance_total - $credit_total,
+        ];
 
         view()->share([
-            'invoices' => $invoices,
+            'ledgers' => $ledgers,
+            'balance' => $balance,
             'filters' => $request->all(),
         ]);
 
