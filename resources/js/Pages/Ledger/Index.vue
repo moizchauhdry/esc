@@ -97,7 +97,7 @@ const format_number = (number) => {
                                 <tbody>
                                     <template v-for="(ledger, index) in ledgers.data">
                                         <tr>
-                                            <td>{{ ledger.invoice_at }}</td>
+                                            <td>{{ ledger.created_at }}</td>
                                             <td>{{ ledger.invoice?.carrier }}</td>
                                             <td>{{ ledger.invoice?.mawb_no }}</td>
                                             <td>{{ ledger.invoice?.sender }}</td>

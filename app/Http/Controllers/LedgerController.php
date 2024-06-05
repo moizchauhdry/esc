@@ -18,8 +18,8 @@ class LedgerController extends Controller
         $user = Auth::user();
         $role_id = getRoleID($user);
 
-        $from = $request->from_date;
-        $to = $request->to_date;
+        $from = $request->from_date ?? Carbon::now()->startOfMonth()->format('Y-m-d');
+        $to = $request->to_date ?? Carbon::now()->endOfMonth()->format('Y-m-d');
 
         $company_name = NULL;
         if (!empty($request->company)) {
@@ -55,7 +55,7 @@ class LedgerController extends Controller
             ->withQueryString()
             ->through(fn ($ledger) => [
                 'id' => $ledger->id,
-                'invoice_at' => $ledger->invoice_at,
+                'created_at' => Carbon::parse($ledger->created_at)->format('d-m-Y'),
                 'debit' => $ledger->debit_amount,
                 'credit' => $ledger->credit_amount,
                 'balance' => $ledger->balance_amount,
@@ -85,7 +85,6 @@ class LedgerController extends Controller
         ]);
     }
 
-
     public function print(Request $request)
     {
         $user = Auth::user();
@@ -112,8 +111,8 @@ class LedgerController extends Controller
         });
 
         $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->whereDate('created_at', '>=', $filter['from']);
-            $q->whereDate('created_at', '<=', $filter['to']);
+            $q->where('created_at', '>=', $filter['from']);
+            $q->where('created_at', '<=', $filter['to']);
         });
 
         $ledgers = $query->orderBy('id', 'asc')->get();
