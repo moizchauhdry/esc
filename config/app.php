@@ -69,8 +69,8 @@ return [
     |
     */
 
-    // 'timezone' => 'UTC',
-    'timezone' => 'Asia/Karachi',
+    'timezone' => 'UTC',
+    // 'timezone' => 'Asia/Karachi',
 
     /*
     |--------------------------------------------------------------------------
