@@ -41,9 +41,9 @@ class ShipmentController extends Controller
                 'consignee_id' => $invoice->consignee->id,
                 'consignee_name' => $invoice->consignee->name,
                 'sender' => $invoice->sender,
-                'departure_at' => $invoice->departure_at,
                 'destination' => $invoice->destination,
-                'landing_at' => $invoice->landing_at,
+                'departure_at' => Carbon::parse($invoice->departure_at)->format('d-m-Y h:i A'),
+                'landing_at' => Carbon::parse($invoice->landing_at)->format('d-m-Y h:i A'),
                 'status_id' => $invoice->status_id,
             ]);
 
@@ -81,7 +81,7 @@ class ShipmentController extends Controller
         $request->validate($rules, $messages);
 
         $data = [
-            'invoice_at' => Carbon::parse($request->invoice_at)->format("Y-m-d h:i:s"),
+            'invoice_at' => $request->invoice_at,
             'company_id' => $request->company_id,
             'shipper_id' => $request->shipper_id,
             'consignee_id' => $request->consignee_id,
@@ -93,8 +93,8 @@ class ShipmentController extends Controller
             'weight' => $request->weight,
             'afc_rate' => $request->afc_rate,
 
-            'departure_at' => Carbon::parse($request->departure_at)->format("Y-m-d h:i:s"),
-            'landing_at' => Carbon::parse($request->landing_at)->format("Y-m-d h:i:s"),
+            'departure_at' => $request->departure_at,
+            'landing_at' => $request->landing_at,
             'sender' => $request->sender,
             'destination' => $request->destination,
             'created_by' => auth()->id(),
@@ -135,6 +135,8 @@ class ShipmentController extends Controller
     public function edit($id)
     {
         $invoice = Invoice::with(['items'])->find($id);
+
+        // dd($invoice);
 
         $shippers = User::role('shipper')->get();
         $consignees = User::role('consignee')->get();
