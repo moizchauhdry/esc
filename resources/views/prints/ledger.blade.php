@@ -22,7 +22,7 @@
         th,
         td {
             border: 1px solid black;
-            padding: 8px;
+            padding: 3px;
             text-align: left;
         }
 
@@ -69,23 +69,28 @@
                 <th>D/C</th>
             </tr>
 
-            @foreach ($invoices as $invoice)
+            @foreach ($ledgers as $ledger)
             <tr>
-                <td>{{ $invoice->created_at }}</td>
-                <td>{{ $invoice->carrier }}</td>
-                <td>{{ $invoice->mawb_no }}</td>
-                <td>{{ $invoice->sender }}</td>
-                <td>{{ $invoice->destination }}</td>
-                <td>{{ $invoice->quantity }}</td>
-                <td>{{ $invoice->weight }}</td>
-                <td>{{ $invoice->id }}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>DR</td>
+                <td>{{ $ledger->invoice_at }}</td>
+                <td>{{ $ledger->invoice->carrier }}</td>
+                <td>{{ $ledger->invoice->mawb_no }}</td>
+                <td>{{ $ledger->invoice->sender }}</td>
+                <td>{{ $ledger->invoice->destination }}</td>
+                <td>{{ $ledger->invoice->quantity }}</td>
+                <td>{{ $ledger->invoice->weight }}</td>
+                <td>{{ $ledger->invoice->id }}</td>
+                <td>{{ format_number($ledger->debit) }}</td>
+                <td>{{ format_number($ledger->credit) }}</td>
+                <td>{{ format_number($ledger->balance) }}</td>
+                <td>{{ $ledger->credit > 0 ? 'CR': 'DR' }}</td>
             </tr>
             @endforeach
-
+            <tr>
+                <th colspan="8" style="text-align: right">Total</th>
+                <th>{{ format_number($balance['debit_total']) }}</th>
+                <th>{{ format_number($balance['credit_total']) }}</th>
+                <th colspan="2">{{ format_number($balance['balance_total']) }}</th>
+            </tr>
 
         </table>
     </div>
