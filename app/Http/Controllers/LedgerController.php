@@ -18,8 +18,8 @@ class LedgerController extends Controller
         $user = Auth::user();
         $role_id = getRoleID($user);
 
-        $from = isset($request->date[0]) ? Carbon::parse($request->date[0])->addDay()->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d');
-        $to = isset($request->date[1]) ? Carbon::parse($request->date[1])->addDay()->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d');
+        $from = $request->from_date;
+        $to = $request->to_date;
 
         $company_name = NULL;
         if (!empty($request->company)) {

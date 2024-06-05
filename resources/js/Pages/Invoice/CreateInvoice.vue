@@ -162,7 +162,6 @@ const format_number = (number) => {
     }).format(number);
 };
 
-
 const format_date = (date) => {
     let parsedDate = moment(date);
     // let newDate = parsedDate.add(5, 'hours');

@@ -10,6 +10,7 @@ import InputError from '@/Components/InputError.vue';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { onMounted } from "vue";
+import moment from 'moment';
 
 defineProps({
     companies: Array
@@ -22,7 +23,8 @@ var saved_filters = "";
 
 const form = useForm({
     company: "",
-    date: "",
+    from_date: "",
+    to_date: "",
 });
 
 const create = () => {
@@ -40,7 +42,8 @@ const create = () => {
 const submit = () => {
     var filters = {
         company: form.company,
-        date: form.date,
+        from_date: form.from_date,
+        to_date: form.to_date,
     };
 
     form.post(route("ledger.index"), {
@@ -64,10 +67,28 @@ const closeModal = () => {
     modal.value = false;
     form.reset();
 };
+
+const format_date = (date) => {
+    let parsedDate = moment(date);
+    // let newDate = parsedDate.add(5, 'hours');
+    let formattedDate = parsedDate.format('YYYY-MM-DD');
+    return formattedDate;
+}
+
+watch(
+    () => {
+        if (form.from_date) {
+            form.from_date = format_date(form.from_date)
+        }
+        if (form.to_date) {
+            form.to_date = format_date(form.to_date)
+        }
+    }
+);
 </script>
 
 <template>
-    <PrimaryButton @click="create"  type="button">Search</PrimaryButton>
+    <PrimaryButton @click="create" type="button">Search</PrimaryButton>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit ? update() : submit()">
@@ -91,10 +112,17 @@ const closeModal = () => {
                             <InputError :message="form.errors.company" />
                         </div>
 
-                        <div class="col-md-6">
-                            <InputLabel for="" value="Date" class="mb-1" />
-                            <VueDatePicker v-model="form.date" :teleport="true" :enable-time-picker="false" range></VueDatePicker>
-                            <InputError :message="form.errors.date" />
+                        <div class="col-md-3">
+                            <InputLabel for="" value="From Date" class="mb-1" />
+                            <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
+                            </VueDatePicker>
+                            <InputError :message="form.errors.from_date" />
+                        </div>
+                        <div class="col-md-3">
+                            <InputLabel for="" value="To Date" class="mb-1" />
+                            <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
+                            </VueDatePicker>
+                            <InputError :message="form.errors.to_date" />
                         </div>
                     </div>
                 </div>
