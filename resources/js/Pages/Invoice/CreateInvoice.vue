@@ -11,6 +11,7 @@ import axios from 'axios';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import InputLabel from "@/Components/InputLabel.vue";
+import moment from 'moment';
 
 const props = defineProps({
     invoice: Object,
@@ -161,6 +162,28 @@ const format_number = (number) => {
     }).format(number);
 };
 
+
+const format_date = (date) => {
+    let parsedDate = moment(date);
+    // let newDate = parsedDate.add(5, 'hours');
+    let formattedDate = parsedDate.format('YYYY-MM-DD HH:mm');
+    return formattedDate;
+}
+
+watch(
+    () => {
+        if (form.departure_at) {
+            form.departure_at = format_date(form.departure_at)
+        }
+        if (form.landing_at) {
+            form.landing_at = format_date(form.landing_at)
+        }
+        if (form.invoice_at) {
+            form.invoice_at = format_date(form.invoice_at)
+        }
+    }
+);
+
 onMounted(() => {
     if (!edit_mode) {
         form.items = [
@@ -217,14 +240,13 @@ onMounted(() => {
                                     <h6 class="invoice-heading">INVOICE TO</h6>
                                     <hr>
 
-                                    <div class="col-md-2" v-if="page_type == 'invoice'">
+                                    <div class="col-md-3" v-if="page_type == 'invoice'">
                                         <InputLabel for="" value="Invoice Date" class="mb-1" />
-                                        <VueDatePicker v-model="form.invoice_at" :teleport="true"
-                                            :enable-time-picker="false"></VueDatePicker>
+                                        <VueDatePicker v-model="form.invoice_at" :teleport="true"></VueDatePicker>
                                         <InputError :message="form.errors.invoice_at" />
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <InputLabel for="" value="Company Account" class="mb-1" />
                                         <select class="form-control" v-model="form.company_id"
                                             @change="fetchAddress('company')">
@@ -252,9 +274,9 @@ onMounted(() => {
                                     <div class="col-md-2" v-if="page_type == 'invoice'">
                                         <InputLabel for="" value="Invoice Status" class="mb-1" />
                                         <select class="form-control" v-model="form.status_id">
-                                                <option :value="1">Pending</option>
-                                                <option :value="2">Approved</option>
-                                                <option :value="3">Rejected</option>
+                                            <option :value="1">Pending</option>
+                                            <option :value="2">Approved</option>
+                                            <option :value="3">Rejected</option>
                                         </select>
                                         <InputError :message="form.errors.status_id" />
                                     </div>
@@ -329,13 +351,15 @@ onMounted(() => {
 
                                     <div class="col-md-3">
                                         <InputLabel for="" value="Departure Date" class="mb-1" />
-                                        <VueDatePicker v-model="form.departure_at" :teleport="true"></VueDatePicker>
+                                        <VueDatePicker v-model="form.departure_at" :teleport="true" :is-24="false">
+                                        </VueDatePicker>
                                         <InputError :message="form.errors.departure_at" />
                                     </div>
 
                                     <div class="col-md-3">
                                         <InputLabel for="" value="Landing Date" class="mb-1" />
-                                        <VueDatePicker v-model="form.landing_at" :teleport="true"></VueDatePicker>
+                                        <VueDatePicker v-model="form.landing_at" :teleport="true" :is-24="false">
+                                        </VueDatePicker>
                                         <InputError :message="form.errors.landing_at" />
                                     </div>
 

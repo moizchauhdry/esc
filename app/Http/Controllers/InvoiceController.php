@@ -44,7 +44,7 @@ class InvoiceController extends Controller
                 'consignee_id' => $invoice->consignee->id,
                 'consignee_name' => $invoice->consignee->name,
                 'total' => $invoice->total,
-                'invoice_at' => $invoice->invoice_at,
+                'invoice_at' => Carbon::parse($invoice->invoice_at)->format('d-m-Y h:i A'),
                 'status_id' => $invoice->status_id,
             ]);
 
@@ -89,7 +89,7 @@ class InvoiceController extends Controller
         $request->validate($rules, $messages);
 
         $data = [
-            'invoice_at' => Carbon::parse($request->invoice_at)->format("Y-m-d h:i:s"),
+            'invoice_at' => $request->invoice_at,
             'company_id' => $request->company_id,
             'shipper_id' => $request->shipper_id,
             'consignee_id' => $request->consignee_id,
@@ -101,8 +101,8 @@ class InvoiceController extends Controller
             'weight' => $request->weight,
             'afc_rate' => $request->afc_rate,
 
-            'departure_at' => Carbon::parse($request->departure_at)->format("Y-m-d h:i:s"),
-            'landing_at' => Carbon::parse($request->landing_at)->format("Y-m-d h:i:s"),
+            'departure_at' => $request->departure_at,
+            'landing_at' => $request->landing_at,
             'sender' => $request->sender,
             'destination' => $request->destination,
             'created_by' => auth()->id(),
