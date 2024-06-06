@@ -29,7 +29,7 @@ class ShipmentController extends Controller
         ];
 
         $query = Invoice::with(['shipper', 'consignee', 'company']);
-        
+
         $query->when($user_role_id == 2, function ($qry) use ($user) {
             $qry->where('company_id', $user->id);
         });
@@ -39,7 +39,7 @@ class ShipmentController extends Controller
         });
 
         $query->when($filter['mawb_no'], function ($q) use ($filter) {
-            $q->where('mawb_no', $filter['mawb_no']);
+            $q->where('mawb_no', 'LIKE', '%' . $filter['mawb_no'] . '%');
         });
 
         $invoices = $query

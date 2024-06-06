@@ -43,7 +43,7 @@ class InvoiceController extends Controller
         });
 
         $query->when($filter['mawb_no'], function ($q) use ($filter) {
-            $q->where('mawb_no', $filter['mawb_no']);
+            $q->where('mawb_no', 'LIKE', '%' . $filter['mawb_no'] . '%');
         });
 
         $invoices = $query
