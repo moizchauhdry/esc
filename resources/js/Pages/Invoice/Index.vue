@@ -1,13 +1,15 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link, usePage } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Paginate from "@/Components/Paginate.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
 
 defineProps({
     invoices: Object,
     contact: Object,
     page_type: String,
+    filter: Object,
 });
 
 const permission = usePage().props.can;
@@ -18,6 +20,30 @@ const format_number = (number) => {
         maximumFractionDigits: 2
     }).format(number);
 };
+
+const form = useForm({
+    invoice_id: "",
+    mawb_no: "",
+});
+
+const search = () => {
+    // var filters = {
+    //     invoice_id: form.invoice_id,
+    //     mawb_no: form.mawb_no,
+    // };
+
+    form.post(route("invoice.index"), {
+        preserveScroll: true,
+        onSuccess: (response) => {
+            // localStorage.setItem('filters', JSON.stringify(filters));
+        },
+        onError: (errors) => {
+            console.log(errors)
+        },
+        onFinish: () => { },
+    });
+};
+
 </script>
 
 <template>
@@ -51,13 +77,25 @@ const format_number = (number) => {
 
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-lg-flex align-items-center mb-4 gap-3">
-                            <div class="position-relative">
-                                <input type="text" class="form-control ps-5 radius-30" placeholder="Search Invoice">
-                                <span class="position-absolute top-50 product-show translate-middle-y"><i
-                                        class="bx bx-search"></i></span>
+                        <form @submit.prevent="search">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <input type="text" v-model="form.invoice_id" class="form-control"
+                                        placeholder="Search Invoice #">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" v-model="form.mawb_no" class="form-control"
+                                        placeholder="Search AWB #">
+                                </div>
+                                <div class="col-md-3">
+                                    <SuccessButton class="px-4 py-1" :class="{ 'opacity-25': form.processing }"
+                                        :disabled="form.processing">
+                                        Search
+                                    </SuccessButton>
+                                </div>
                             </div>
-                        </div>
+                        </form>
+
                         <div class="table-responsive">
                             <table class="table">
                                 <thead class="table-light">
@@ -110,15 +148,13 @@ const format_number = (number) => {
                                                 <b>Date:</b> {{ invoice.landing_at }}
                                             </td>
 
-                                            <td style="width: 10px;" v-if="page_type == 'invoice'">PKR {{ format_number(invoice.total) }}
+                                            <td style="width: 10px;" v-if="page_type == 'invoice'">PKR {{
+                                                format_number(invoice.total) }}
                                             </td>
-                                            <td style="width: 10px;" v-if="page_type == 'invoice'">{{ invoice.invoice_at }}</td>
+                                            <td style="width: 10px;" v-if="page_type == 'invoice'">{{ invoice.invoice_at
+                                                }}</td>
 
                                             <td style="width: 10px;">
-                                                <!-- <div
-                                                    class="badge text-primary bg-light-primary p-2 text-uppercase px-2 mx-1">
-                                                    <i class='bx bxs-circle me-1'></i>{{page_type}}
-                                                </div> -->
 
                                                 <template v-if="invoice.status_id == 1">
                                                     <div

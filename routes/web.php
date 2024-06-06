@@ -53,7 +53,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
         });
 
         Route::prefix('shipments')->group(function () {
-            Route::get('/', [ShipmentController::class, 'index'])->name('shipment.index');
+            Route::any('/', [ShipmentController::class, 'index'])->name('shipment.index');
             Route::get('/create', [ShipmentController::class, 'create'])->name('shipment.create')->middleware('permission:shipment_create');
             Route::post('/store', [ShipmentController::class, 'store'])->name('shipment.store')->middleware('permission:shipment_create');
             Route::get('/edit/{id}', [ShipmentController::class, 'edit'])->name('shipment.edit')->middleware('permission:shipment_update');
@@ -61,7 +61,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
         });
 
         Route::prefix('invoices')->group(function () {
-            Route::get('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice_list');
+            Route::any('/', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:invoice_list');
             Route::get('/create', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('permission:invoice_create');
             Route::post('/store', [InvoiceController::class, 'store'])->name('invoice.store')->middleware('permission:invoice_create');
             Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:invoice_update');

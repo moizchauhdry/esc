@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Role;
 
 class ShipmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -23,9 +23,23 @@ class ShipmentController extends Controller
             $user_role_id = $user->roles[0]->id;
         }
 
+        $filter = [
+            'invoice_id' => $request->invoice_id,
+            'mawb_no' => $request->mawb_no,
+        ];
+
         $query = Invoice::with(['shipper', 'consignee', 'company']);
+        
         $query->when($user_role_id == 2, function ($qry) use ($user) {
             $qry->where('company_id', $user->id);
+        });
+
+        $query->when($filter['invoice_id'], function ($q) use ($filter) {
+            $q->where('id', $filter['invoice_id']);
+        });
+
+        $query->when($filter['mawb_no'], function ($q) use ($filter) {
+            $q->where('mawb_no', $filter['mawb_no']);
         });
 
         $invoices = $query
