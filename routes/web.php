@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
             Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice_print');
             Route::get('/detail/{id}', [InvoiceController::class, 'detail'])->name('invoice.detail')->middleware('permission:invoice_list');
             Route::post('/upload', [InvoiceController::class, 'upload'])->name('invoice.upload')->middleware('permission:invoice_list');
+            Route::get('/upload/destroy', [InvoiceController::class, 'uploadDestroy'])->name('invoice.upload.destroy')->middleware('permission:invoice_list');
         });
 
         Route::prefix('ledgers')->group(function () {
