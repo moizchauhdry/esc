@@ -288,14 +288,9 @@ class InvoiceController extends Controller
         return Redirect::route('invoice.detail', $request->invoice_id)->with('success', 'File uploaded.');
     }
 
-    // public function getInvoiceUploadList($invoice_id)
-    // {
-    //     $invoices_uploads = InvoiceUpload::where('invoice_id', $invoice_id)->get();
-
-    //     $data = [
-    //         'invoices_uploads' => $invoices_uploads
-    //     ];
-
-    //     return response()->json($data);
-    // }
+    public function uploadDestroy(Request $request)
+    {
+       InvoiceUpload::find($request->upload_id)->delete();
+       return Redirect::back()->with('success', 'File deleted.');
+    }
 }
