@@ -220,10 +220,23 @@ class InvoiceController extends Controller
 
     public function detail($id)
     {
-        $invoice = Invoice::with(['company', 'shipper', 'consignee', 'uploads'])->find($id);
+        $invoice = Invoice::with(['company', 'shipper', 'consignee'])->find($id);
+
+        $invoice_uploads = InvoiceUpload::query()
+            ->where('invoice_id', $invoice->id)
+            ->orderBy('id', 'desc')
+            ->paginate(5)
+            ->withQueryString()
+            ->through(fn ($upload) => [
+                'id' => $upload->id,
+                'invoice_id' => $upload->invoice_id,
+                'url' => $upload->url,
+            ]);
+
 
         return Inertia::render('Invoice/Detail', [
             'invoice' => $invoice,
+            'invoice_uploads' => $invoice_uploads,
         ]);
     }
 
@@ -274,4 +287,15 @@ class InvoiceController extends Controller
 
         return Redirect::route('invoice.detail', $request->invoice_id)->with('success', 'File uploaded.');
     }
+
+    // public function getInvoiceUploadList($invoice_id)
+    // {
+    //     $invoices_uploads = InvoiceUpload::where('invoice_id', $invoice_id)->get();
+
+    //     $data = [
+    //         'invoices_uploads' => $invoices_uploads
+    //     ];
+
+    //     return response()->json($data);
+    // }
 }

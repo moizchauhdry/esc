@@ -2,11 +2,13 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import Paginate from "@/Components/Paginate.vue";
+
 
 defineProps({
     invoice: Object,
-    invoice_files: Array,
+    invoice_uploads: Array,
 });
 
 const invoice = usePage().props.invoice;
@@ -32,12 +34,17 @@ const handle_file_change = (event) => {
 const upload_file = () => {
     form.post(route("invoice.upload"), {
         preserveScroll: true,
-        onSuccess: () => { },
+        onSuccess: () => {
+            // 
+        },
         onError: () => error(),
         onFinish: () => { },
     });
 };
 
+onMounted(() => {
+    // 
+});
 </script>
 
 <template>
@@ -109,7 +116,7 @@ const upload_file = () => {
                                 </td>
                             </tr>
 
-                            <template v-if="invoice.uploads.length > 0">
+                            <template v-if="invoice_uploads.data.length > 0">
                                 <tr class="text-uppercase">
                                     <th colspan="8" class="bg-dark text-white">
                                         <div>
@@ -123,14 +130,20 @@ const upload_file = () => {
                                             SR. #
                                         </div>
                                     </th>
+                                    <th>
+                                        <div>
+                                            File ID
+                                        </div>
+                                    </th>
                                     <th colspan="6">
                                         <div>
                                             URL
                                         </div>
                                     </th>
                                 </tr>
-                                <tr v-for="upload, index in invoice.uploads" :key="upload.id">
+                                <tr v-for="upload, index in invoice_uploads.data" :key="upload.id">
                                     <td>{{ ++index }}</td>
+                                    <td>{{ upload.id }}</td>
                                     <td colspan="6">
                                         <div class="text-underline">
                                             <a :href="'/storage/' + upload.url" target="_blank"
@@ -147,6 +160,7 @@ const upload_file = () => {
                                 </tr>
                             </template>
                         </table>
+                        <div><Paginate :links="invoice_uploads.links" /></div>
                     </div>
                 </div>
 

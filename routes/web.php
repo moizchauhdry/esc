@@ -72,6 +72,8 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
             Route::get('/upload/destroy', [InvoiceController::class, 'uploadDestroy'])->name('invoice.upload.destroy')->middleware('permission:invoice_list');
         });
 
+        // Route::get('/getInvoiceUploadList/{invoice_id}', [InvoiceController::class, 'getInvoiceUploadList'])->name('getInvoiceUploadList');
+
         Route::prefix('ledgers')->group(function () {
             Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');
             Route::post('/payment', [LedgerController::class, 'payment'])->name('ledger.payment');
