@@ -102,6 +102,7 @@ const search = () => {
                                     <tr>
                                         <th style="width: 5px;">SR #</th>
                                         <th style="width: 10px;">AWB/Shipment #</th>
+                                        <th style="width: 5px;">Company</th>
                                         <th style="width: 10px;">Shipper/Consignee</th>
 
                                         <th style="width: 10px;" v-if="page_type == 'shipment'">Departure</th>
@@ -129,8 +130,9 @@ const search = () => {
                                             <td style="width: 10px;">
                                                 <b>AWB #:</b> {{ invoice.mawb_no }} <br>
                                                 <b>Shipment #:</b> {{ invoice.id }} <br>
-                                                <b>Company:</b> {{ invoice.company_name }} <br>
                                             </td>
+                                            <td>{{ invoice.company_name }}</td>
+
                                             <td style="width: 10px;">
                                                 <!-- <b>Account #:</b> {{ invoice.shipper_id }} <br> -->
                                                 <b>Shipper:</b> {{ invoice.shipper_name }} <br>

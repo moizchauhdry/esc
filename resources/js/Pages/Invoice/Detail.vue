@@ -151,7 +151,7 @@ onMounted(() => {
                             </tbody>
                         </table>
                         <div>
-                            <Paginate :links="invoice_uploads.links" />
+                            <Paginate :links="invoice_uploads.links" :scroll="true" />
                         </div>
                     </div>
                 </div>

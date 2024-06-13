@@ -48,7 +48,7 @@ class InvoiceController extends Controller
 
         $invoices = $query
             ->orderBy('id', 'desc')
-            ->paginate(10)
+            ->paginate(5)
             ->withQueryString()
             ->through(fn ($invoice) => [
                 'id' => $invoice->id,
