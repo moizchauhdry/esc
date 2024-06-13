@@ -67,12 +67,10 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
             Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('invoice.edit')->middleware('permission:invoice_update');
             Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice_update');
             Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice_print');
-            Route::get('/detail/{id}', [InvoiceController::class, 'detail'])->name('invoice.detail')->middleware('permission:invoice_list');
-            Route::post('/upload', [InvoiceController::class, 'upload'])->name('invoice.upload')->middleware('permission:invoice_list');
-            Route::get('/upload/destroy', [InvoiceController::class, 'uploadDestroy'])->name('invoice.upload.destroy')->middleware('permission:invoice_list');
+            Route::get('/detail/{id}', [InvoiceController::class, 'detail'])->name('invoice.detail');
+            Route::post('/upload', [InvoiceController::class, 'upload'])->name('invoice.upload');
+            Route::delete('/upload/destroy', [InvoiceController::class, 'uploadDestroy'])->name('invoice.upload.destroy');
         });
-
-        // Route::get('/getInvoiceUploadList/{invoice_id}', [InvoiceController::class, 'getInvoiceUploadList'])->name('getInvoiceUploadList');
 
         Route::prefix('ledgers')->group(function () {
             Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');

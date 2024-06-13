@@ -218,6 +218,10 @@
                         <p style="float: right;">{{$invoice->mawb_no}}</p>
                     </div>
                     <div style="margin-top: 20px;">
+                        <p style="float: left;"><b>CARRIER:</b></p>
+                        <p style="float: right;">{{$invoice->carrier}}</p>
+                    </div>
+                    <div style="margin-top: 20px;">
                         <p style="float: left;"><b>INVOICE TO:</b></p>
                         <p style="float: right;">{{$invoice->company->name ?? 'N/A'}}</p>
                     </div>
@@ -381,7 +385,10 @@
             <div style="float: right;font-size: 12px;margin: 0;padding-left:50px;">
                 <p style="font-size: 14px;"><b>Terms & Consitions:</b></p>
                 Please Make Check Payable to <b>EXPRESS SAVER CARGO.</b> <br>
-                <b>Online Transfer: A/C: 3397301000001395 :: EXPRESS SAVER CARGO BANK: FAYSAL BANK</b>
+                <b>ONLINE TRANSFER :: EXPRESS SAVER CARGO</b> <br> <br>
+                <b>A/C: 3397301000001395 :: FAYSAL BANK</b> <br>
+                <b>A/C: PK08 SONE 0014 4200 1292 6128 :: SONARI BANK</b> <br>
+                <b>A/C: PK06 MPBL 0431 0271 4012 6060 :: HABIB METRO</b> <br>
             </div>
 
         </div>
