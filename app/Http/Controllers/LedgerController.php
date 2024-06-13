@@ -51,7 +51,7 @@ class LedgerController extends Controller
         });
 
         $ledgers = $query->orderBy('id', 'asc')
-            ->paginate(10)
+            ->paginate(500)
             ->withQueryString()
             ->through(fn ($ledger) => [
                 'id' => $ledger->id,
