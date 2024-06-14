@@ -15,6 +15,7 @@ class LedgerController extends Controller
 {
     public function index(Request $request)
     {
+        // dd( $request->get('company'));
         $user = Auth::user();
         $role_id = getRoleID($user);
 
@@ -37,9 +38,15 @@ class LedgerController extends Controller
 
         $query = Ledger::query();
 
-        $query->when($filter['company'], function ($q) use ($filter) {
-            $q->where('company_id', $filter['company']);
-        });
+        if($request->company != null && $request->company != 0){
+            $query->when($request->company, function ($q) use ($request) {
+                $q->where('company_id', $request->company);
+            });
+        } else {
+            $query->when($filter['company'], function ($q) use ($filter) {
+                $q->where('company_id', $filter['company']);
+            });
+        }
 
         $query->when($role_id == 2, function ($q) use ($user) {
             $q->where('company_id', $user->id);
@@ -49,7 +56,7 @@ class LedgerController extends Controller
             $q->whereDate('created_at', '>=', $filter['from']);
             $q->whereDate('created_at', '<=', $filter['to']);
         });
-
+        
         $ledgers = $query->orderBy('id', 'asc')
             ->paginate(10)
             ->withQueryString()
@@ -102,9 +109,15 @@ class LedgerController extends Controller
 
         $query = Ledger::query();
 
-        $query->when($filter['company'], function ($q) use ($filter) {
-            $q->where('company_id', $filter['company']);
-        });
+        if($request->company != null && $request->company != 0){
+            $query->when($request->company, function ($q) use ($request) {
+                $q->where('company_id', $request->company);
+            });
+        } else {
+            $query->when($filter['company'], function ($q) use ($filter) {
+                $q->where('company_id', $filter['company']);
+            });
+        }
 
         $query->when($role_id == 2, function ($q) use ($user) {
             $q->where('company_id', $user->id);
@@ -157,6 +170,14 @@ class LedgerController extends Controller
             'debit_amount' => 0,
             'credit_amount' => $request->credit,
             'balance_amount' => $request->balance_total - $request->credit
+        ]);
+    }
+
+    public function company(){
+
+        $companies = User::role('company')->get();
+        return Inertia::render('Ledger/Company', [
+            'companies' => $companies,
         ]);
     }
 }
