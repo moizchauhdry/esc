@@ -154,7 +154,7 @@ class InvoiceController extends Controller
             Ledger::updateOrCreate(['invoice_id' => $invoice->id], [
                 'company_id' => $invoice->company_id,
                 'invoice_id' => $invoice->id,
-                'invoice_at' => $invoice->invoice_at,
+                'ledger_at' => Carbon::now(),
                 'debit_amount' => $invoice->total,
                 'credit_amount' => 0,
                 'balance_amount' => $invoice->total,
@@ -290,7 +290,7 @@ class InvoiceController extends Controller
 
     public function uploadDestroy(Request $request)
     {
-       InvoiceUpload::find($request->upload_id)->delete();
-       return Redirect::back()->with('success', 'File deleted.');
+        InvoiceUpload::find($request->upload_id)->delete();
+        return Redirect::back()->with('success', 'File deleted.');
     }
 }
