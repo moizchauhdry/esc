@@ -12,6 +12,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import InputLabel from "@/Components/InputLabel.vue";
 import moment from 'moment';
+import { toast } from 'vue3-toastify';
 
 const props = defineProps({
     invoice: Object,
@@ -30,6 +31,15 @@ const page_type = usePage().props.page_type;
 
 var selected_shipper = "";
 var selected_consignee = "";
+
+const notify = (message, type) => {
+    toast(message, {
+        "theme": "colored",
+        "transition": "slide",
+        "autoClose": 2000,
+        "type": type,
+    });
+}
 
 const form = useForm({
     invoice_id: invoice?.id,
@@ -75,7 +85,11 @@ const submit = () => {
         if (edit_mode) {
             form.post(route("shipment.update"), {
                 preserveScroll: true,
-                onSuccess: () => closeModal(),
+                onSuccess: () => {
+                    console.log(usePage().props.flash.success);
+                    notify(usePage().props.flash.success, 'success');
+                    closeModal()
+                },
                 onError: () => error(),
                 onFinish: () => { },
             });
@@ -107,7 +121,7 @@ const submit = () => {
 };
 
 const error = () => {
-    // 
+    notify('Something went wrong. Please try again later', 'error');
 };
 
 const closeModal = () => {
