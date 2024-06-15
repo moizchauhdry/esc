@@ -77,6 +77,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
             Route::post('/payment', [LedgerController::class, 'payment'])->name('ledger.payment');
             Route::get('/print', [LedgerController::class, 'print'])->name('ledger.print');
             Route::get('/company', [LedgerController::class, 'company'])->name('ledger.company');
+            Route::post('/delete', [LedgerController::class, 'deleteLedger'])->name('ledger.delete');
         });
     });
 });

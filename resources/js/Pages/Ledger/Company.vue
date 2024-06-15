@@ -13,7 +13,7 @@ defineProps({
 
 <template>
 
-    <Head title="Users" />
+    <Head title="Company" />
 
     <AuthenticatedLayout>
         <!--start page wrapper -->
