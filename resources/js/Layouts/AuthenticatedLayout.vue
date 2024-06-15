@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Sidebar from "@/Layouts/Partials/Sidebar.vue";
 import Header from "@/Layouts/Partials/Header.vue";
-
+import FlashMessage from "@/Components/FlashMessage.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -13,6 +13,7 @@ const showingNavigationDropdown = ref(false);
 
         <Sidebar></Sidebar>
         <Header></Header>
+        <FlashMessage></FlashMessage>
 
         <!-- Page Content -->
         <main>
