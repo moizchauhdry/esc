@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use PDF;
 
@@ -178,6 +179,9 @@ class LedgerController extends Controller
             'balance_amount' => $request->balance_total - $request->credit,
             'ledger_at' => date('Y-m-d H:i:s', strtotime($request->ledger_at)),
         ]);
+
+
+        return Redirect::route('ledger.index')->with('success', 'Payment added.');
     }
 
     public function company(){
@@ -192,5 +196,8 @@ class LedgerController extends Controller
         
         $ledger = Ledger::find($request->ledger_id);
         $ledger->delete();
+
+        return Redirect::route('ledger.index')->with('success', 'Ledger deleted.');
+
     }
 }
