@@ -20,6 +20,24 @@ const format_number = (number) => {
         maximumFractionDigits: 2
     }).format(number);
 };
+
+const deleteLedger = (LedgerId) => {
+    const form = useForm({
+        ledger_id: LedgerId,
+    });
+  if (confirm('Are you sure you want to delete this Ledger?')) {
+    form.post(route("ledger.delete"), {
+        preserveScroll: true,
+        onSuccess: (response) => {
+            // closeModal();
+        },
+        onError: (errors) => {
+            // console.log(errors)
+        },
+        onFinish: () => { },
+    });
+  }
+};
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
@@ -92,6 +110,7 @@ const format_number = (number) => {
                                         <th>Credit</th>
                                         <th>Balance</th>
                                         <th>D/C</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,6 +128,7 @@ const format_number = (number) => {
                                             <td>{{ format_number(ledger.credit) }}</td>
                                             <td>{{ format_number(ledger.balance) }}</td>
                                             <td>{{ ledger.credit > 0 ? 'CR': 'DR' }}</td>
+                                            <td><button @click="deleteLedger(ledger.id)"><i class="bx bx-trash"></i></button></td>
                                         </tr>
                                     </template>
                                     <tr>

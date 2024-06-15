@@ -20,11 +20,12 @@ const modal = ref(false);
 const edit = ref(false);
 const companies = usePage().props.companies;
 const balance = usePage().props.balance;
-
+const ledger_company_id = usePage().props.ledger_company_id;
 const form = useForm({
-    company_id: "",
+    company_id: ledger_company_id || "",
     balance_total: balance.balance_total,
     credit: "",
+    ledger_at: "",
 });
 
 const create = () => {
@@ -53,6 +54,7 @@ const closeModal = () => {
     modal.value = false;
     form.reset();
 };
+
 </script>
 
 <template>
@@ -70,10 +72,16 @@ const closeModal = () => {
                             <InputLabel for="" value="Company" class="mb-1" />
                             <select v-model="form.company_id" class="form-control">
                                 <template v-for="company in companies">
-                                    <option :value="company.id">{{ company.name }}</option>
+                                    <option :value="company.id" >{{ company.name }}</option>
                                 </template>
                             </select>
                             <InputError :message="form.errors.company_id" />
+                        </div>
+                        <div class="col-md-3">
+                            <InputLabel for="" value="Payment Date" class="mb-1" />
+                            <VueDatePicker v-model="form.ledger_at" :teleport="true" :enable-time-picker="false">
+                            </VueDatePicker>
+                            <InputError :message="form.errors.ledger_at" />
                         </div>
                         <div class="col-md-3">
                             <InputLabel for="" value="Balance" class="mb-1" />

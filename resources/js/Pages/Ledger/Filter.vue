@@ -19,10 +19,12 @@ defineProps({
 const modal = ref(false);
 const edit = ref(false);
 const companies = usePage().props.companies;
+const ledger_company_id = usePage().props.ledger_company_id;
+
 var saved_filters = "";
 
 const form = useForm({
-    company: "",
+    company: ledger_company_id || "",
     from_date: "",
     to_date: "",
 });
