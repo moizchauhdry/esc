@@ -70,6 +70,9 @@ class LedgerController extends Controller
                 'credit' => $ledger->credit_amount,
                 'balance' => $ledger->balance_amount,
                 'invoice' => $ledger->invoice,
+                'comments' => $ledger->comments,
+                'company_id' => $ledger->company_id,
+                'ledger_at' => $ledger->ledger_at,
             ]);
 
 
@@ -177,6 +180,7 @@ class LedgerController extends Controller
             'credit_amount' => $request->credit,
             'balance_amount' => $request->balance_total - $request->credit,
             'ledger_at' => date('Y-m-d H:i:s', strtotime($request->ledger_at)),
+            'comments' => $request->comments,
         ]);
     }
 
@@ -192,5 +196,31 @@ class LedgerController extends Controller
         
         $ledger = Ledger::find($request->ledger_id);
         $ledger->delete();
+    }
+
+    public function updateLedger(Request $request)
+    {
+        $rules = [
+            'company_id' => 'required',
+            'credit' => 'required',
+            'ledger_at' => 'required',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $data = [
+            'company_id' => $request->company_id,
+            'credit_amount' => $request->credit,
+            'ledger_at' => date('Y-m-d H:i:s', strtotime($request->ledger_at)),
+            'comments' => $request->comments,
+        ];
+
+        $ledger = Ledger::find($request->id);
+        $ledger->update($data);
+
     }
 }
