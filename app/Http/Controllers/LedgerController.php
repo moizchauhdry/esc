@@ -16,7 +16,6 @@ class LedgerController extends Controller
 {
     public function index(Request $request)
     {
-        // dd( $request->get('company'));
         $user = Auth::user();
         $role_id = getRoleID($user);
 
@@ -207,6 +206,7 @@ class LedgerController extends Controller
 
     public function updateLedger(Request $request)
     {
+
         $rules = [
             'company_id' => 'required',
             'credit' => 'required',
@@ -219,14 +219,15 @@ class LedgerController extends Controller
 
         $request->validate($rules, $messages);
 
+        
+        $ledger = Ledger::find($request->id);
         $data = [
             'company_id' => $request->company_id,
             'credit_amount' => $request->credit,
+            'balance_amount' => $request->balance_total - $request->credit,
             'ledger_at' => date('Y-m-d H:i:s', strtotime($request->ledger_at)),
             'comments' => $request->comments,
         ];
-
-        $ledger = Ledger::find($request->id);
         $ledger->update($data);
 
     }

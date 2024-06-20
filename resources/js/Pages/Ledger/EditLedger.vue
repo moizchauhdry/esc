@@ -19,11 +19,13 @@ defineProps({
 const modal = ref(false);
 const edit_mode = ref(false);
 const companies = usePage().props.companies;
+const balance = usePage().props.balance;
+
 
 const form = useForm({
     id: "",
     company_id: "",
-    balance_total: "",
+    balance_total: balance.balance_total,
     credit: "",
     ledger_at: "",
     comments : "",
@@ -38,6 +40,8 @@ const edit = (ledger) => {
     form.credit = format_number(ledger.credit)
     form.ledger_at =  new Date(ledger.ledger_at)
     form.comments = ledger.comments
+    form.balance_total = balance.balance_total
+
     
 };
 
@@ -74,7 +78,7 @@ defineExpose({ edit: (ledger) => edit(ledger) });
 
 <template>
     <button type="button" @click="create" title="Edit"
-                                                    clas="btn btn-primary"><i class="bx bx-edit"></i></button>
+                                                    clas="btn btn-primary"></button>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="update()">
