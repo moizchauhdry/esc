@@ -68,17 +68,17 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
             Route::post('/update', [InvoiceController::class, 'update'])->name('invoice.update')->middleware('permission:invoice_update');
             Route::get('/print/{id}', [InvoiceController::class, 'print'])->name('invoice.print')->middleware('permission:invoice_print');
             Route::get('/detail/{id}', [InvoiceController::class, 'detail'])->name('invoice.detail');
-            Route::post('/upload', [InvoiceController::class, 'upload'])->name('invoice.upload');
-            Route::delete('/upload/destroy', [InvoiceController::class, 'uploadDestroy'])->name('invoice.upload.destroy');
+            Route::post('/upload', [InvoiceController::class, 'upload'])->name('invoice.upload')->middleware('permission:invoice_upload');
+            Route::delete('/upload/destroy', [InvoiceController::class, 'uploadDestroy'])->name('invoice.upload.destroy')->middleware('permission:invoice_upload_destroy');
         });
 
         Route::prefix('ledgers')->group(function () {
             Route::any('/', [LedgerController::class, 'index'])->name('ledger.index');
-            Route::post('/payment', [LedgerController::class, 'payment'])->name('ledger.payment');
+            Route::post('/payment', [LedgerController::class, 'payment'])->name('ledger.payment')->middleware('permission:ledger_payment');
             Route::get('/print', [LedgerController::class, 'print'])->name('ledger.print');
-            Route::get('/company', [LedgerController::class, 'company'])->name('ledger.company');
-            Route::post('/delete', [LedgerController::class, 'deleteLedger'])->name('ledger.delete');
-            Route::post('/update', [LedgerController::class, 'updateLedger'])->name('ledger.update');
+            Route::get('/company', [LedgerController::class, 'company'])->name('ledger.company')->middleware('permission:ledger_company');
+            Route::post('/delete', [LedgerController::class, 'deleteLedger'])->name('ledger.delete')->middleware('permission:ledger_delete');
+            Route::post('/update', [LedgerController::class, 'updateLedger'])->name('ledger.update')->middleware('permission:ledger_update');
             Route::post('/balance', [LedgerController::class, 'fetchBalance'])->name('ledger.balance');
         });
     });

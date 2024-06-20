@@ -141,7 +141,7 @@ onMounted(() => {
                                             </div>
                                         </td>
                                         <td>
-                                            <DeleteInvoiceUpload :upload_id="upload.id"></DeleteInvoiceUpload>
+                                            <DeleteInvoiceUpload :upload_id="upload.id" v-if="permission.invoice_upload_destroy"></DeleteInvoiceUpload>
                                         </td>
                                     </tr>
                                 </template>
