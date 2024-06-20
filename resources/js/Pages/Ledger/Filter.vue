@@ -90,7 +90,7 @@ watch(
 </script>
 
 <template>
-    <PrimaryButton @click="create" type="button">Search</PrimaryButton>
+    <PrimaryButton @click="create" type="button" class="mx-1">Search</PrimaryButton>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit ? update() : submit()">

@@ -27,7 +27,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
+Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified', 'permission:dashboard'])->name('dashboard');
 
@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function() {
             Route::get('/company', [LedgerController::class, 'company'])->name('ledger.company');
             Route::post('/delete', [LedgerController::class, 'deleteLedger'])->name('ledger.delete');
             Route::post('/update', [LedgerController::class, 'updateLedger'])->name('ledger.update');
+            Route::post('/balance', [LedgerController::class, 'fetchBalance'])->name('ledger.balance');
         });
     });
 });

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('ledgers', function (Blueprint $table) {
-            $table->tinyInteger('amount_type')->after('ledger_at');
+            $table->tinyInteger('amount_type')->after('ledger_at')->default(1);
         });
     }
 

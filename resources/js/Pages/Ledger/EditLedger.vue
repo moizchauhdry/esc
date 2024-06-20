@@ -9,7 +9,6 @@ import InputLabel from "@/Components/InputLabel.vue";
 import InputError from '@/Components/InputError.vue';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { onMounted } from "vue";
 
 defineProps({
     companies: Array,
@@ -19,32 +18,24 @@ defineProps({
 const modal = ref(false);
 const edit_mode = ref(false);
 const companies = usePage().props.companies;
-const balance = usePage().props.balance;
-
 
 const form = useForm({
     id: "",
     company_id: "",
-    balance_total: balance.balance_total,
     credit: "",
     ledger_at: "",
-    comments : "",
+    comments: "",
 });
-
 
 const edit = (ledger) => {
     modal.value = true;
     edit_mode.value = true;
     form.id = ledger.id
     form.company_id = ledger.company_id
-    form.credit = format_number(ledger.credit)
-    form.ledger_at =  new Date(ledger.ledger_at)
+    form.credit = ledger.credit
+    form.ledger_at = new Date(ledger.ledger_at)
     form.comments = ledger.comments
-    form.balance_total = balance.balance_total
-
-    
 };
-
 
 const update = () => {
     form.post(route("ledger.update"), {
@@ -55,6 +46,7 @@ const update = () => {
     });
 };
 
+
 const error = () => {
     // 
 };
@@ -64,21 +56,12 @@ const closeModal = () => {
     form.reset();
 };
 
-const format_number = (number) => {
-    return new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(number);
-};
-
 defineExpose({ edit: (ledger) => edit(ledger) });
-
 
 </script>
 
 <template>
-    <button type="button" @click="create" title="Edit"
-                                                    clas="btn btn-primary"></button>
+    <button type="button" @click="create" title="Edit" clas="btn btn-primary"></button>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="update()">
@@ -92,7 +75,7 @@ defineExpose({ edit: (ledger) => edit(ledger) });
                             <InputLabel for="" value="Company" class="mb-1" />
                             <select v-model="form.company_id" class="form-control">
                                 <template v-for="company in companies">
-                                    <option :value="company.id" >{{ company.name }}</option>
+                                    <option :value="company.id">{{ company.name }}</option>
                                 </template>
                             </select>
                             <InputError :message="form.errors.company_id" />
