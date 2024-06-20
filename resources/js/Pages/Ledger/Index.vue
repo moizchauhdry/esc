@@ -1,8 +1,10 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 import Filter from "@/Pages/Ledger/Filter.vue";
 import Payment from "@/Pages/Ledger/Payment.vue";
+import EditLedger from "@/Pages/Ledger/EditLedger.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const role = usePage().props.auth.user.roles[0];
@@ -38,6 +40,11 @@ const deleteLedger = (LedgerId) => {
     });
   }
 };
+
+const create_edit_ref = ref(null);
+const edit = (ledger) => {
+    create_edit_ref.value.edit(ledger)
+};
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
@@ -61,6 +68,9 @@ const deleteLedger = (LedgerId) => {
                                 <li class="breadcrumb-item active" aria-current="page">Ledger List</li>
                             </ol>
                         </nav>
+                    </div>
+                    <div class="ms-auto">
+                        <EditLedger ref="create_edit_ref"></EditLedger>
                     </div>
 
                     <div class="ms-auto">
@@ -106,6 +116,7 @@ const deleteLedger = (LedgerId) => {
                                         <th>Pieces</th>
                                         <th>Weight</th>
                                         <th>Invoice ID</th>
+                                        <th>Comments</th>
                                         <th>Debit</th>
                                         <th>Credit</th>
                                         <th>Balance</th>
@@ -124,11 +135,14 @@ const deleteLedger = (LedgerId) => {
                                             <td>{{ ledger.invoice?.quantity }}</td>
                                             <td>{{ ledger.invoice?.weight }}</td>
                                             <td>{{ ledger.invoice?.id }}</td>
+                                            <td>{{ ledger.comments }}</td>
                                             <td>{{ format_number(ledger.debit) }}</td>
                                             <td>{{ format_number(ledger.credit) }}</td>
                                             <td>{{ format_number(ledger.balance) }}</td>
                                             <td>{{ ledger.credit > 0 ? 'CR': 'DR' }}</td>
-                                            <td><button @click="deleteLedger(ledger.id)"><i class="bx bx-trash"></i></button></td>
+                                            <td>
+                                                <button @click="edit(ledger)"><i class="bx bx-edit"></i></button>
+                                                <button @click="deleteLedger(ledger.id)"><i class="bx bx-trash"></i></button></td>
                                         </tr>
                                     </template>
                                     <tr>

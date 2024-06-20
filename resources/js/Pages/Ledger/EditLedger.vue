@@ -17,32 +17,36 @@ defineProps({
 });
 
 const modal = ref(false);
-const edit = ref(false);
+const edit_mode = ref(false);
 const companies = usePage().props.companies;
-const balance = usePage().props.balance;
-const ledger_company_id = usePage().props.ledger_company_id;
+
 const form = useForm({
-    company_id: ledger_company_id || "",
-    balance_total: balance.balance_total,
+    id: "",
+    company_id: "",
+    balance_total: "",
     credit: "",
     ledger_at: "",
     comments : "",
 });
 
-const create = () => {
+
+const edit = (ledger) => {
     modal.value = true;
-    edit.value = false;
+    edit_mode.value = true;
+    form.id = ledger.id
+    form.company_id = ledger.company_id
+    form.credit = format_number(ledger.credit)
+    form.ledger_at =  new Date(ledger.ledger_at)
+    form.comments = ledger.comments
+    
 };
 
-const submit = () => {
-    form.post(route("ledger.payment"), {
+
+const update = () => {
+    form.post(route("ledger.update"), {
         preserveScroll: true,
-        onSuccess: (response) => {
-            closeModal();
-        },
-        onError: (errors) => {
-            console.log(errors)
-        },
+        onSuccess: () => closeModal(),
+        onError: () => error(),
         onFinish: () => { },
     });
 };
@@ -56,15 +60,26 @@ const closeModal = () => {
     form.reset();
 };
 
+const format_number = (number) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
+};
+
+defineExpose({ edit: (ledger) => edit(ledger) });
+
+
 </script>
 
 <template>
-    <PrimaryButton @click="create" type="button">Payment</PrimaryButton>
+    <button type="button" @click="create" title="Edit"
+                                                    clas="btn btn-primary"><i class="bx bx-edit"></i></button>
 
     <Modal :show="modal" @close="closeModal">
-        <form @submit.prevent="edit ? update() : submit()">
+        <form @submit.prevent="update()">
             <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900">Legder Payment</h2>
+                <h2 class="text-lg font-medium text-gray-900">Edit Legder Payment</h2>
                 <hr>
 
                 <div class="mt-6">
@@ -85,11 +100,6 @@ const closeModal = () => {
                             <InputError :message="form.errors.ledger_at" />
                         </div>
                         <div class="col-md-3">
-                            <InputLabel for="" value="Balance" class="mb-1" />
-                            <input type="text" class="form-control" v-model="form.balance_total">
-                            <InputError :message="form.errors.balance_total" />
-                        </div>
-                        <div class="col-md-3">
                             <InputLabel for="" value="Credit Amount" class="mb-1" />
                             <input type="text" class="form-control" v-model="form.credit">
                             <InputError :message="form.errors.credit" />
@@ -97,7 +107,6 @@ const closeModal = () => {
                         <div class="col-md-9">
                             <InputLabel for="" value="Comments" class="mb-1" />
                             <textarea class="form-control" v-model="form.comments" id="comments" rows="3"></textarea>
-                            <!-- <InputError :message="form.errors.Comments" /> -->
                         </div>
                     </div>
                 </div>
