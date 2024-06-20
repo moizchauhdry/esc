@@ -1,8 +1,10 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 import Filter from "@/Pages/Ledger/Filter.vue";
 import Payment from "@/Pages/Ledger/Payment.vue";
+import EditLedger from "@/Pages/Ledger/EditLedger.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const role = usePage().props.auth.user.roles[0];
@@ -19,6 +21,29 @@ const format_number = (number) => {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     }).format(number);
+};
+
+const deleteLedger = (LedgerId) => {
+    const form = useForm({
+        ledger_id: LedgerId,
+    });
+    if (confirm('Are you sure you want to delete this Ledger?')) {
+        form.post(route("ledger.delete"), {
+            preserveScroll: true,
+            onSuccess: (response) => {
+                // closeModal();
+            },
+            onError: (errors) => {
+                // console.log(errors)
+            },
+            onFinish: () => { },
+        });
+    }
+};
+
+const create_edit_ref = ref(null);
+const edit = (ledger) => {
+    create_edit_ref.value.edit(ledger)
 };
 </script>
 
@@ -44,9 +69,13 @@ const format_number = (number) => {
                             </ol>
                         </nav>
                     </div>
+                    <div class="ms-auto">
+                        <EditLedger ref="create_edit_ref"></EditLedger>
+                    </div>
 
                     <div class="ms-auto">
-                        <Payment v-if="role.id !=2" v-bind="$props"></Payment>
+                        <Payment v-if="role.id != 2" v-bind="$props"></Payment>
+                        
                         <Filter v-bind="$props"></Filter>
                         <a :href="route('ledger.print', filter)" title="Print" class="ms-1" target="_blank">
                             <PrimaryButton>
@@ -58,61 +87,83 @@ const format_number = (number) => {
 
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-lg-flex align-items-center mb-4 gap-3">
+                        <!-- <div class="d-lg-flex align-items-center mb-4 gap-3">
                             <div class="position-relative">
                                 <input type="text" class="form-control ps-5 radius-30" placeholder="Search Invoice">
                                 <span class="position-absolute top-50 product-show translate-middle-y"><i
                                         class="bx bx-search"></i></span>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="table-responsive">
                             <table class="table table-bordered ledger-table table-sm" style="font-size:12px">
                                 <thead class="table-light">
                                     <tr>
                                         <th colspan="12" style="text-align: center">
-                                            {{ filter['company_name'] ?? 'EXPRESS SAVER CARGO' }} <br>
-                                            CURR: PKR/RS
+                                            {{ filter['company_name'] ?? 'EXPRESS SAVER CARGO' }} |
+                                            CURRENCY: PKR/RS
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th colspan="12" style="text-align: center">General Ledger From
+                                        <th colspan="12" style="text-align: center" class="text-uppercase">General Ledger From
                                             {{ filter['from'] }} to
                                             {{ filter['to'] }}</th>
                                     </tr>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Airline</th>
-                                        <th>Particulars</th>
-                                        <th>Orig</th>
-                                        <th>Dest</th>
-                                        <th>Pieces</th>
-                                        <th>Weight</th>
-                                        <th>Invoice ID</th>
-                                        <th>Debit</th>
-                                        <th>Credit</th>
-                                        <th>Balance</th>
-                                        <th>D/C</th>
+                                        <th class="px-2">Company</th>
+                                        <th class="px-2">Ledger at</th>
+                                        <th class="px-2">Airline</th>
+                                        <th class="px-2">MAWB #</th>
+                                        <th class="px-2">Orig</th>
+                                        <th class="px-2">Dest</th>
+                                        <th class="px-2">Pieces</th>
+                                        <th class="px-2">Weight</th>
+                                        <th class="px-2">Invoice ID</th>
+                                        <th class="px-2">Debit</th>
+                                        <th class="px-2">Credit</th>
+                                        <th class="px-2">Balance</th>
+                                        <th class="px-2">D/C</th>
+                                        <th class="px-2"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <template v-for="(ledger, index) in ledgers.data">
                                         <tr>
-                                            <td>{{ ledger.created_at }}</td>
-                                            <td>{{ ledger.invoice?.carrier }}</td>
-                                            <td>{{ ledger.invoice?.mawb_no }}</td>
-                                            <td>{{ ledger.invoice?.sender }}</td>
-                                            <td>{{ ledger.invoice?.destination }}</td>
-                                            <td>{{ ledger.invoice?.quantity }}</td>
-                                            <td>{{ ledger.invoice?.weight }}</td>
-                                            <td>{{ ledger.invoice?.id }}</td>
-                                            <td>{{ format_number(ledger.debit) }}</td>
-                                            <td>{{ format_number(ledger.credit) }}</td>
-                                            <td>{{ format_number(ledger.balance) }}</td>
-                                            <td>{{ ledger.credit > 0 ? 'CR': 'DR' }}</td>
+                                            <td class="px-2">{{ ledger.company_name }}</td>
+                                            <td class="px-2">{{ ledger.ledger_at }}</td>
+                                            <template v-if="ledger.amount_type == 1">
+                                                <td class="px-2">{{ ledger.invoice?.carrier }}</td>
+                                                <td class="px-2">{{ ledger.invoice?.mawb_no }}</td>
+                                                <td class="px-2">{{ ledger.invoice?.sender }}</td>
+                                                <td class="px-2">{{ ledger.invoice?.destination }}</td>
+                                                <td class="px-2">{{ ledger.invoice?.quantity }}</td>
+                                                <td class="px-2">{{ ledger.invoice?.weight }}</td>
+                                                <td class="px-2">{{ ledger.invoice?.id }}</td>
+                                            </template>
+                                            <template v-if="ledger.amount_type == 2">
+                                                <td colspan="7">{{ ledger.comments }}</td>
+                                            </template>
+                                            <td class="px-2">{{ format_number(ledger.debit) }}</td>
+                                            <td class="px-2">{{ format_number(ledger.credit) }}</td>
+                                            <td class="px-2">{{ format_number(ledger.balance) }}</td>
+                                            <td class="px-2">
+                                                {{ ledger.amount_type == 1 ? 'Dr' : '' }}
+                                                {{ ledger.amount_type == 2 ? 'Cr' : '' }}
+                                            </td>
+                                            <td class="px-2">
+                                                <template v-if="ledger.amount_type == 2">
+                                                    <div class="d-flex order-actions">
+                                                        <a href="#" class="mx-1" @click="edit(ledger)">
+                                                            <i class="bx bx-edit"></i></a>
+                                                        <a href="#" @click="deleteLedger(ledger.id)">
+                                                            <i class="bx bx-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </template>
+                                            </td>
                                         </tr>
                                     </template>
                                     <tr>
-                                        <th colspan="8" class="text-right">Total</th>
+                                        <th colspan="9" class="text-right">Total</th>
                                         <th>{{ format_number(balance.debit_total) }}</th>
                                         <th>{{ format_number(balance.credit_total) }}</th>
                                         <th>{{ format_number(balance.balance_total) }}</th>

@@ -154,7 +154,7 @@ class InvoiceController extends Controller
             Ledger::updateOrCreate(['invoice_id' => $invoice->id], [
                 'company_id' => $invoice->company_id,
                 'invoice_id' => $invoice->id,
-                'invoice_at' => $invoice->invoice_at,
+                'ledger_at' => Carbon::now(),
                 'debit_amount' => $invoice->total,
                 'credit_amount' => 0,
                 'balance_amount' => $invoice->total,
@@ -270,27 +270,30 @@ class InvoiceController extends Controller
     {
         $rules = [
             'invoice_id' => 'required',
-            'file' => 'required',
+            'file' => 'required|file|mimes:pdf,jpg,png|max:2048',
         ];
 
         $messages = [
             'required' => 'The field is required.',
         ];
 
-        $request->validate($rules, $messages);
+        try {
+            $request->validate($rules, $messages);
 
-        $url = $request->file('file')->store('invoice-files', 'public');
-        InvoiceUpload::create([
-            'invoice_id' => $request->invoice_id,
-            'url' => $url
-        ]);
-
-        return Redirect::route('invoice.detail', $request->invoice_id)->with('success', 'File uploaded.');
+            $url = $request->file('file')->store('invoice-files', 'public');
+            InvoiceUpload::create([
+                'invoice_id' => $request->invoice_id,
+                'url' => $url
+            ]);
+            return Redirect::route('invoice.detail', $request->invoice_id)->with('success', 'File uploaded.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return Redirect::route('invoice.detail', $request->invoice_id)->withErrors($e->validator)->withInput()->with('error', 'Validation failed. Please check the inputs.');
+        }
     }
 
     public function uploadDestroy(Request $request)
     {
-       InvoiceUpload::find($request->upload_id)->delete();
-       return Redirect::back()->with('success', 'File deleted.');
+        InvoiceUpload::find($request->upload_id)->delete();
+        return Redirect::back()->with('success', 'File deleted.');
     }
 }

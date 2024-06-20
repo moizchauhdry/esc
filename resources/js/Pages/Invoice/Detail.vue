@@ -5,8 +5,9 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ref, onMounted } from "vue";
 import Paginate from "@/Components/Paginate.vue";
 import DeleteInvoiceUpload from './DeleteInvoiceUpload.vue';
+import InputError from "@/Components/InputError.vue";
 
-defineProps({
+const props = defineProps({
     invoice: Object,
     invoice_uploads: Array,
 });
@@ -34,10 +35,10 @@ const handle_file_change = (event) => {
 const upload_file = () => {
     form.post(route("invoice.upload"), {
         preserveScroll: true,
-        onSuccess: () => {
-            // 
+        onSuccess: () => { },
+        onError: () => {
+            // console.log(usePage().props.flash)
         },
-        onError: () => error(),
         onFinish: () => { },
     });
 };
@@ -104,6 +105,7 @@ onMounted(() => {
                                     <td colspan="5">
                                         <div>
                                             <input type="file" class="form-control" @change="handle_file_change" />
+                                            <InputError :message="form.errors.file" />
                                         </div>
                                     </td>
                                     <td colspan="3">
@@ -139,7 +141,7 @@ onMounted(() => {
                                             </div>
                                         </td>
                                         <td>
-                                            <DeleteInvoiceUpload :upload_id="upload.id"></DeleteInvoiceUpload>
+                                            <DeleteInvoiceUpload :upload_id="upload.id" v-if="permission.invoice_upload_destroy"></DeleteInvoiceUpload>
                                         </td>
                                     </tr>
                                 </template>

@@ -2,17 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
 use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use PDF;
 
 class LedgerController extends Controller
 {
+    private function fetchLedgerData($request)
+    {
+        $user = Auth::user();
+        $role_id = getRoleID($user);
+
+        $from = $request->from_date ?? Carbon::now()->startOfMonth()->format('Y-m-d');
+        $to = $request->to_date ?? Carbon::now()->endOfMonth()->format('Y-m-d');
+
+        $filter = [
+            'company' => $request->company_id,
+            'from' => $from,
+            'to' => $to,
+        ];
+
+        $query = Ledger::query();
+        if ($request->company != null && $request->company != 0) {
+            $query->when($request->company, function ($q) use ($request) {
+                $q->where('company_id', $request->company);
+            });
+        } else {
+            $query->when($filter['company'], function ($q) use ($filter) {
+                $q->where('company_id', $filter['company']);
+            });
+        }
+
+        $query->when($role_id == 2, function ($q) use ($user) {
+            $q->where('company_id', $user->id);
+        });
+
+        $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
+            $q->whereDate('ledger_at', '>=', $filter['from']);
+            $q->whereDate('ledger_at', '<=', $filter['to']);
+        });
+
+        $ledgers = $query->orderBy('id', 'asc')->get();
+
+        $debit_total = $ledgers->sum('debit_amount');
+        $credit_total = $ledgers->sum('credit_amount');
+
+        $data = [
+            'debit_total' => $debit_total,
+            'credit_total' => $credit_total,
+            'balance_total' => $debit_total - $credit_total,
+        ];
+
+        return $data;
+    }
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -37,31 +85,43 @@ class LedgerController extends Controller
 
         $query = Ledger::query();
 
-        $query->when($filter['company'], function ($q) use ($filter) {
-            $q->where('company_id', $filter['company']);
-        });
+        $ledger_company_id = 0;
+
+        if ($request->company != null && $request->company != 0) {
+            $query->when($request->company, function ($q) use ($request) {
+                $q->where('company_id', $request->company);
+            });
+            $ledger_company_id = (int)$request->company;
+        } else {
+            $query->when($filter['company'], function ($q) use ($filter) {
+                $q->where('company_id', $filter['company']);
+            });
+        }
 
         $query->when($role_id == 2, function ($q) use ($user) {
             $q->where('company_id', $user->id);
         });
 
         $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->whereDate('created_at', '>=', $filter['from']);
-            $q->whereDate('created_at', '<=', $filter['to']);
+            $q->whereDate('ledger_at', '>=', $filter['from']);
+            $q->whereDate('ledger_at', '<=', $filter['to']);
         });
 
         $ledgers = $query->orderBy('id', 'asc')
-            ->paginate(500)
+            ->paginate(1000)
             ->withQueryString()
             ->through(fn ($ledger) => [
                 'id' => $ledger->id,
-                'created_at' => Carbon::parse($ledger->created_at)->format('d-m-Y'),
+                'ledger_at' => Carbon::parse($ledger->ledger_at)->format('d-m-Y'),
                 'debit' => $ledger->debit_amount,
                 'credit' => $ledger->credit_amount,
                 'balance' => $ledger->balance_amount,
                 'invoice' => $ledger->invoice,
+                'comments' => $ledger->comments,
+                'company_id' => $ledger->company_id,
+                'company_name' => $ledger->company->name,
+                'amount_type' => $ledger->amount_type,
             ]);
-
 
         $debit_total = $query->sum('debit_amount');
         $credit_total = $query->sum('credit_amount');
@@ -82,6 +142,7 @@ class LedgerController extends Controller
             'companies' => $companies,
             'filter' => $filter,
             'balance' => $balance,
+            'ledger_company_id' => $ledger_company_id,
         ]);
     }
 
@@ -102,9 +163,15 @@ class LedgerController extends Controller
 
         $query = Ledger::query();
 
-        $query->when($filter['company'], function ($q) use ($filter) {
-            $q->where('company_id', $filter['company']);
-        });
+        if ($request->company != null && $request->company != 0) {
+            $query->when($request->company, function ($q) use ($request) {
+                $q->where('company_id', $request->company);
+            });
+        } else {
+            $query->when($filter['company'], function ($q) use ($filter) {
+                $q->where('company_id', $filter['company']);
+            });
+        }
 
         $query->when($role_id == 2, function ($q) use ($user) {
             $q->where('company_id', $user->id);
@@ -144,6 +211,7 @@ class LedgerController extends Controller
             'company_id' => 'required',
             'balance_total' => 'required',
             'credit' => 'required',
+            'ledger_at' => 'required',
         ];
 
         $messages = [
@@ -152,11 +220,73 @@ class LedgerController extends Controller
 
         $request->validate($rules, $messages);
 
-        $ledger = Ledger::create([
+        Ledger::create([
             'company_id' => $request->company_id,
             'debit_amount' => 0,
             'credit_amount' => $request->credit,
-            'balance_amount' => $request->balance_total - $request->credit
+            'balance_amount' => $request->balance_total - $request->credit,
+            'ledger_at' => date('Y-m-d H:i:s', strtotime($request->ledger_at)),
+            'comments' => $request->comments,
+            'amount_type' => 2,
         ]);
+
+        return Redirect::back()->with('success', 'Payment added.');
+    }
+
+    public function company()
+    {
+        $companies = User::role('company')->get();
+
+        return Inertia::render('Ledger/Company', [
+            'companies' => $companies,
+        ]);
+    }
+
+    public function deleteLedger(Request $request)
+    {
+        $ledger = Ledger::find($request->ledger_id);
+        $ledger->delete();
+
+        return Redirect::back()->with('success', 'Ledger deleted.');
+    }
+
+    public function updateLedger(Request $request)
+    {
+        $rules = [
+            'company_id' => 'required',
+            'credit' => 'required',
+            'ledger_at' => 'required',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $ledger = Ledger::find($request->id);
+        $data = [
+            'company_id' => $request->company_id,
+            'debit_amount' => 0,
+            'credit_amount' => $request->credit,
+            'ledger_at' => date('Y-m-d H:i:s', strtotime($request->ledger_at)),
+            'comments' => $request->comments,
+        ];
+
+        $ledger->update($data);
+
+        $fetch_ledger_data = $this->fetchLedgerData($request);
+
+        $ledger->update([
+            'balance_amount' => $fetch_ledger_data['balance_total'],
+        ]);
+
+        return Redirect::back()->with('success', 'Ledger updated.');
+    }
+
+    public function fetchBalance(Request $request)
+    {
+        $fetch_ledger_data = $this->fetchLedgerData($request);
+        return response()->json($fetch_ledger_data);
     }
 }

@@ -61,6 +61,9 @@ const permission = usePage().props.can;
                     <li v-if="permission.ledger_list">
                         <Link :href="route('ledger.index')"><i class='bx bx-radio-circle'></i>General Ledger</Link>
                     </li>
+                    <li v-if="permission.ledger_company">
+                        <Link :href="route('ledger.company')"><i class='bx bx-radio-circle'></i>Company Ledger</Link>
+                    </li>
                 </ul>
             </li>
 
