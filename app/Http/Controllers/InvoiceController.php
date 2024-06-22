@@ -72,7 +72,7 @@ class InvoiceController extends Controller
     public function save($request)
     {
         $rules = [
-            'invoice_at' => 'nullable',
+            'invoice_at' => 'required',
             'company_id' => 'required',
             'shipper_id' => 'required',
             'consignee_id' => 'required',
@@ -154,7 +154,8 @@ class InvoiceController extends Controller
             Ledger::updateOrCreate(['invoice_id' => $invoice->id], [
                 'company_id' => $invoice->company_id,
                 'invoice_id' => $invoice->id,
-                'ledger_at' => Carbon::now(),
+                'invoice_at' => $request->invoice_at,
+                'ledger_at' => $request->invoice_at,
                 'debit_amount' => $invoice->total,
                 'credit_amount' => 0,
                 'balance_amount' => $invoice->total,
@@ -270,7 +271,7 @@ class InvoiceController extends Controller
     {
         $rules = [
             'invoice_id' => 'required',
-            'file' => 'required|file|mimes:pdf,jpg,png|max:2048',
+            'file' => 'required|file|mimes:pdf,jpg,png|max:10240',
         ];
 
         $messages = [

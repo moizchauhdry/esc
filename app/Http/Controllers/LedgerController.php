@@ -107,7 +107,7 @@ class LedgerController extends Controller
             $q->whereDate('ledger_at', '<=', $filter['to']);
         });
 
-        $ledgers = $query->orderBy('id', 'asc')
+        $ledgers = $query->orderBy('ledger_at', 'asc')
             ->paginate(1000)
             ->withQueryString()
             ->through(fn ($ledger) => [
@@ -288,5 +288,33 @@ class LedgerController extends Controller
     {
         $fetch_ledger_data = $this->fetchLedgerData($request);
         return response()->json($fetch_ledger_data);
+    }
+
+    public function openingBalance(Request $request)
+    {        
+        $rules = [
+            'company_id' => 'required',
+            'opening_balance' => 'required',
+            'ledger_at' => 'required|date_format:Y-m-d',
+            'comments' => 'nullable',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        Ledger::create([
+            'company_id' => $request->company_id,
+            'ledger_at' => $request->ledger_at,
+            'debit_amount' => $request->opening_balance,
+            'credit_amount' => 0,
+            'balance_amount' => $request->opening_balance,
+            'comments' => $request->comments,
+            'amount_type' => 3, // OB
+        ]);
+
+        return Redirect::back()->with('success', 'Opening Balance added.');
     }
 }

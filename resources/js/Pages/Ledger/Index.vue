@@ -4,6 +4,7 @@ import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import Filter from "@/Pages/Ledger/Filter.vue";
 import Payment from "@/Pages/Ledger/Payment.vue";
+import Balance from "@/Pages/Ledger/Balance.vue";
 import EditLedger from "@/Pages/Ledger/EditLedger.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
@@ -74,6 +75,8 @@ const edit = (ledger) => {
                     </div>
 
                     <div class="ms-auto">
+                        <Balance v-if="role.id != 2" v-bind="$props"></Balance>
+
                         <Payment v-if="role.id != 2" v-bind="$props"></Payment>
                         
                         <Filter v-bind="$props"></Filter>
@@ -139,7 +142,7 @@ const edit = (ledger) => {
                                                 <td class="px-2">{{ ledger.invoice?.weight }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.id }}</td>
                                             </template>
-                                            <template v-if="ledger.amount_type == 2">
+                                            <template v-if="ledger.amount_type == 2 || ledger.amount_type == 3">
                                                 <td colspan="7">{{ ledger.comments }}</td>
                                             </template>
                                             <td class="px-2">{{ format_number(ledger.debit) }}</td>
@@ -150,10 +153,12 @@ const edit = (ledger) => {
                                                 {{ ledger.amount_type == 2 ? 'Cr' : '' }}
                                             </td>
                                             <td class="px-2">
-                                                <template v-if="ledger.amount_type == 2">
+                                                <template v-if="ledger.amount_type == 2 || ledger.amount_type == 3">
                                                     <div class="d-flex order-actions">
-                                                        <a href="#" class="mx-1" @click="edit(ledger)">
-                                                            <i class="bx bx-edit"></i></a>
+                                                        <template v-if="ledger.amount_type == 2">
+                                                            <a href="#" class="mx-1" @click="edit(ledger)">
+                                                                <i class="bx bx-edit"></i></a>
+                                                        </template>
                                                         <a href="#" @click="deleteLedger(ledger.id)">
                                                             <i class="bx bx-trash"></i>
                                                         </a>
