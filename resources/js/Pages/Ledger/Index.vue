@@ -9,6 +9,7 @@ import EditLedger from "@/Pages/Ledger/EditLedger.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const role = usePage().props.auth.user.roles[0];
+const permission = usePage().props.can;
 
 defineProps({
     ledgers: Object,
@@ -101,13 +102,13 @@ const edit = (ledger) => {
                             <table class="table table-bordered ledger-table table-sm" style="font-size:12px">
                                 <thead class="table-light">
                                     <tr>
-                                        <th colspan="12" style="text-align: center">
+                                        <th colspan="14" style="text-align: center">
                                             {{ filter['company_name'] ?? 'EXPRESS SAVER CARGO' }} |
                                             CURRENCY: PKR/RS
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th colspan="12" style="text-align: center" class="text-uppercase">General Ledger From
+                                        <th colspan="14" style="text-align: center" class="text-uppercase">General Ledger From
                                             {{ filter['from'] }} to
                                             {{ filter['to'] }}</th>
                                     </tr>
@@ -156,10 +157,10 @@ const edit = (ledger) => {
                                                 <template v-if="ledger.amount_type == 2 || ledger.amount_type == 3">
                                                     <div class="d-flex order-actions">
                                                         <template v-if="ledger.amount_type == 2">
-                                                            <a href="#" class="mx-1" @click="edit(ledger)">
+                                                            <a href="#" class="mx-1" @click="edit(ledger)" v-if="permission.ledger_update">
                                                                 <i class="bx bx-edit"></i></a>
                                                         </template>
-                                                        <a href="#" @click="deleteLedger(ledger.id)">
+                                                        <a href="#" @click="deleteLedger(ledger.id)" v-if="permission.ledger_delete">
                                                             <i class="bx bx-trash"></i>
                                                         </a>
                                                     </div>
