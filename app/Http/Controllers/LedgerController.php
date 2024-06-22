@@ -107,7 +107,7 @@ class LedgerController extends Controller
             $q->whereDate('ledger_at', '<=', $filter['to']);
         });
 
-        $ledgers = $query->orderBy('id', 'asc')
+        $ledgers = $query->orderBy('ledger_at', 'asc')
             ->paginate(1000)
             ->withQueryString()
             ->through(fn ($ledger) => [
