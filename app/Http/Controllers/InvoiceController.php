@@ -271,7 +271,7 @@ class InvoiceController extends Controller
     {
         $rules = [
             'invoice_id' => 'required',
-            'file' => 'required|file|mimes:pdf,jpg,png|max:2048',
+            'file' => 'required|file|mimes:pdf,jpg,png|max:10240',
         ];
 
         $messages = [
