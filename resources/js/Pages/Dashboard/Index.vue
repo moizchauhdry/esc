@@ -2,6 +2,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getMessaging } from "firebase/messaging";
+
+import { onMounted } from "vue";
 
 const permission = usePage().props.can;
 const role = usePage().props.auth.user.roles[0];
@@ -16,6 +21,26 @@ const format_number = (number) => {
         maximumFractionDigits: 2
     }).format(number);
 };
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAH6VnMoR7jVBG4y1yHzWngmQpz8xpvjnc",
+  authDomain: "express-saver-cargo.firebaseapp.com",
+  projectId: "express-saver-cargo",
+  storageBucket: "express-saver-cargo.appspot.com",
+  messagingSenderId: "996558087884",
+  appId: "1:996558087884:web:83b3a423237145f8030469",
+  measurementId: "G-Q2HF60128K"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const messaging = getMessaging(app);
+
+onMounted(() => {
+//    console.log(analytics);
+});
 
 </script>
 

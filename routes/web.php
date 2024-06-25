@@ -86,3 +86,6 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
 });
 
 require __DIR__ . '/auth.php';
+
+Route::post('/save-token', [DashboardController::class, 'saveToken'])->name('save-token');
+Route::post('/send-notification', [DashboardController::class, 'sendNotification'])->name('send.notification');
