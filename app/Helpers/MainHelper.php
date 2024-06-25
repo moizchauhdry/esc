@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 function format_number($number)
@@ -16,4 +17,9 @@ function getRoleID($user)
     }
 
     return $role_id;
+}
+
+function dateFormat($date)
+{
+    return Carbon::parse($date)->format('d-m-Y');
 }
