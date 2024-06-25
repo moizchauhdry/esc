@@ -8,13 +8,32 @@ const dropdownOpen = ref(false);
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value;
 }
+
+const props = defineProps({
+    closeable: {
+        type: Boolean,
+        default: true,
+    },
+});
+
+const emit = defineEmits(['toggle']);
+
+const toggle = () => {
+    if (props.closeable) {
+        emit('toggle');
+    }
+};
 </script>
 
 <template>
     <header>
         <div class="topbar d-flex align-items-center">
             <nav class="navbar navbar-expand gap-3">
-                <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
+                <!-- <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
+                </div> -->
+
+                <div class="toggle-menu cursor-pointer" @click="toggle">
+                    <i class='bx bx-menu text-xl'></i>
                 </div>
 
                 <div class="search-bar d-lg-block d-none" data-bs-toggle="modal" data-bs-target="#SearchModal">
@@ -29,7 +48,7 @@ const toggleDropdown = () => {
                             </a>
                         </li> -->
 
-                        <li class="nav-item dropdown dropdown-large">
+                        <!-- <li class="nav-item dropdown dropdown-large">
                             <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#"
                                 data-bs-toggle="dropdown"><span class="alert-count">7</span>
                                 <i class='bx bx-bell'></i>
@@ -166,7 +185,7 @@ const toggleDropdown = () => {
                                     </div>
                                 </a>
                             </div>
-                        </li>
+                        </li> -->
 
                     </ul>
                 </div>
@@ -180,14 +199,16 @@ const toggleDropdown = () => {
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end profile-dropdown" :class="{ 'show': dropdownOpen }">
-                        <li><Link class="dropdown-item d-flex align-items-center" :href="route('profile.edit')"><i
-                                    class="bx bx-user fs-5"></i><span>Profile</span></Link>
+                        <li>
+                            <Link class="dropdown-item d-flex align-items-center" :href="route('profile.edit')"><i
+                                class="bx bx-user fs-5"></i><span>Profile</span></Link>
                         </li>
                         <!-- <li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i
                                     class="bx bx-cog fs-5"></i><span>Settings</span></a>
                         </li> -->
-                        <li><Link class="dropdown-item d-flex align-items-center" :href="route('dashboard')"><i
-                                    class="bx bx-home-circle fs-5"></i><span>Dashboard</span></Link>
+                        <li>
+                            <Link class="dropdown-item d-flex align-items-center" :href="route('dashboard')"><i
+                                class="bx bx-home-circle fs-5"></i><span>Dashboard</span></Link>
                         </li>
                         <li>
                             <div class="dropdown-divider mb-0"></div>

@@ -5,14 +5,21 @@ import Header from "@/Layouts/Partials/Header.vue";
 import FlashMessage from "@/Components/FlashMessage.vue";
 
 const showingNavigationDropdown = ref(false);
+
+const toggleSidebar = () => {
+    const wrapper = document.querySelector('.wrapper');
+    if (wrapper) {
+        wrapper.classList.toggle('toggled');
+    }
+};
 </script>
 
 <template>
     <!--wrapper-->
     <div class="wrapper">
 
-        <Sidebar></Sidebar>
-        <Header></Header>
+        <Sidebar @toggle="toggleSidebar"></Sidebar>
+        <Header @toggle="toggleSidebar"></Header>
         <FlashMessage></FlashMessage>
 
         <!-- Page Content -->

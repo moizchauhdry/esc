@@ -71,14 +71,21 @@
 
             @foreach ($ledgers as $ledger)
             <tr>
-                <td>{{ $ledger->invoice_at }}</td>
+                <td style="width:70px">{{ dateFormat($ledger->ledger_at) }}</td>
+                @if ($ledger->amount_type == 1)
                 <td>{{ $ledger->invoice->carrier }}</td>
-                <td>{{ $ledger->invoice->mawb_no }}</td>
+                <td style="width:90px">{{ $ledger->invoice->mawb_no }}</td>
                 <td>{{ $ledger->invoice->sender }}</td>
                 <td>{{ $ledger->invoice->destination }}</td>
                 <td>{{ $ledger->invoice->quantity }}</td>
                 <td>{{ $ledger->invoice->weight }}</td>
                 <td>{{ $ledger->invoice->id }}</td>
+                @endif
+
+                @if ($ledger->amount_type == 2 || $ledger->amount_type == 3)
+                <td colspan="7">{{ $ledger->comments }}</td>
+                @endif
+
                 <td>{{ format_number($ledger->debit) }}</td>
                 <td>{{ format_number($ledger->credit) }}</td>
                 <td>{{ format_number($ledger->balance) }}</td>
