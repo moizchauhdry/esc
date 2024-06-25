@@ -26,7 +26,7 @@ const edit = (user) => {
         <div class="page-wrapper">
             <div class="page-content">
                 <!--breadcrumb-->
-                <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div class="page-breadcrumb d-sm-flex align-items-center mb-3">
                     <div class="breadcrumb-title pe-3">User Management</div>
                     <div class="ps-3">
                         <nav aria-label="breadcrumb">
