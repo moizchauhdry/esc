@@ -2,6 +2,9 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import Chart from 'chart.js/auto';
+import { getRelativePosition } from 'chart.js/helpers';
+import { onMounted } from "vue";
 
 const permission = usePage().props.can;
 const role = usePage().props.auth.user.roles[0];
@@ -17,6 +20,123 @@ const format_number = (number) => {
     }).format(number);
 };
 
+
+onMounted(() => {
+    const ctx1 = document.getElementById('chart-1');
+    const ctx2 = document.getElementById('chart-2');
+    const ctx3 = document.getElementById('chart-3');
+    const ctx4 = document.getElementById('chart-4');
+    const ctx5 = document.getElementById('chart-5');
+
+    // const data = [
+    //     { year: 2010, count: 10 },
+    //     { year: 2011, count: 20 },
+    //     { year: 2012, count: 15 },
+    //     { year: 2013, count: 25 },
+    //     { year: 2014, count: 22 },
+    //     { year: 2015, count: 30 },
+    //     { year: 2016, count: 28 },
+    // ];
+
+    const DATA_COUNT = 7;
+    const NUMBER_CFG = { count: DATA_COUNT, min: -100, max: 100 };
+    const labels =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Dataset 1',
+                data: [0, 10, 5, 2, 20, 30, 45, 10, 20, 30, 40, 50],
+                stack: 'Stack 0',
+            },
+            {
+                label: 'Dataset 2',
+                data: [0, 10, 5, 2, 20, 30, 45, 10, 20, 30, 40, 50],
+                stack: 'Stack 1',
+            },
+        ]
+    };
+
+    const chart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Revenue',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: [0, 10, 5, 2, 20, 30, 45, 10, 20, 30, 40, 50]
+            }]
+        },
+        options: {
+            //    
+        }
+    });
+
+    const chart2 = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: ['January', 'February',],
+            datasets: [{
+                label: 'My First dataset',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: [0, 10, 5, 2, 20, 30, 45]
+            }]
+        },
+        options: {
+            onClick: (e) => {
+                const canvasPosition = getRelativePosition(e, chart);
+
+                // Substitute the appropriate scale IDs
+                const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+                const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+            }
+        }
+    });
+
+    const chart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: data,
+        options: {
+
+        }
+    });
+
+    const char4 = new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March',],
+            datasets: [{
+                label: 'My First dataset',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: [0, 10, 5, 2, 20, 30, 45]
+            }]
+        },
+        options: {
+            // 
+        }
+    });
+
+    const char5 = new Chart(ctx5, {
+        type: 'doughnut',
+        data: {
+            labels: ['January', 'February'],
+            datasets: [{
+                label: 'My First dataset',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: [0, 10, 5, 2, 20, 30, 45]
+            }]
+        },
+        options: {
+            // 
+        }
+    });
+
+});
 </script>
 
 <template>
@@ -121,6 +241,54 @@ const format_number = (number) => {
                         <br>
                     </div>
                 </template>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-3"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-4"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-5"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
                 <!-- <div class="row">
