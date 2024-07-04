@@ -4,6 +4,9 @@ import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import CreateEdit from "./CreateEdit.vue";
 import Paginate from "@/Components/Paginate.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
+import ActionButton from "@/Components/ActionButton.vue";
+import ResetPassword from "./ResetPassword.vue";
 
 defineProps({
     users: Object,
@@ -11,8 +14,32 @@ defineProps({
 });
 
 const create_edit_ref = ref(null);
+const password_ref = ref(null);
+
 const edit = (user) => {
     create_edit_ref.value.edit(user)
+};
+
+const resetPasswordFunc = (user) => {
+    console.log(password_ref.value);
+    password_ref.value.resetpasswordfunc(user)
+};
+
+const search_form = useForm({
+    search: ""
+});
+
+const search = () => {
+    search_form.post(route("user.index"), {
+        preserveScroll: true,
+        onSuccess: (response) => {
+            // 
+        },
+        onError: (errors) => {
+            console.log(errors)
+        },
+        onFinish: () => { },
+    });
 };
 </script>
 
@@ -40,16 +67,35 @@ const edit = (user) => {
                     </div>
                     <div class="ms-auto">
                         <CreateEdit :roles="roles" ref="create_edit_ref"></CreateEdit>
+                        <ResetPassword ref="password_ref"></ResetPassword>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-body">
+
+                        <form @submit.prevent="search">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <input type="text" v-model="search_form.search" class="form-control"
+                                        placeholder="Search">
+                                </div>
+                                <div class="col-md-3">
+                                    <SuccessButton :class="{ 'opacity-25': search_form.processing }"
+                                        :disabled="search_form.processing">
+                                        Search
+                                    </SuccessButton>
+                                </div>
+                            </div>
+                        </form>
+
+
                         <div class="table-responsive">
-                            <table id="example" class="table table-striped table-bordered" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
+                            <table id="example" class="table table-bordered table-striped" style="width:100%">
+                                <thead class="table-dark">
+                                    <tr class="text-uppercase">
+                                        <th>Sr.No.</th>
+                                        <th>User ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Role</th>
@@ -60,7 +106,10 @@ const edit = (user) => {
                                 <tbody>
                                     <template v-for="(user, index) in users.data">
                                         <tr>
-                                            <td>{{ user.id }}</td>
+                                            <td>
+                                                {{ (users.current_page - 1) * users.per_page + index + 1 }}
+                                            </td>
+                                            <td>00{{ user.id }}</td>
                                             <td>{{ user.name }}</td>
                                             <td>
                                                 <template v-if="!([3, 4].includes(user.role_id))">
@@ -70,8 +119,12 @@ const edit = (user) => {
                                             <td>{{ user.role }}</td>
                                             <td>{{ user.created_at }}</td>
                                             <td>
-                                                <button type="button" @click="edit(user)" title="Edit"
-                                                    clas="btn btn-primary"><i class="bx bx-edit"></i></button>
+                                                <ActionButton @click="edit(user)" title="Edit" class="mr-1">
+                                                    <i class="bx bx-edit"></i></ActionButton>
+
+                                                <ActionButton @click="resetPasswordFunc(user)" title="Reset Password"
+                                                    clas="btn btn-primary"><i class="bx bx-box"></i></ActionButton>
+
                                             </td>
                                         </tr>
                                     </template>

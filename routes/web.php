@@ -37,13 +37,14 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
         Route::prefix('users')->group(function () {
-            Route::get('/', [UserController::class, 'index'])->name('user.index')->middleware('permission:user_list');
+            Route::any('/', [UserController::class, 'index'])->name('user.index')->middleware('permission:user_list');
             Route::get('/create', [UserController::class, 'create'])->name('user.create')->middleware('permission:user_create');
             Route::post('/store', [UserController::class, 'store'])->name('user.store')->middleware('permission:user_create');
             Route::get('/edit', [UserController::class, 'edit'])->name('user.edit')->middleware('permission:user_update');
             Route::post('/update', [UserController::class, 'update'])->name('user.update')->middleware('permission:user_update');
             Route::get('/fetch/shipper/{id}', [UserController::class, 'fetchShipper'])->name('user.fetch-shipper');
             Route::get('/fetch/consignee/{id}', [UserController::class, 'fetchConsignee'])->name('user.fetch-consignee');
+            Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('user.reset-password');
         });
 
         Route::prefix('roles')->group(function () {
