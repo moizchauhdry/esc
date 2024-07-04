@@ -99,7 +99,7 @@ defineExpose({ edit: (user) => edit(user) });
 </script>
 
 <template>
-    <PrimaryButton @click="create" type="button">Add</PrimaryButton>
+    <PrimaryButton @click="create" type="button">Add User</PrimaryButton>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit_mode ? update() : submit()">
@@ -150,28 +150,6 @@ defineExpose({ edit: (user) => edit(user) });
                             <InputError :message="form.errors.email" />
                         </div>
 
-                        <template v-if="!edit_mode && !([3, 4].includes(form.role))">
-                            <div class="col-md-6">
-                                <label for="input17" class="form-label">Password</label>
-                                <div class="position-relative input-icon">
-                                    <input type="password" class="form-control" id="input17" placeholder="Password"
-                                        v-model="form.password">
-                                    <span class="position-absolute top-50 translate-middle-y"><i
-                                            class='bx bx-lock-alt'></i></span>
-                                </div>
-                                <InputError :message="form.errors.password" />
-                            </div>
-                            <div class="col-md-6">
-                                <label for="input17" class="form-label">Confirm
-                                    Password</label>
-                                <div class="position-relative input-icon">
-                                    <input type="password" class="form-control" id="input17" placeholder="Password"
-                                        v-model="form.password_confirmation">
-                                    <span class="position-absolute top-50 translate-middle-y"><i
-                                            class='bx bx-lock-alt'></i></span>
-                                </div>
-                            </div>
-                        </template>
                     </div>
 
                     <div class="row g-3 mt-2">
@@ -205,6 +183,31 @@ defineExpose({ edit: (user) => edit(user) });
                             <input type="text" v-model="form.zipcode" class="form-control">
                             <InputError :message="form.errors.zipcode" />
                         </div>
+                    </div>
+
+                    <div class="row g-3 mt-2">
+                        <template v-if="!edit_mode && !([3, 4].includes(form.role))">
+                            <div class="col-md-6">
+                                <label for="input17" class="form-label">Password</label>
+                                <div class="position-relative input-icon">
+                                    <input type="password" class="form-control" id="input17" placeholder="Password"
+                                        v-model="form.password">
+                                    <span class="position-absolute top-50 translate-middle-y"><i
+                                            class='bx bx-lock-alt'></i></span>
+                                </div>
+                                <InputError :message="form.errors.password" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="input17" class="form-label">Confirm
+                                    Password</label>
+                                <div class="position-relative input-icon">
+                                    <input type="password" class="form-control" id="input17" placeholder="Password"
+                                        v-model="form.password_confirmation">
+                                    <span class="position-absolute top-50 translate-middle-y"><i
+                                            class='bx bx-lock-alt'></i></span>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
 
