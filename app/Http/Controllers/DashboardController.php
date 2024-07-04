@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageEvent;
 use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,14 @@ class DashboardController extends Controller
             'companies' => $companies,
             'users' => $users,
         ];
+
+        $data2= [
+            'user_id' => 2,
+            'message' => "hello world",
+        ];
+
+        event(new MessageEvent($data2));
+    
 
         return Inertia::render('Dashboard/Index', [
             'data' => $data,
