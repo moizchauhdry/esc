@@ -45,10 +45,10 @@
     <div>
         <table>
             <tr>
-                <th colspan="12" style="text-align: center">EXPRESS SAVER CARGO</th>
+                <th colspan="12" style="text-align: center">EXPRESS SAVER CARGO | CURR: PKR/RS</th>
             </tr>
             <tr>
-                <th colspan="12" style="text-align: center">{{$filters['company_name'] ?? ''}} CURR: PKR/RS</th>
+                <th colspan="12" style="text-align: center">{{$filters['company_name'] ?? ''}}</th>
             </tr>
             <tr>
                 <th colspan="12" style="text-align: center">General Ledger From {{$filters['from']}} to
@@ -86,9 +86,9 @@
                 <td colspan="7">{{ $ledger->comments }}</td>
                 @endif
 
-                <td>{{ format_number($ledger->debit) }}</td>
-                <td>{{ format_number($ledger->credit) }}</td>
-                <td>{{ format_number($ledger->balance) }}</td>
+                <td>{{ format_number($ledger->debit_amount) }}</td>
+                <td>{{ format_number($ledger->credit_amount) }}</td>
+                <td>{{ format_number($ledger->balance_amount) }}</td>
                 <td>{{ $ledger->credit > 0 ? 'CR': 'DR' }}</td>
             </tr>
             @endforeach
