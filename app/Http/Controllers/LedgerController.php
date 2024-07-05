@@ -178,8 +178,8 @@ class LedgerController extends Controller
         });
 
         $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->where('created_at', '>=', $filter['from']);
-            $q->where('created_at', '<=', $filter['to']);
+            $q->where('ledger_at', '>=', $filter['from']);
+            $q->where('ledger_at', '<=', $filter['to']);
         });
 
         $ledgers = $query->orderBy('id', 'asc')->get();

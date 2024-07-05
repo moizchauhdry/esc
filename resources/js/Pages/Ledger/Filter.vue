@@ -32,12 +32,13 @@ const form = useForm({
 const create = () => {
     modal.value = true;
     edit.value = false;
-
     saved_filters = localStorage.getItem('filters');
+    console.log(saved_filters);
     if (saved_filters) {
         saved_filters = JSON.parse(saved_filters);
         form.company = saved_filters.company
-        // form.date = saved_filters.date
+        form.from_date = saved_filters.from_date
+        form.to_date = saved_filters.to_date
     }
 };
 
