@@ -181,6 +181,20 @@ onMounted(() => {
         }
     }
 
+
+    .chart_loader {
+        width: 120px;
+        height: 20px;
+        background: 
+            linear-gradient(90deg,#0001 33%,#0005 50%,#0001 66%)
+            #f2f2f2;
+        background-size:300% 100%;
+        animation: l1 1s infinite linear;
+        }
+        @keyframes l1 {
+        0% {background-position: right}
+        }
+
 </style>
 
 <template>
@@ -194,10 +208,10 @@ onMounted(() => {
         <!--start page wrapper -->
         <div class="page-wrapper">
 
-                                <!-- --------- Loader ---------- !-->
-                        <div class="page_loader_page">
+                                <!-- --------- Page Loader ---------- !-->
+                        <!-- <div class="page_loader_page">
                             <div class="page_loader"></div>
-                        </div>
+                        </div> -->
 
             <div class="page-content">
                 <template v-if="permission.analytics">
@@ -298,8 +312,9 @@ onMounted(() => {
                     <div class="col-md-6">
                         <div class="card radius-10">
                             <div class="card-body">
-                                <div style="height: 300px;width: 100%;">
-                                    <canvas id="chart-1"></canvas>
+                                <div style="height: 300px;width: 100%;display: flex;justify-content: center;align-items: center;">
+                                    <!-- <canvas id="chart-1"></canvas> -->
+                                    <div class="chart_loader"></div>
                                 </div>
                             </div>
                         </div>
