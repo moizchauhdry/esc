@@ -23,3 +23,9 @@ function dateFormat($date)
 {
     return Carbon::parse($date)->format('d-m-Y');
 }
+
+function getMonthName($month_number)
+{
+    $date = Carbon::createFromDate(null, $month_number, 1);
+    return $date->format('F');
+}

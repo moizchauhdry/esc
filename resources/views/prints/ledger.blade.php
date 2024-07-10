@@ -45,15 +45,15 @@
     <div>
         <table>
             <tr>
-                <th colspan="12" style="text-align: center">EXPRESS SAVER CARGO | CURR: PKR/RS</th>
+                <th colspan="12" style="text-align: center; text-transform:uppercase">General Ledger | CURRENCY: PKR/RS</th>
             </tr>
             <tr>
-                <th colspan="12" style="text-align: center">{{$filters['company_name'] ?? ''}}</th>
+                <th colspan="12" style="text-align: center; text-transform:uppercase; font-size:16px">
+                    {{ $filters['company_name'] ?? 'EXPRESS SAVER CARGO' }} |
+                    {{ $filters['month_name'] }} {{ $filters['year'] }}
+                </th>
             </tr>
-            <tr>
-                <th colspan="12" style="text-align: center">General Ledger From {{$filters['from']}} to
-                    {{$filters['to']}}</th>
-            </tr>
+
             <tr>
                 <th>Date</th>
                 <th>Airline</th>

@@ -66,8 +66,11 @@ class LedgerController extends Controller
         $user = Auth::user();
         $role_id = getRoleID($user);
 
-        $from = $request->from_date ?? Carbon::now()->startOfMonth()->format('Y-m-d');
-        $to = $request->to_date ?? Carbon::now()->endOfMonth()->format('Y-m-d');
+        // $from = $request->from_date ?? Carbon::now()->startOfMonth()->format('Y-m-d');
+        // $to = $request->to_date ?? Carbon::now()->endOfMonth()->format('Y-m-d');
+
+        $current_month = $request->month ?? Carbon::now()->format('m');
+        $current_year = $request->year ?? Carbon::now()->format('Y');
 
         $company_name = NULL;
         if (!empty($request->company)) {
@@ -78,9 +81,9 @@ class LedgerController extends Controller
         $filter = [
             'company' => $request->company,
             'company_name' => $company_name,
-            'date' => $request->date,
-            'from' => $from,
-            'to' => $to,
+            'month' => $current_month,
+            'month_name' => getMonthName($current_month),
+            'year' => $current_year,
         ];
 
         $query = Ledger::query();
@@ -102,10 +105,13 @@ class LedgerController extends Controller
             $q->where('company_id', $user->id);
         });
 
-        $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->whereDate('ledger_at', '>=', $filter['from']);
-            $q->whereDate('ledger_at', '<=', $filter['to']);
-        });
+        // $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
+        //     $q->whereDate('ledger_at', '>=', $filter['from']);
+        //     $q->whereDate('ledger_at', '<=', $filter['to']);
+        // });
+
+        $query->whereYear('ledger_at', $filter['year']);
+        $query->whereMonth('ledger_at', $filter['month']);
 
         $ledgers = $query->orderBy('ledger_at', 'asc')
             ->paginate(1000)
@@ -148,17 +154,17 @@ class LedgerController extends Controller
 
     public function print(Request $request)
     {
+        // dd($request->all());
+
         $user = Auth::user();
         $role_id = getRoleID($user);
 
-        $from = $request->from;
-        $to = $request->to;
-        $company = $request->company;
-
         $filter = [
-            'company' => $company,
-            'from' => $from,
-            'to' => $to,
+            'company' => $request->company,
+            'company_name' => $request->company_name,
+            'month' => $request->month,
+            'month_name' => $request->month_name,
+            'year' => $request->year,
         ];
 
         $query = Ledger::query();
@@ -177,12 +183,10 @@ class LedgerController extends Controller
             $q->where('company_id', $user->id);
         });
 
-        $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->where('ledger_at', '>=', $filter['from']);
-            $q->where('ledger_at', '<=', $filter['to']);
-        });
+        $query->whereYear('ledger_at', $filter['year']);
+        $query->whereMonth('ledger_at', $filter['month']);
 
-        $ledgers = $query->orderBy('id', 'asc')->get();
+        $ledgers = $query->orderBy('ledger_at', 'asc')->get();
 
         $debit_total = $ledgers->sum('debit_amount');
         $credit_total = $ledgers->sum('credit_amount');
@@ -291,7 +295,7 @@ class LedgerController extends Controller
     }
 
     public function openingBalance(Request $request)
-    {        
+    {
         $rules = [
             'company_id' => 'required',
             'opening_balance' => 'required',

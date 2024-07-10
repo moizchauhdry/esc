@@ -89,7 +89,7 @@ watch(
                     <div class="row g-2">
                         <div class="col-md-5">
                             <InputLabel for="" value="Company" class="mb-1" />
-                            <select v-model="form.company_id" class="form-control">
+                            <select v-model="form.company_id" class="form-control" :disabled="ledger_company_id">
                                 <template v-for="company in companies">
                                     <option :value="company.id">{{ company.name }}</option>
                                 </template>
