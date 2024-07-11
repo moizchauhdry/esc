@@ -33,7 +33,8 @@ const edit = (ledger) => {
     form.id = ledger.id
     form.company_id = ledger.company_id
     form.credit = ledger.credit
-    form.ledger_at = new Date(ledger.ledger_at)
+    // form.ledger_at = new Date(ledger.ledger_at)
+    form.ledger_at = ""
     form.comments = ledger.comments
 };
 
