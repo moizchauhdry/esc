@@ -33,7 +33,7 @@ const create = () => {
     modal.value = true;
     edit.value = false;
 
-    fetchLedgerBalance();
+    // fetchLedgerBalance();
 };
 
 const fetchLedgerBalance = () => {
@@ -71,6 +71,14 @@ const closeModal = () => {
 onMounted(() => {
     // 
 });
+
+watch(
+    () => {
+        if (form.ledger_at) {
+            fetchLedgerBalance();
+        }
+    }
+);
 
 </script>
 

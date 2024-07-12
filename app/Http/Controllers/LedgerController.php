@@ -18,13 +18,14 @@ class LedgerController extends Controller
         $user = Auth::user();
         $role_id = getRoleID($user);
 
-        $from = $request->from_date ?? Carbon::now()->startOfMonth()->format('Y-m-d');
-        $to = $request->to_date ?? Carbon::now()->endOfMonth()->format('Y-m-d');
+        $date = Carbon::parse($request->ledger_at);
+        $year = $date->year;
+        $month = $date->format('m');
 
         $filter = [
             'company' => $request->company_id,
-            'from' => $from,
-            'to' => $to,
+            'year' => $year,
+            'month' => $month,
         ];
 
         $query = Ledger::query();
@@ -42,10 +43,13 @@ class LedgerController extends Controller
             $q->where('company_id', $user->id);
         });
 
-        $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
-            $q->whereDate('ledger_at', '>=', $filter['from']);
-            $q->whereDate('ledger_at', '<=', $filter['to']);
-        });
+        $query->whereYear('ledger_at', $filter['year']);
+        $query->whereMonth('ledger_at', $filter['month']);
+
+        // $query->when($filter['ledger_at'], function ($q) use ($filter) {
+        //     $q->where('ledger_at', '>=', $filter['ledger_at']);
+        //     $q->where('ledger_at', '<=', $filter['ledger_at']);
+        // });
 
         $ledgers = $query->orderBy('id', 'asc')->get();
 
