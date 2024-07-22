@@ -119,6 +119,7 @@ const edit = (ledger) => {
                                         <th class="px-2">MAWB #</th>
                                         <th class="px-2">Orig</th>
                                         <th class="px-2">Dest</th>
+                                        <th class="px-2">Afc Rate</th>
                                         <th class="px-2">Pieces</th>
                                         <th class="px-2">Weight</th>
                                         <th class="px-2">Invoice ID</th>
@@ -139,6 +140,7 @@ const edit = (ledger) => {
                                                 <td class="px-2">{{ ledger.invoice?.mawb_no }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.sender }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.destination }}</td>
+                                                <td class="px-2">{{ ledger.invoice?.afc_rate }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.quantity }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.weight }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.id }}</td>
