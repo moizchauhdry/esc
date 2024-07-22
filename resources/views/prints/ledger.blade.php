@@ -60,6 +60,7 @@
                 <th>Particulars</th>
                 <th>Orig</th>
                 <th>Dest</th>
+                <th>AFC Rate</th>
                 <th>Pieces</th>
                 <th>Weight</th>
                 <th>Invoice ID</th>
@@ -77,6 +78,7 @@
                 <td style="width:90px">{{ $ledger->invoice->mawb_no }}</td>
                 <td>{{ $ledger->invoice->sender }}</td>
                 <td>{{ $ledger->invoice->destination }}</td>
+                <td>{{ format_number($ledger->invoice->afc_rate) }}</td>
                 <td>{{ $ledger->invoice->quantity }}</td>
                 <td>{{ $ledger->invoice->weight }}</td>
                 <td>{{ $ledger->invoice->id }}</td>
