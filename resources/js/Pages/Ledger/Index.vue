@@ -146,7 +146,7 @@ const edit = (ledger) => {
                                                 <td class="px-2">{{ ledger.invoice?.id }}</td>
                                             </template>
                                             <template v-if="ledger.amount_type == 2 || ledger.amount_type == 3">
-                                                <td colspan="7">{{ ledger.comments }}</td>
+                                                <td colspan="8">{{ ledger.comments }}</td>
                                             </template>
                                             <td class="px-2">{{ format_number(ledger.debit) }}</td>
                                             <td class="px-2">{{ format_number(ledger.credit) }}</td>
@@ -173,7 +173,7 @@ const edit = (ledger) => {
                                         </tr>
                                     </template>
                                     <tr>
-                                        <th colspan="9" class="text-right">Total</th>
+                                        <th colspan="10" class="text-right">Total</th>
                                         <th>{{ format_number(balance.debit_total) }}</th>
                                         <th>{{ format_number(balance.credit_total) }}</th>
                                         <th>{{ format_number(balance.balance_total) }}</th>
