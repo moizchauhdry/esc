@@ -45,10 +45,10 @@
     <div>
         <table>
             <tr>
-                <th colspan="12" style="text-align: center; text-transform:uppercase">General Ledger | CURRENCY: PKR/RS</th>
+                <th colspan="13" style="text-align: center; text-transform:uppercase">General Ledger | CURRENCY: PKR/RS</th>
             </tr>
             <tr>
-                <th colspan="12" style="text-align: center; text-transform:uppercase; font-size:16px">
+                <th colspan="13" style="text-align: center; text-transform:uppercase; font-size:16px">
                     {{ $filters['company_name'] ?? 'EXPRESS SAVER CARGO' }} |
                     {{ $filters['month_name'] }} {{ $filters['year'] }}
                 </th>
@@ -85,7 +85,7 @@
                 @endif
 
                 @if ($ledger->amount_type == 2 || $ledger->amount_type == 3)
-                <td colspan="7">{{ $ledger->comments }}</td>
+                <td colspan="8">{{ $ledger->comments }}</td>
                 @endif
 
                 <td>{{ format_number($ledger->debit_amount) }}</td>
@@ -95,7 +95,7 @@
             </tr>
             @endforeach
             <tr>
-                <th colspan="8" style="text-align: right">Total</th>
+                <th colspan="9" style="text-align: right">Total</th>
                 <th>{{ format_number($balance['debit_total']) }}</th>
                 <th>{{ format_number($balance['credit_total']) }}</th>
                 <th colspan="2">{{ format_number($balance['balance_total']) }}</th>
