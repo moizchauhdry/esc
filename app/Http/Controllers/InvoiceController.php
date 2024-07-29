@@ -79,9 +79,9 @@ class InvoiceController extends Controller
                 'status_id' => $invoice->status_id,
             ]);
 
-        $companies = User::role('company')->get();
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $companies = User::select('id as value', 'name as label')->role('company')->get();
+        $shippers = User::select('id as value', 'name as label')->role('shipper')->get();
+        $consignees = User::select('id as value', 'name as label')->role('consignee')->get();
 
         return Inertia::render('Invoice/Index', [
             'invoices' => $invoices,

@@ -5,6 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Paginate from "@/Components/Paginate.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import Multiselect from "@vueform/multiselect";
 
 defineProps({
     invoices: Object,
@@ -17,6 +18,7 @@ defineProps({
 });
 
 const permission = usePage().props.can;
+// const companies = usePage().props.companies;
 
 const format_number = (number) => {
     return new Intl.NumberFormat('en-US', {
@@ -96,36 +98,29 @@ const resetFilter = () => {
                                     </select>
                                 </div>
 
-                                <div class="col-md-3" v-if="form.search_key == 1 || form.search_key == 2">
-                                    <input type="text" v-model="form.search_value" class="form-control"
-                                        placeholder="Search">
-                                </div>
+                                <template v-if="form.search_key == 1 || form.search_key == 2">
+                                    <div class="col-md-3">
+                                        <input type="search" v-model="form.search_value" class="form-control"
+                                                placeholder="Search">
+                                    </div>
+                                </template>
 
                                 <div class="col-md-3" v-if="form.search_key == 3">
                                     <InputLabel for="" value="Company" class="mb-1" />
-                                    <select v-model="form.search_value" class="form-control">
-                                        <template v-for="company in companies">
-                                            <option :value="company.id">{{ company.name }}</option>
-                                        </template>
-                                    </select>
+                                    <Multiselect :searchable="true" v-model="form.search_value" :options="companies">
+                                    </Multiselect>
                                 </div>
 
-                            <div class="col-md-3" v-if="form.search_key == 4">
-                                <InputLabel for="" value="Shipper" class="mb-1" />
-                                    <select v-model="form.search_value" class="form-control">
-                                        <template v-for="shipper in shippers">
-                                            <option :value="shipper.id">{{ shipper.name }}</option>
-                                        </template>
-                                    </select>
+                                <div class="col-md-3" v-if="form.search_key == 4">
+                                    <InputLabel for="" value="Shipper" class="mb-1" />
+                                    <Multiselect :searchable="true" v-model="form.search_value" :options="shippers">
+                                    </Multiselect>
                                 </div>
 
                                 <div class="col-md-3" v-if="form.search_key == 5">
                                     <InputLabel for="" value="Consignee" class="mb-1" />
-                                    <select v-model="form.search_value" class="form-control">
-                                        <template v-for="consignee in consignees">
-                                            <option :value="consignee.id">{{ consignee.name }}</option>
-                                        </template>
-                                    </select>
+                                    <Multiselect :searchable="true" v-model="form.search_value" :options="consignees">
+                                    </Multiselect>
                                 </div>
 
                                 <div class="col-md-3">
@@ -165,9 +160,9 @@ const resetFilter = () => {
                                             <td style="width: 10px;">
                                                 <div class="d-flex align-items-center">
                                                     <!-- <div>
-                                                                            <input class="form-check-input me-3" type="checkbox" value="1"
-                                                                                aria-label="...">
-                                                                        </div> -->
+                                                                                            <input class="form-check-input me-3" type="checkbox" value="1"
+                                                                                                aria-label="...">
+                                                                                        </div> -->
                                                     {{ ++index }}
                                                 </div>
                                             </td>
@@ -190,12 +185,12 @@ const resetFilter = () => {
                                                 <b>Date:</b> {{ invoice.departure_at }}
                                             </td>
                                             <td style="width: 10px;" v-if="page_type == 'shipment'">
-                                                <b>Port:</b> {{ invoice.destination }} <br>
-                                                <b>Date:</b> {{ invoice.landing_at }}
+                                            <b>Port:</b> {{ invoice.destination }} <br>
+                                            <b>Date:</b> {{ invoice.landing_at }}
                                         </td>
 
-                                        <td style="width: 10px;" v-if="page_type == 'invoice'">PKR {{
-                                            format_number(invoice.total) }}
+                                            <td style="width: 10px;" v-if="page_type == 'invoice'">PKR {{
+                                                format_number(invoice.total) }}
                                             </td>
                                             <td style="width: 10px;" v-if="page_type == 'invoice'">{{ invoice.invoice_at
                                             }}</td>
@@ -248,9 +243,9 @@ const resetFilter = () => {
                                                     </template>
 
                                                     <!-- <template v-if="page_type == 'shipment'">
-                                                                                                                <a href="#" title="Delete" class="ms-1 text-danger"><i
-                                                                                                                        class='bx bxs-trash'></i></a>
-                                                                                                            </template> -->
+                                                                                                                                <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                                                                                                        class='bx bxs-trash'></i></a>
+                                                                                                                            </template> -->
                                                 </div>
                                             </td>
                                         </tr>
@@ -271,3 +266,5 @@ const resetFilter = () => {
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
