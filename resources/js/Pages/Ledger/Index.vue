@@ -52,7 +52,6 @@ const edit = (ledger) => {
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <template>
-
     <Head title="Ledgers" />
 
     <AuthenticatedLayout>
@@ -92,12 +91,12 @@ const edit = (ledger) => {
                 <div class="card">
                     <div class="card-body">
                         <!-- <div class="d-lg-flex align-items-center mb-4 gap-3">
-                            <div class="position-relative">
-                                <input type="text" class="form-control ps-5 radius-30" placeholder="Search Invoice">
-                                <span class="position-absolute top-50 product-show translate-middle-y"><i
-                                        class="bx bx-search"></i></span>
-                            </div>
-                        </div> -->
+                                                    <div class="position-relative">
+                                                        <input type="text" class="form-control ps-5 radius-30" placeholder="Search Invoice">
+                                                        <span class="position-absolute top-50 product-show translate-middle-y"><i
+                                                                class="bx bx-search"></i></span>
+                                                    </div>
+                                                </div> -->
                         <div class="table-responsive">
                             <table class="table table-bordered ledger-table table-sm" style="font-size:12px">
                                 <thead class="table-light">
@@ -143,7 +142,10 @@ const edit = (ledger) => {
                                                 <td class="px-2">{{ format_number(ledger.invoice?.afc_rate) }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.quantity }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.weight }}</td>
-                                                <td class="px-2">{{ ledger.invoice?.id }}</td>
+                                                <td class="px-2">
+                                                    <Link :href="route('invoice.detail', ledger.invoice.id)" title="Detail"
+                                                        class="text-lg underline">{{ ledger.invoice?.id }}</Link>
+                                                </td>
                                             </template>
                                             <template v-if="ledger.amount_type == 2 || ledger.amount_type == 3">
                                                 <td colspan="8">{{ ledger.comments }}</td>
@@ -163,11 +165,16 @@ const edit = (ledger) => {
                                                                 v-if="permission.ledger_update">
                                                                 <i class="bx bx-edit"></i></a>
                                                         </template>
-                                                        <a href="#" @click="deleteLedger(ledger.id)"
+                                                        <a class="text-danger" href="#" @click="deleteLedger(ledger.id)"
                                                             v-if="permission.ledger_delete">
                                                             <i class="bx bx-trash"></i>
                                                         </a>
                                                     </div>
+                                                </template>
+
+                                                <template v-if="ledger.invoice?.id">
+                                                    <a :href="route('invoice.print', ledger.invoice?.id)" title="Print"
+                                                        class="text-lg" target="_blank"><i class='bx bxs-printer'></i></a>
                                                 </template>
                                             </td>
                                         </tr>
@@ -187,5 +194,4 @@ const edit = (ledger) => {
             </div>
         </div>
     </AuthenticatedLayout>
-
 </template>

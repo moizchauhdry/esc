@@ -264,8 +264,8 @@ class InvoiceController extends Controller
 
         $pdf = PDF::loadView('prints.invoice');
         $pdf->setPaper('A4', 'portrait');
-        // return $pdf->stream('invoice.pdf');
-        return $pdf->download('invoice.pdf');
+        return $pdf->stream('invoice.pdf');
+        // return $pdf->download('invoice.pdf');
     }
 
     public function upload(Request $request)
