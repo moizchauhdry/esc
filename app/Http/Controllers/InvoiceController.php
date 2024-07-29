@@ -27,8 +27,8 @@ class InvoiceController extends Controller
         }
 
         $filter = [
-            'invoice_id' => $request->invoice_id,
-            'mawb_no' => $request->mawb_no,
+            'search_key' => $request->search_key,
+            'search_value' => $request->search_value,
         ];
 
 
@@ -38,12 +38,28 @@ class InvoiceController extends Controller
             $qry->where('company_id', $user->id);
         });
 
-        $query->when($filter['invoice_id'], function ($q) use ($filter) {
-            $q->where('id', $filter['invoice_id']);
-        });
+        $query->when($filter['search_key'] && $filter['search_value'], function ($q) use ($filter) {
 
-        $query->when($filter['mawb_no'], function ($q) use ($filter) {
-            $q->where('mawb_no', 'LIKE', '%' . $filter['mawb_no'] . '%');
+            if ($filter['search_key'] == 1) {
+                // $q->where('mawb_no', 'LIKE', '%' . $filter['search_value'] . '%');
+                $q->where('mawb_no', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 2) {
+                $q->where('id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 3) {
+                $q->where('company_id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 4) {
+                $q->where('shipper_id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 5) {
+                $q->where('consignee_id', $filter['search_value']);
+            }
         });
 
         $invoices = $query
@@ -63,9 +79,16 @@ class InvoiceController extends Controller
                 'status_id' => $invoice->status_id,
             ]);
 
+        $companies = User::role('company')->get();
+        $shippers = User::role('shipper')->get();
+        $consignees = User::role('consignee')->get();
+
         return Inertia::render('Invoice/Index', [
             'invoices' => $invoices,
             'page_type' => "invoice",
+            'companies' => $companies,
+            'shippers' => $shippers,
+            'consignees' => $consignees,
         ]);
     }
 
