@@ -18,7 +18,7 @@ defineProps({
 });
 
 const permission = usePage().props.can;
-// const companies = usePage().props.companies;
+const page_type = usePage().props.page_type;
 
 const format_number = (number) => {
     return new Intl.NumberFormat('en-US', {
@@ -33,13 +33,19 @@ const form = useForm({
 });
 
 const search = () => {
-    form.post(route("invoice.index"), {
+    if (page_type == 'invoice') {
+        var form_route = route("invoice.index");
+    } else {
+        var form_route = route("shipment.index");
+    }
+
+    form.post(form_route, {
         preserveScroll: true,
         onSuccess: (response) => {
-            // localStorage.setItem('filters', JSON.stringify(filters));
+            //
         },
         onError: (errors) => {
-            console.log(errors)
+            //
         },
         onFinish: () => { },
     });
@@ -96,12 +102,12 @@ const resetFilter = () => {
                                         <option value="4">Shipper</option>
                                         <option value="5">Consignee</option>
                                     </select>
-                                </div>
+                            </div>
 
-                                <template v-if="form.search_key == 1 || form.search_key == 2">
+                            <template v-if="form.search_key == 1 || form.search_key == 2">
                                     <div class="col-md-3">
                                         <input type="search" v-model="form.search_value" class="form-control"
-                                                placeholder="Search">
+                                            placeholder="Search">
                                     </div>
                                 </template>
 
@@ -160,9 +166,9 @@ const resetFilter = () => {
                                             <td style="width: 10px;">
                                                 <div class="d-flex align-items-center">
                                                     <!-- <div>
-                                                                                            <input class="form-check-input me-3" type="checkbox" value="1"
-                                                                                                aria-label="...">
-                                                                                        </div> -->
+                                                                                                    <input class="form-check-input me-3" type="checkbox" value="1"
+                                                                                                        aria-label="...">
+                                                                                                </div> -->
                                                     {{ ++index }}
                                                 </div>
                                             </td>
@@ -180,14 +186,14 @@ const resetFilter = () => {
                                                 <b>Consignee:</b> {{ invoice.consignee_name }} <br>
                                             </td>
 
-                                            <td style="width: 10px;" v-if="page_type == 'shipment'">
-                                                <b>Port:</b> {{ invoice.sender }} <br>
+                                        <td style="width: 10px;" v-if="page_type == 'shipment'">
+                                            <b>Port:</b> {{ invoice.sender }} <br>
                                                 <b>Date:</b> {{ invoice.departure_at }}
                                             </td>
                                             <td style="width: 10px;" v-if="page_type == 'shipment'">
-                                            <b>Port:</b> {{ invoice.destination }} <br>
-                                            <b>Date:</b> {{ invoice.landing_at }}
-                                        </td>
+                                                <b>Port:</b> {{ invoice.destination }} <br>
+                                                <b>Date:</b> {{ invoice.landing_at }}
+                                            </td>
 
                                             <td style="width: 10px;" v-if="page_type == 'invoice'">PKR {{
                                                 format_number(invoice.total) }}
@@ -243,9 +249,9 @@ const resetFilter = () => {
                                                     </template>
 
                                                     <!-- <template v-if="page_type == 'shipment'">
-                                                                                                                                <a href="#" title="Delete" class="ms-1 text-danger"><i
-                                                                                                                                        class='bx bxs-trash'></i></a>
-                                                                                                                            </template> -->
+                                                                                                                                        <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                                                                                                                class='bx bxs-trash'></i></a>
+                                                                                                                                    </template> -->
                                                 </div>
                                             </td>
                                         </tr>

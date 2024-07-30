@@ -31,7 +31,6 @@ class InvoiceController extends Controller
             'search_value' => $request->search_value,
         ];
 
-
         $query = Invoice::with(['shipper', 'consignee', 'company']);
 
         $query->when($user_role_id == 2, function ($qry) use ($user) {
