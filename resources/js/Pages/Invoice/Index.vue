@@ -18,7 +18,7 @@ defineProps({
 });
 
 const permission = usePage().props.can;
-// const companies = usePage().props.companies;
+const page_type = usePage().props.page_type;
 
 const format_number = (number) => {
     return new Intl.NumberFormat('en-US', {
@@ -33,20 +33,34 @@ const form = useForm({
 });
 
 const search = () => {
-    form.post(route("invoice.index"), {
+    if (page_type == 'invoice') {
+        var form_route = route("invoice.index");
+    } else {
+        var form_route = route("shipment.index");
+    }
+
+    var filters = {
+        search_key: form.search_key,
+        search_value: form.search_value,
+    };
+    
+    const queryParams = new URLSearchParams(filters).toString();
+    const urlWithFilters = `${form_route}?${queryParams}`;
+
+    form.post(urlWithFilters, {
         preserveScroll: true,
         onSuccess: (response) => {
-            // localStorage.setItem('filters', JSON.stringify(filters));
+            //
         },
         onError: (errors) => {
-            console.log(errors)
+            //
         },
         onFinish: () => { },
     });
 };
 
 const clearSearch = () => {
-    form.search_value = "";
+    // form.search_value = "";
 };
 
 const resetFilter = () => {
@@ -87,9 +101,9 @@ const resetFilter = () => {
                 <div class="card">
                     <div class="card-body">
                         <form @submit.prevent="search">
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <select v-model="form.search_key" class="form-control" @change="clearSearch">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <select v-model="form.search_key" class="form-control" @change="clearSearch">
                                         <option value="1">AWB #</option>
                                         <option value="2">Shipment #</option>
                                         <option value="3">Company</option>
@@ -101,7 +115,7 @@ const resetFilter = () => {
                                 <template v-if="form.search_key == 1 || form.search_key == 2">
                                     <div class="col-md-3">
                                         <input type="search" v-model="form.search_value" class="form-control"
-                                                placeholder="Search">
+                                            placeholder="Search">
                                     </div>
                                 </template>
 
@@ -160,9 +174,9 @@ const resetFilter = () => {
                                             <td style="width: 10px;">
                                                 <div class="d-flex align-items-center">
                                                     <!-- <div>
-                                                                                            <input class="form-check-input me-3" type="checkbox" value="1"
-                                                                                                aria-label="...">
-                                                                                        </div> -->
+                                                                                                        <input class="form-check-input me-3" type="checkbox" value="1"
+                                                                                                            aria-label="...">
+                                                                                                    </div> -->
                                                     {{ ++index }}
                                                 </div>
                                             </td>
@@ -170,9 +184,9 @@ const resetFilter = () => {
                                                 <b>AWB #:</b> {{ invoice.mawb_no }} <br>
                                                 <b>Shipment #:</b> {{ invoice.id }} <br>
                                             </td>
-                                            <td>{{ invoice.company_name }}</td>
+                                        <td>{{ invoice.company_name }}</td>
 
-                                            <td style="width: 10px;">
+                                        <td style="width: 10px;">
                                                 <!-- <b>Account #:</b> {{ invoice.shipper_id }} <br> -->
                                                 <b>Shipper:</b> {{ invoice.shipper_name }} <br>
 
@@ -185,9 +199,9 @@ const resetFilter = () => {
                                                 <b>Date:</b> {{ invoice.departure_at }}
                                             </td>
                                             <td style="width: 10px;" v-if="page_type == 'shipment'">
-                                            <b>Port:</b> {{ invoice.destination }} <br>
-                                            <b>Date:</b> {{ invoice.landing_at }}
-                                        </td>
+                                                <b>Port:</b> {{ invoice.destination }} <br>
+                                                <b>Date:</b> {{ invoice.landing_at }}
+                                            </td>
 
                                             <td style="width: 10px;" v-if="page_type == 'invoice'">PKR {{
                                                 format_number(invoice.total) }}
@@ -243,9 +257,9 @@ const resetFilter = () => {
                                                     </template>
 
                                                     <!-- <template v-if="page_type == 'shipment'">
-                                                                                                                                <a href="#" title="Delete" class="ms-1 text-danger"><i
-                                                                                                                                        class='bx bxs-trash'></i></a>
-                                                                                                                            </template> -->
+                                                                                                                                            <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                                                                                                                    class='bx bxs-trash'></i></a>
+                                                                                                                                        </template> -->
                                                 </div>
                                             </td>
                                         </tr>
