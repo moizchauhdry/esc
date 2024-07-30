@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
+use App\Models\InvoiceUpload;
 use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
@@ -324,5 +326,26 @@ class LedgerController extends Controller
         ]);
 
         return Redirect::back()->with('success', 'Opening Balance added.');
+    }
+
+    public function fetchLedgerInvoice(Request $request)
+    {
+        $invoice = Invoice::where('id', $request->invoice_id)->first();
+
+        $invoice_uploads = InvoiceUpload::query()
+            ->where('invoice_id', $invoice->id)
+            ->orderBy('id', 'desc')
+            ->paginate(5)
+            ->withQueryString()
+            ->through(fn ($upload) => [
+                'id' => $upload->id,
+                'invoice_id' => $upload->invoice_id,
+                'url' => $upload->url,
+            ]);
+
+        $data['invoice'] = $invoice;
+        $data['invoice_uploads'] = $invoice_uploads;
+
+        return response()->json($data);
     }
 }

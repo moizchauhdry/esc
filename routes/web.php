@@ -82,6 +82,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
             Route::post('/update', [LedgerController::class, 'updateLedger'])->name('ledger.update')->middleware('permission:ledger_update');
             Route::post('/balance', [LedgerController::class, 'fetchBalance'])->name('ledger.balance');
             Route::post('/opening-balance', [LedgerController::class, 'openingBalance'])->name('ledger.opening-balance');
+            Route::post('/fetch-ledger-invoice', [LedgerController::class, 'fetchLedgerInvoice'])->name('ledger.fetch-ledger-invoice');
         });
     });
 });
