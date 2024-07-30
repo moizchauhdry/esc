@@ -88,6 +88,7 @@ class InvoiceController extends Controller
             'companies' => $companies,
             'shippers' => $shippers,
             'consignees' => $consignees,
+            'filter' => $filter,
         ]);
     }
 

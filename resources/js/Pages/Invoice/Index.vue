@@ -39,7 +39,15 @@ const search = () => {
         var form_route = route("shipment.index");
     }
 
-    form.post(form_route, {
+    var filters = {
+        search_key: form.search_key,
+        search_value: form.search_value,
+    };
+    
+    const queryParams = new URLSearchParams(filters).toString();
+    const urlWithFilters = `${form_route}?${queryParams}`;
+
+    form.post(urlWithFilters, {
         preserveScroll: true,
         onSuccess: (response) => {
             //
@@ -52,7 +60,7 @@ const search = () => {
 };
 
 const clearSearch = () => {
-    form.search_value = "";
+    // form.search_value = "";
 };
 
 const resetFilter = () => {
@@ -93,18 +101,18 @@ const resetFilter = () => {
                 <div class="card">
                     <div class="card-body">
                         <form @submit.prevent="search">
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <select v-model="form.search_key" class="form-control" @change="clearSearch">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <select v-model="form.search_key" class="form-control" @change="clearSearch">
                                         <option value="1">AWB #</option>
                                         <option value="2">Shipment #</option>
                                         <option value="3">Company</option>
                                         <option value="4">Shipper</option>
                                         <option value="5">Consignee</option>
                                     </select>
-                            </div>
+                                </div>
 
-                            <template v-if="form.search_key == 1 || form.search_key == 2">
+                                <template v-if="form.search_key == 1 || form.search_key == 2">
                                     <div class="col-md-3">
                                         <input type="search" v-model="form.search_value" class="form-control"
                                             placeholder="Search">
@@ -166,9 +174,9 @@ const resetFilter = () => {
                                             <td style="width: 10px;">
                                                 <div class="d-flex align-items-center">
                                                     <!-- <div>
-                                                                                                    <input class="form-check-input me-3" type="checkbox" value="1"
-                                                                                                        aria-label="...">
-                                                                                                </div> -->
+                                                                                                        <input class="form-check-input me-3" type="checkbox" value="1"
+                                                                                                            aria-label="...">
+                                                                                                    </div> -->
                                                     {{ ++index }}
                                                 </div>
                                             </td>
@@ -176,9 +184,9 @@ const resetFilter = () => {
                                                 <b>AWB #:</b> {{ invoice.mawb_no }} <br>
                                                 <b>Shipment #:</b> {{ invoice.id }} <br>
                                             </td>
-                                            <td>{{ invoice.company_name }}</td>
+                                        <td>{{ invoice.company_name }}</td>
 
-                                            <td style="width: 10px;">
+                                        <td style="width: 10px;">
                                                 <!-- <b>Account #:</b> {{ invoice.shipper_id }} <br> -->
                                                 <b>Shipper:</b> {{ invoice.shipper_name }} <br>
 
@@ -186,8 +194,8 @@ const resetFilter = () => {
                                                 <b>Consignee:</b> {{ invoice.consignee_name }} <br>
                                             </td>
 
-                                        <td style="width: 10px;" v-if="page_type == 'shipment'">
-                                            <b>Port:</b> {{ invoice.sender }} <br>
+                                            <td style="width: 10px;" v-if="page_type == 'shipment'">
+                                                <b>Port:</b> {{ invoice.sender }} <br>
                                                 <b>Date:</b> {{ invoice.departure_at }}
                                             </td>
                                             <td style="width: 10px;" v-if="page_type == 'shipment'">
@@ -249,9 +257,9 @@ const resetFilter = () => {
                                                     </template>
 
                                                     <!-- <template v-if="page_type == 'shipment'">
-                                                                                                                                        <a href="#" title="Delete" class="ms-1 text-danger"><i
-                                                                                                                                                class='bx bxs-trash'></i></a>
-                                                                                                                                    </template> -->
+                                                                                                                                            <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                                                                                                                    class='bx bxs-trash'></i></a>
+                                                                                                                                        </template> -->
                                                 </div>
                                             </td>
                                         </tr>
