@@ -16,13 +16,29 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $filter = [
-            'search' => $request->search,
+            'search_key' => $request->search_key,
+            'search_value' => $request->search_value,
         ];
 
-        $users = User::orderBy('id', 'desc')
-            ->when($filter['search'], function ($q) use ($filter) {
-                $q->where('id', $filter['search']);
-                $q->orWhere('name', 'LIKE', '%' . $filter['search'] . '%');
+        $users = User::orderBy('users.name', 'asc')
+            ->when($filter['search_key'] && $filter['search_value'], function ($q) use ($filter) {
+                if ($filter['search_key'] == 1) {
+                    $q->where('id', $filter['search_value']);
+                }
+
+                if ($filter['search_key'] == 2) {
+                    $q->where('name', 'LIKE', '%' . $filter['search_value'] . '%');
+                }
+
+                if ($filter['search_key'] == 3) {
+                    $q->where('email', $filter['search_value']);
+                }
+
+                if ($filter['search_key'] == 4) {
+                    $q->whereHas('roles', function ($qry) use ($filter) {
+                        $qry->where('id', $filter['search_value']);
+                    });
+                }
             })
             ->paginate(10)
             ->withQueryString()
