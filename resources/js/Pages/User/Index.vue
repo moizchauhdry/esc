@@ -7,6 +7,7 @@ import Paginate from "@/Components/Paginate.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 import ActionButton from "@/Components/ActionButton.vue";
 import ResetPassword from "./ResetPassword.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 defineProps({
     users: Object,
@@ -21,16 +22,16 @@ const edit = (user) => {
 };
 
 const resetPasswordFunc = (user) => {
-    console.log(password_ref.value);
     password_ref.value.resetpasswordfunc(user)
 };
 
-const search_form = useForm({
-    search: ""
+const form = useForm({
+    search_key: 2,
+    search_value: ""
 });
 
 const search = () => {
-    search_form.post(route("user.index"), {
+    form.post(route("user.index"), {
         preserveScroll: true,
         onSuccess: (response) => {
             // 
@@ -41,11 +42,15 @@ const search = () => {
         onFinish: () => { },
     });
 };
+
+const resetFilter = () => {
+    form.search_key = 2;
+    form.search_value = "";
+};
 </script>
 
 
 <template>
-
     <Head title="Users" />
 
     <AuthenticatedLayout>
@@ -77,14 +82,39 @@ const search = () => {
                         <form @submit.prevent="search">
                             <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <input type="text" v-model="search_form.search" class="form-control"
-                                        placeholder="Search">
+                                    <select v-model="form.search_key" class="form-control" @change="clearSearch">
+                                        <option value="1">User ID</option>
+                                        <option value="2">Name</option>
+                                        <option value="3">Email</option>
+                                        <option value="4">Role</option>
+                                    </select>
                                 </div>
+
+                                <template v-if="form.search_key == 1 || form.search_key == 2 || form.search_key == 3">
+                                    <div class="col-md-3">
+                                        <input type="search" v-model="form.search_value" class="form-control"
+                                            placeholder="Search">
+                                    </div>
+                                </template>
+
+                                <template v-if="form.search_key == 4">
+                                    <div class="col-md-3">
+                                        <select v-model="form.search_value" class="form-control">
+                                        <template v-for="role in roles">
+                                            <option :value="role.id">{{ role.name }}</option>
+                                        </template>
+                                    </select>
+                                    </div>
+                                </template>
+
                                 <div class="col-md-3">
-                                    <SuccessButton :class="{ 'opacity-25': search_form.processing }"
-                                        :disabled="search_form.processing">
+                                    <SuccessButton class="px-4 py-1" :class="{ 'opacity-25': form.processing }"
+                                        :disabled="form.processing">
                                         Search
                                     </SuccessButton>
+                                    <DangerButton class="px-4 py-1" @click="resetFilter" :disabled="form.processing">
+                                        Reset
+                                    </DangerButton>
                                 </div>
                             </div>
                         </form>
@@ -120,7 +150,8 @@ const search = () => {
                                             <td>{{ user.created_at }}</td>
                                             <td>
                                                 <ActionButton @click="edit(user)" title="Edit" class="mr-1">
-                                                    <i class="bx bx-edit"></i></ActionButton>
+                                                    <i class="bx bx-edit"></i>
+                                                </ActionButton>
 
                                                 <ActionButton @click="resetPasswordFunc(user)" title="Reset Password"
                                                     clas="btn btn-primary"><i class="bx bx-box"></i></ActionButton>
@@ -143,5 +174,4 @@ const search = () => {
         </div>
         <!--end page wrapper -->
     </AuthenticatedLayout>
-
 </template>
