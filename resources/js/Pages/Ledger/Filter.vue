@@ -140,6 +140,7 @@ const format_date = (date) => {
                         <div class="col-md-6">
                             <InputLabel for="" value="Company" class="mb-1" />
                             <select v-model="form.company" class="form-control" :disabled="ledger_company_id">
+                                <option :value="''">EXPRESS SAVER CARGO</option>
                                 <template v-for="company in companies">
                                     <option :value="company.id">{{ company.name }}</option>
                                 </template>
@@ -168,17 +169,17 @@ const format_date = (date) => {
                         </div>
 
                         <!-- <div class="col-md-3">
-                            <InputLabel for="" value="From Date" class="mb-1" />
-                            <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
-                            </VueDatePicker>
-                            <InputError :message="form.errors.from_date" />
-                        </div>
-                        <div class="col-md-3">
-                            <InputLabel for="" value="To Date" class="mb-1" />
-                            <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
-                            </VueDatePicker>
-                            <InputError :message="form.errors.to_date" />
-                        </div> -->
+                                <InputLabel for="" value="From Date" class="mb-1" />
+                                <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
+                                </VueDatePicker>
+                                <InputError :message="form.errors.from_date" />
+                            </div>
+                            <div class="col-md-3">
+                                <InputLabel for="" value="To Date" class="mb-1" />
+                                <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
+                                </VueDatePicker>
+                                <InputError :message="form.errors.to_date" />
+                            </div> -->
                     </div>
                 </div>
 
