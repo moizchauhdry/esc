@@ -54,6 +54,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'ledger_payment', 'level' => 2],
             ['name' => 'ledger_company', 'level' => 2],
 
+            // Template
+            ['name' => 'template', 'level' => 1],
+            ['name' => 'template_list', 'level' => 2],
+            ['name' => 'template_delete', 'level' => 2],
+            ['name' => 'template_update', 'level' => 2],
+
         ];
 
         foreach ($permissions as $permission) {

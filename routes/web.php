@@ -1,15 +1,13 @@
 <?php
 
-use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShipmentController;
-use App\Http\Controllers\WorkOrderController;
+use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -83,6 +81,15 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
             Route::post('/balance', [LedgerController::class, 'fetchBalance'])->name('ledger.balance');
             Route::post('/opening-balance', [LedgerController::class, 'openingBalance'])->name('ledger.opening-balance');
             Route::post('/fetch-ledger-invoice', [LedgerController::class, 'fetchLedgerInvoice'])->name('ledger.fetch-ledger-invoice');
+        });
+
+        Route::prefix('templates')->group(function () {
+            Route::any('/', [TemplateController::class, 'index'])->name('template.index');
+            Route::get('/create', [TemplateController::class, 'create'])->name('template.create');
+            Route::post('/store', [TemplateController::class, 'store'])->name('template.store');
+            Route::get('/edit/{id}', [TemplateController::class, 'edit'])->name('template.edit');
+            Route::post('/update', [TemplateController::class, 'update'])->name('template.update');
+            Route::get('/fetch/particulars/{id}', [TemplateController::class, 'fetchParticulars'])->name('template.fetch.particulars');
         });
     });
 });
