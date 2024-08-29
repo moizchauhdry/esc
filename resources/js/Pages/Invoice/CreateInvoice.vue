@@ -21,6 +21,7 @@ const props = defineProps({
     roles: Array,
     edit_mode: Boolean,
     page_type: String,
+    templates: Array,
 });
 
 const invoice_modal = ref(false);
@@ -202,10 +203,17 @@ onMounted(() => {
     fetchShipper(form.shipper_id);
     fetchConsignee(form.consignee_id);
 });
+
+
+const changeTemplate = (id) => {
+    axios.get(`/templates/fetch/particulars/${id}`)
+        .then(({ data }) => {
+            form.items = data.particulars
+        });
+};
 </script>
 
 <template>
-
     <Head title="Invoices" />
 
     <AuthenticatedLayout>
@@ -220,7 +228,7 @@ onMounted(() => {
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ edit_mode ? 'Create' : 'Edit'
-                                    }}
+                                }}
                                 </li>
                             </ol>
                         </nav>
@@ -293,8 +301,7 @@ onMounted(() => {
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
                                                     Number
-                                                    <UserCreateEdit :roles="roles" :selected_role="3"
-                                                        ref="create_edit_ref">
+                                                    <UserCreateEdit :roles="roles" :selected_role="3" ref="create_edit_ref">
                                                     </UserCreateEdit>
 
                                                     <PrimaryButton @click="edit(selected_shipper)" type="button">Edit
@@ -402,7 +409,20 @@ onMounted(() => {
                                     <div class="my-3"></div>
 
                                     <h6 class="invoice-heading">PARTICULARS</h6>
+
+                                    <div class="col-md-6">
+                                        <InputLabel for="" value="Templates" class="mb-1" />
+                                        <select class="form-control" v-model="form.template_id"
+                                            @change="changeTemplate(form.template_id)">
+                                            <template v-for="template in templates" :key="template.id">
+                                                <option :value="template.id">{{template.title }}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+
                                     <hr>
+
+                                    
 
                                     <table>
                                         <thead>
@@ -434,8 +454,7 @@ onMounted(() => {
 
                                                     </td>
                                                     <td class="text-left" colspan="3" style="width:45%">
-                                                        <input type="text" class="form-control"
-                                                            v-model="item.particular">
+                                                        <input type="text" class="form-control" v-model="item.particular">
                                                     </td>
                                                     <td class="text-left" style="width:15%">
                                                         <input type="number" class="form-control" v-model="item.amount"
@@ -446,7 +465,7 @@ onMounted(() => {
                                                             @keyup="getLineTotal(index)">
                                                     </td>
                                                     <td class="total" style="width:15%">PKR {{ format_number(item.total)
-                                                        }}</td>
+                                                    }}</td>
                                                 </tr>
                                             </template>
 

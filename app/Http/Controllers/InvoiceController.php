@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceUpload;
 use App\Models\Ledger;
+use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -222,6 +223,7 @@ class InvoiceController extends Controller
         $consignees = User::role('consignee')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
+        $templates = Template::get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
@@ -233,6 +235,7 @@ class InvoiceController extends Controller
             'selected_consignee' => session('selected_consignee'),
             'edit_mode' => true,
             'page_type' => "invoice",
+            'templates' => $templates,
         ]);
     }
 
