@@ -534,6 +534,8 @@ const changeTemplate = (id) => {
     </AuthenticatedLayout>
 </template>
 
+<style src="@vueform/multiselect/themes/default.css"></style>
+
 <style>
 .invoice table .no {
     color: black;
@@ -568,5 +570,3 @@ input:disabled {
     font-size: 14px
 }
 </style>
-
-<style src="@vueform/multiselect/themes/default.css"></style>
