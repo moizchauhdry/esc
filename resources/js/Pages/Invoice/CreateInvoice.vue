@@ -12,6 +12,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import InputLabel from "@/Components/InputLabel.vue";
 import moment from 'moment';
+import Multiselect from "@vueform/multiselect";
 
 const props = defineProps({
     invoice: Object,
@@ -21,6 +22,7 @@ const props = defineProps({
     roles: Array,
     edit_mode: Boolean,
     page_type: String,
+    templates: Array,
 });
 
 const invoice_modal = ref(false);
@@ -137,17 +139,21 @@ const getLineTotal = (index) => {
 };
 
 const fetchShipper = (id) => {
-    axios.get(`/users/fetch/shipper/${id}`)
-        .then(({ data }) => {
-            selected_shipper = data.selected_shipper
-        });
+    if (id) {
+        axios.get(`/users/fetch/shipper/${id}`)
+            .then(({ data }) => {
+                selected_shipper = data.selected_shipper
+            });
+    }
 };
 
 const fetchConsignee = (id) => {
-    axios.get(`/users/fetch/consignee/${id}`)
-        .then(({ data }) => {
-            selected_consignee = data.selected_consignee
-        });
+    if (id) {
+        axios.get(`/users/fetch/consignee/${id}`)
+            .then(({ data }) => {
+                selected_consignee = data.selected_consignee
+            });
+    }
 };
 
 const create_edit_ref = ref(null);
@@ -202,10 +208,17 @@ onMounted(() => {
     fetchShipper(form.shipper_id);
     fetchConsignee(form.consignee_id);
 });
+
+
+const changeTemplate = (id) => {
+    axios.get(`/templates/fetch/particulars/${id}`)
+        .then(({ data }) => {
+            form.items = data.particulars
+        });
+};
 </script>
 
 <template>
-
     <Head title="Invoices" />
 
     <AuthenticatedLayout>
@@ -220,7 +233,7 @@ onMounted(() => {
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ edit_mode ? 'Create' : 'Edit'
-                                    }}
+                                }}
                                 </li>
                             </ol>
                         </nav>
@@ -293,22 +306,26 @@ onMounted(() => {
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
                                                     Number
-                                                    <UserCreateEdit :roles="roles" :selected_role="3"
-                                                        ref="create_edit_ref">
+                                                    <UserCreateEdit :roles="roles" :selected_role="3" ref="create_edit_ref">
                                                     </UserCreateEdit>
 
                                                     <PrimaryButton @click="edit(selected_shipper)" type="button">Edit
                                                         <i class="bx bx-edit ms-1"></i>
                                                     </PrimaryButton>
                                                 </label>
-                                                <select class="form-control" v-model="form.shipper_id"
-                                                    @change="fetchShipper(form.shipper_id)">
-                                                    <template v-for="shipper in shippers" :key="shipper.id">
-                                                        <option :value="shipper.id">{{ shipper.id }} - {{
-                                                            shipper.name }}
-                                                        </option>
-                                                    </template>
-                                                </select>
+                                                <!-- <select class="form-control" v-model="form.shipper_id"
+                                                        @change="fetchShipper(form.shipper_id)">
+                                                        <template v-for="shipper in shippers" :key="shipper.id">
+                                                            <option :value="shipper.id">{{ shipper.id }} - {{
+                                                                shipper.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select> -->
+
+                                                <Multiselect style="margin-top: 3px !important" :searchable="true"
+                                                    v-model="form.shipper_id" :options="shippers"
+                                                    @click="fetchShipper(form.shipper_id)"></Multiselect>
+
                                                 <InputError :message="form.errors.shipper_id" />
                                             </div>
                                         </div>
@@ -327,14 +344,19 @@ onMounted(() => {
                                                         <i class="bx bx-edit ms-1"></i>
                                                     </PrimaryButton>
                                                 </label>
-                                                <select class="form-control" v-model="form.consignee_id"
-                                                    @change="fetchConsignee(form.consignee_id)">
-                                                    <template v-for="consignee in consignees" :key="consignee.id">
-                                                        <option :value="consignee.id">{{ consignee.id }} - {{
-                                                            consignee.name }}
-                                                        </option>
-                                                    </template>
-                                                </select>
+                                                <!-- <select class="form-control" v-model="form.consignee_id"
+                                                        @change="fetchConsignee(form.consignee_id)">
+                                                        <template v-for="consignee in consignees" :key="consignee.id">
+                                                            <option :value="consignee.id">{{ consignee.id }} - {{
+                                                                consignee.name }}
+                                                            </option>
+                                                        </template>
+                                                    </select> -->
+
+                                                <Multiselect style="margin-top: 3px !important" :searchable="true"
+                                                    v-model="form.consignee_id" :options="consignees"
+                                                    @click="fetchConsignee(form.consignee_id)"></Multiselect>
+
                                                 <InputError :message="form.errors.consignee_id" />
                                             </div>
                                         </div>
@@ -402,7 +424,20 @@ onMounted(() => {
                                     <div class="my-3"></div>
 
                                     <h6 class="invoice-heading">PARTICULARS</h6>
+
+                                    <div class="col-md-6">
+                                        <InputLabel for="" value="Templates" class="mb-1" />
+                                        <select class="form-control" v-model="form.template_id"
+                                            @change="changeTemplate(form.template_id)">
+                                            <template v-for="template in templates" :key="template.id">
+                                                <option :value="template.id">{{ template.title }}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+
                                     <hr>
+
+
 
                                     <table>
                                         <thead>
@@ -434,8 +469,7 @@ onMounted(() => {
 
                                                     </td>
                                                     <td class="text-left" colspan="3" style="width:45%">
-                                                        <input type="text" class="form-control"
-                                                            v-model="item.particular">
+                                                        <input type="text" class="form-control" v-model="item.particular">
                                                     </td>
                                                     <td class="text-left" style="width:15%">
                                                         <input type="number" class="form-control" v-model="item.amount"
@@ -446,7 +480,7 @@ onMounted(() => {
                                                             @keyup="getLineTotal(index)">
                                                     </td>
                                                     <td class="total" style="width:15%">PKR {{ format_number(item.total)
-                                                        }}</td>
+                                                    }}</td>
                                                 </tr>
                                             </template>
 
@@ -534,3 +568,5 @@ input:disabled {
     font-size: 14px
 }
 </style>
+
+<style src="@vueform/multiselect/themes/default.css"></style>

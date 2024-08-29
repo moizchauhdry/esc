@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceUpload;
 use App\Models\Ledger;
+use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -65,7 +66,7 @@ class InvoiceController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10)
             ->withQueryString()
-            ->through(fn ($invoice) => [
+            ->through(fn($invoice) => [
                 'id' => $invoice->id,
                 'mawb_no' => $invoice->mawb_no,
                 'company_name' => $invoice->company->name,
@@ -192,8 +193,8 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
@@ -218,10 +219,11 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::with(['items'])->find($id);
 
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
+        $templates = Template::get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
@@ -233,6 +235,7 @@ class InvoiceController extends Controller
             'selected_consignee' => session('selected_consignee'),
             'edit_mode' => true,
             'page_type' => "invoice",
+            'templates' => $templates,
         ]);
     }
 
@@ -251,7 +254,7 @@ class InvoiceController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(5)
             ->withQueryString()
-            ->through(fn ($upload) => [
+            ->through(fn($upload) => [
                 'id' => $upload->id,
                 'invoice_id' => $upload->invoice_id,
                 'url' => $upload->url,

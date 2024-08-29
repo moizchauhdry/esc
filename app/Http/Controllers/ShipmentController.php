@@ -148,8 +148,8 @@ class ShipmentController extends Controller
 
     public function create()
     {
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
@@ -174,10 +174,9 @@ class ShipmentController extends Controller
     {
         $invoice = Invoice::with(['items'])->find($id);
 
-        // dd($invoice);
-
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
