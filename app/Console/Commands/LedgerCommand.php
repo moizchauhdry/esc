@@ -6,6 +6,7 @@ use App\Models\Ledger;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class LedgerCommand extends Command
 {
@@ -29,6 +30,7 @@ class LedgerCommand extends Command
     public function handle()
     {
         dump('ledger-command running ...');
+        Log::info("ledger command start");
 
         $month = Carbon::now()->subMonth()->format('m');
         $year = Carbon::now()->subMonth()->format('Y');
@@ -82,6 +84,7 @@ class LedgerCommand extends Command
             dump('Iteration ...' . $key);
         }
 
+        Log::info("ledger command complete");
         dd('DONE');
     }
 }
