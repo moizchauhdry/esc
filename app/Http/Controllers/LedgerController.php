@@ -107,6 +107,10 @@ class LedgerController extends Controller
             });
         }
 
+        if (empty($request->company)) {
+            $query->where('amount_type', '!=', 3);
+        }
+
         $query->when($role_id == 2, function ($q) use ($user) {
             $q->where('company_id', $user->id);
         });
@@ -122,7 +126,7 @@ class LedgerController extends Controller
         $ledgers = $query->orderBy('ledger_at', 'asc')
             ->paginate(1000)
             ->withQueryString()
-            ->through(fn ($ledger) => [
+            ->through(fn($ledger) => [
                 'id' => $ledger->id,
                 'ledger_at' => Carbon::parse($ledger->ledger_at)->format('d-m-Y'),
                 'debit' => $ledger->debit_amount,
@@ -337,7 +341,7 @@ class LedgerController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(5)
             ->withQueryString()
-            ->through(fn ($upload) => [
+            ->through(fn($upload) => [
                 'id' => $upload->id,
                 'invoice_id' => $upload->invoice_id,
                 'url' => $upload->url,
