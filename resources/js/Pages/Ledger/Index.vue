@@ -100,12 +100,12 @@ const invoicedetail = (ledger) => {
                             <table class="table table-bordered ledger-table table-sm text-uppercase" style="font-size:12px">
                                 <thead class="table-light">
                                     <tr>
-                                        <th colspan="14" class="text-uppercase text-center">
+                                        <th colspan="15" class="text-uppercase text-center">
                                             General Ledger | CURRENCY: PKR/RS
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th colspan="14" class="text-uppercase text-center text-lg">
+                                        <th colspan="15" class="text-uppercase text-center text-lg">
                                             {{ filter['company_name'] ?? 'EXPRESS SAVER CARGO' }} | {{
                                                 filter['month_name'] }} {{ filter['year'] }}
                                         </th>
@@ -194,11 +194,18 @@ const invoicedetail = (ledger) => {
                                             </td>
                                         </tr>
                                     </template>
+
+                                    <tr v-if="ledgers.data.length == 0">
+                                        <td class="text-center" colspan="15">No record</td>
+                                    </tr>
+
                                     <tr>
                                         <th colspan="10" class="text-right">Total</th>
                                         <th>{{ format_number(balance.debit_total) }}</th>
                                         <th>{{ format_number(balance.credit_total) }}</th>
                                         <th>{{ format_number(balance.balance_total) }}</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </tbody>
                             </table>
