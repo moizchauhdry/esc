@@ -4,15 +4,21 @@ import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Paginate from "@/Components/Paginate.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import Multiselect from "@vueform/multiselect";
 
 defineProps({
     invoices: Object,
     contact: Object,
     page_type: String,
     filter: Object,
+    companies: Array,
+    shippers: Array,
+    consignees: Array,
 });
 
 const permission = usePage().props.can;
+const page_type = usePage().props.page_type;
 
 const format_number = (number) => {
     return new Intl.NumberFormat('en-US', {
@@ -22,39 +28,56 @@ const format_number = (number) => {
 };
 
 const form = useForm({
-    invoice_id: "",
-    mawb_no: "",
+    search_key: 1,
+    search_value: "",
 });
 
 const search = () => {
-    // var filters = {
-    //     invoice_id: form.invoice_id,
-    //     mawb_no: form.mawb_no,
-    // };
+    if (page_type == 'invoice') {
+        var form_route = route("invoice.index");
+    } else {
+        var form_route = route("shipment.index");
+    }
 
-    form.post(route("invoice.index"), {
+    var filters = {
+        search_key: form.search_key,
+        search_value: form.search_value,
+    };
+    
+    const queryParams = new URLSearchParams(filters).toString();
+    const urlWithFilters = `${form_route}?${queryParams}`;
+
+    form.post(urlWithFilters, {
         preserveScroll: true,
         onSuccess: (response) => {
-            // localStorage.setItem('filters', JSON.stringify(filters));
+            //
         },
         onError: (errors) => {
-            console.log(errors)
+            //
         },
         onFinish: () => { },
     });
 };
 
+const clearSearch = () => {
+    // form.search_value = "";
+};
+
+const resetFilter = () => {
+    form.search_key = 1;
+    form.search_value = "";
+};
+
 </script>
 
 <template>
-
     <Head title="Invoices" />
 
     <AuthenticatedLayout>
         <div class="page-wrapper">
             <div class="page-content">
                 <!--breadcrumb-->
-                <div class="page-breadcrumb d-sm-flex align-items-center mb-3"> 
+                <div class="page-breadcrumb d-sm-flex align-items-center mb-3">
                     <div class="breadcrumb-title pe-3">Manage Shipments</div>
                     <div class="ps-3">
                         <nav aria-label="breadcrumb">
@@ -78,20 +101,50 @@ const search = () => {
                 <div class="card">
                     <div class="card-body">
                         <form @submit.prevent="search">
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <input type="text" v-model="form.invoice_id" class="form-control"
-                                        placeholder="Search Invoice #">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <select v-model="form.search_key" class="form-control" @change="clearSearch">
+                                        <option value="1">AWB #</option>
+                                        <option value="2">Shipment #</option>
+                                        <option value="3">Company</option>
+                                        <option value="4">Shipper</option>
+                                        <option value="5">Consignee</option>
+                                    </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <input type="text" v-model="form.mawb_no" class="form-control"
-                                        placeholder="Search AWB #">
+
+                                <template v-if="form.search_key == 1 || form.search_key == 2">
+                                    <div class="col-md-3">
+                                        <input type="search" v-model="form.search_value" class="form-control"
+                                            placeholder="Search">
+                                    </div>
+                                </template>
+
+                                <div class="col-md-3" v-if="form.search_key == 3">
+                                    <InputLabel for="" value="Company" class="mb-1" />
+                                    <Multiselect :searchable="true" v-model="form.search_value" :options="companies">
+                                    </Multiselect>
                                 </div>
+
+                                <div class="col-md-3" v-if="form.search_key == 4">
+                                    <InputLabel for="" value="Shipper" class="mb-1" />
+                                    <Multiselect :searchable="true" v-model="form.search_value" :options="shippers">
+                                    </Multiselect>
+                                </div>
+
+                                <div class="col-md-3" v-if="form.search_key == 5">
+                                    <InputLabel for="" value="Consignee" class="mb-1" />
+                                    <Multiselect :searchable="true" v-model="form.search_value" :options="consignees">
+                                    </Multiselect>
+                                </div>
+
                                 <div class="col-md-3">
                                     <SuccessButton class="px-4 py-1" :class="{ 'opacity-25': form.processing }"
                                         :disabled="form.processing">
                                         Search
                                     </SuccessButton>
+                                    <DangerButton class="px-4 py-1" @click="resetFilter" :disabled="form.processing">
+                                        Reset
+                                    </DangerButton>
                                 </div>
                             </div>
                         </form>
@@ -120,10 +173,10 @@ const search = () => {
                                         <tr>
                                             <td style="width: 10px;">
                                                 <div class="d-flex align-items-center">
-                                                    <div>
-                                                        <input class="form-check-input me-3" type="checkbox" value="1"
-                                                            aria-label="...">
-                                                    </div>
+                                                    <!-- <div>
+                                                                                                        <input class="form-check-input me-3" type="checkbox" value="1"
+                                                                                                            aria-label="...">
+                                                                                                    </div> -->
                                                     {{ ++index }}
                                                 </div>
                                             </td>
@@ -131,9 +184,9 @@ const search = () => {
                                                 <b>AWB #:</b> {{ invoice.mawb_no }} <br>
                                                 <b>Shipment #:</b> {{ invoice.id }} <br>
                                             </td>
-                                            <td>{{ invoice.company_name }}</td>
+                                        <td>{{ invoice.company_name }}</td>
 
-                                            <td style="width: 10px;">
+                                        <td style="width: 10px;">
                                                 <!-- <b>Account #:</b> {{ invoice.shipper_id }} <br> -->
                                                 <b>Shipper:</b> {{ invoice.shipper_name }} <br>
 
@@ -154,7 +207,7 @@ const search = () => {
                                                 format_number(invoice.total) }}
                                             </td>
                                             <td style="width: 10px;" v-if="page_type == 'invoice'">{{ invoice.invoice_at
-                                                }}</td>
+                                            }}</td>
 
                                             <td style="width: 10px;">
 
@@ -173,8 +226,7 @@ const search = () => {
                                                 </template>
 
                                                 <template v-if="invoice.status_id == 3">
-                                                    <div
-                                                        class="badge text-danger bg-light-danger p-2 text-uppercase px-2">
+                                                    <div class="badge text-danger bg-light-danger p-2 text-uppercase px-2">
                                                         <i class='bx bxs-circle me-1'></i>Rejected
                                                     </div>
                                                 </template>
@@ -183,15 +235,13 @@ const search = () => {
                                             <td style="width: 10px;">
                                                 <div class="d-flex order-actions">
 
-                                                    <template
-                                                        v-if="page_type == 'shipment' && permission.shipment_update">
+                                                    <template v-if="page_type == 'shipment' && permission.shipment_update">
                                                         <Link :href="route('shipment.edit', invoice.id)">
                                                         <i class='bx bxs-edit'></i>
                                                         </Link>
                                                     </template>
 
-                                                    <template
-                                                        v-if="page_type == 'invoice' && permission.invoice_update">
+                                                    <template v-if="page_type == 'invoice' && permission.invoice_update">
                                                         <Link :href="route('invoice.edit', invoice.id)">
                                                         <i class='bx bxs-edit'></i>
                                                         </Link>
@@ -203,14 +253,13 @@ const search = () => {
 
                                                     <template v-if="page_type == 'invoice' && permission.invoice_print">
                                                         <a :href="route('invoice.print', invoice.id)" title="Print"
-                                                            class="ms-1" target="_blank"><i
-                                                                class='bx bxs-printer'></i></a>
+                                                            class="ms-1" target="_blank"><i class='bx bxs-printer'></i></a>
                                                     </template>
 
                                                     <!-- <template v-if="page_type == 'shipment'">
-                                                        <a href="#" title="Delete" class="ms-1 text-danger"><i
-                                                                class='bx bxs-trash'></i></a>
-                                                    </template> -->
+                                                                                                                                            <a href="#" title="Delete" class="ms-1 text-danger"><i
+                                                                                                                                                    class='bx bxs-trash'></i></a>
+                                                                                                                                        </template> -->
                                                 </div>
                                             </td>
                                         </tr>
@@ -230,5 +279,6 @@ const search = () => {
             </div>
         </div>
     </AuthenticatedLayout>
-
 </template>
+
+<style src="@vueform/multiselect/themes/default.css"></style>

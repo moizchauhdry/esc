@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceUpload;
 use App\Models\Ledger;
+use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,10 +28,9 @@ class InvoiceController extends Controller
         }
 
         $filter = [
-            'invoice_id' => $request->invoice_id,
-            'mawb_no' => $request->mawb_no,
+            'search_key' => $request->search_key,
+            'search_value' => $request->search_value,
         ];
-
 
         $query = Invoice::with(['shipper', 'consignee', 'company']);
 
@@ -38,19 +38,35 @@ class InvoiceController extends Controller
             $qry->where('company_id', $user->id);
         });
 
-        $query->when($filter['invoice_id'], function ($q) use ($filter) {
-            $q->where('id', $filter['invoice_id']);
-        });
+        $query->when($filter['search_key'] && $filter['search_value'], function ($q) use ($filter) {
 
-        $query->when($filter['mawb_no'], function ($q) use ($filter) {
-            $q->where('mawb_no', 'LIKE', '%' . $filter['mawb_no'] . '%');
+            if ($filter['search_key'] == 1) {
+                // $q->where('mawb_no', 'LIKE', '%' . $filter['search_value'] . '%');
+                $q->where('mawb_no', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 2) {
+                $q->where('id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 3) {
+                $q->where('company_id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 4) {
+                $q->where('shipper_id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 5) {
+                $q->where('consignee_id', $filter['search_value']);
+            }
         });
 
         $invoices = $query
             ->orderBy('id', 'desc')
             ->paginate(10)
             ->withQueryString()
-            ->through(fn ($invoice) => [
+            ->through(fn($invoice) => [
                 'id' => $invoice->id,
                 'mawb_no' => $invoice->mawb_no,
                 'company_name' => $invoice->company->name,
@@ -63,9 +79,17 @@ class InvoiceController extends Controller
                 'status_id' => $invoice->status_id,
             ]);
 
+        $companies = User::select('id as value', 'name as label')->role('company')->get();
+        $shippers = User::select('id as value', 'name as label')->role('shipper')->get();
+        $consignees = User::select('id as value', 'name as label')->role('consignee')->get();
+
         return Inertia::render('Invoice/Index', [
             'invoices' => $invoices,
             'page_type' => "invoice",
+            'companies' => $companies,
+            'shippers' => $shippers,
+            'consignees' => $consignees,
+            'filter' => $filter,
         ]);
     }
 
@@ -169,8 +193,8 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
@@ -195,10 +219,11 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::with(['items'])->find($id);
 
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
+        $templates = Template::get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
@@ -210,6 +235,7 @@ class InvoiceController extends Controller
             'selected_consignee' => session('selected_consignee'),
             'edit_mode' => true,
             'page_type' => "invoice",
+            'templates' => $templates,
         ]);
     }
 
@@ -228,7 +254,7 @@ class InvoiceController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(5)
             ->withQueryString()
-            ->through(fn ($upload) => [
+            ->through(fn($upload) => [
                 'id' => $upload->id,
                 'invoice_id' => $upload->invoice_id,
                 'url' => $upload->url,
@@ -264,15 +290,15 @@ class InvoiceController extends Controller
 
         $pdf = PDF::loadView('prints.invoice');
         $pdf->setPaper('A4', 'portrait');
-        // return $pdf->stream('invoice.pdf');
-        return $pdf->download('invoice.pdf');
+        return $pdf->stream('invoice.pdf');
+        // return $pdf->download('invoice.pdf');
     }
 
     public function upload(Request $request)
     {
         $rules = [
             'invoice_id' => 'required',
-            'file' => 'required|file|mimes:pdf,jpg,png|max:10240',
+            'file' => 'required|file|mimes:pdf,jpg,png|max:51200',
         ];
 
         $messages = [

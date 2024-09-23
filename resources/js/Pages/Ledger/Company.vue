@@ -54,10 +54,10 @@ defineProps({
                                                 <!-- <button type="button" title="Edit"
                                                     clas="btn btn-primary"><i class="bx bx-edit"></i></button> -->
 
-                                                    <Link :href="route('ledger.index', { company: company.id })">
-                                                        <i class='bx bxs-edit'></i>
-                                                        Ledger
-                                                        </Link>
+                                                <Link :href="route('ledger.index', { company: company.id })">
+                                                <i class='bx bxs-edit'></i>
+                                                Ledger
+                                                </Link>
                                             </td>
                                         </tr>
                                     </template>

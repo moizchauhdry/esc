@@ -42,6 +42,9 @@ watch(
         else if (route().current('ledger.index') || route().current('ledger.company')) {
             isSubmenuVisible.value.ledger = true;
         }
+        else if (route().current('template.index')) {
+            isSubmenuVisible.value.template = true;
+        }
     }
 );
 
@@ -123,6 +126,19 @@ watch(
                     </li>
                     <li v-if="permission.ledger_company" :class="{ 'mm-active': route().current('ledger.company') }">
                         <Link :href="route('ledger.company')"><i class='bx bx-radio-circle'></i>Company Ledger</Link>
+                    </li>
+                </ul>
+            </li>
+
+            <li v-if="permission.template_list" :class="{ 'mm-active': route().current('template.index') }">
+                <a href="javascript:;" class="has-arrow" @click="toggleList('template')">
+                    <div class="parent-icon"><i class="bx bx-box"></i>
+                    </div>
+                    <div class="menu-title">Manage Templates</div>
+                </a>
+                <ul :class="{ 'hidden': !isSubmenuVisible.template }">
+                    <li v-if="permission.template_list" :class="{ 'mm-active': route().current('template.index') }">
+                        <Link :href="route('template.index')"><i class='bx bx-radio-circle'></i>Template List</Link>
                     </li>
                 </ul>
             </li>

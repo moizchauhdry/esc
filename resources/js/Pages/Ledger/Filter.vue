@@ -21,41 +21,74 @@ const edit = ref(false);
 const companies = usePage().props.companies;
 const ledger_company_id = usePage().props.ledger_company_id;
 
+var months = [
+    { id: 1, name: "January" },
+    { id: 2, name: "February" },
+    { id: 3, name: "March" },
+    { id: 4, name: "April" },
+    { id: 5, name: "May" },
+    { id: 6, name: "June" },
+    { id: 7, name: "July" },
+    { id: 8, name: "August" },
+    { id: 9, name: "September" },
+    { id: 10, name: "October" },
+    { id: 11, name: "November" },
+    { id: 12, name: "December" },
+];
+
+var years = [
+    { id: 1, value: "2023" },
+    { id: 2, value: "2024" },
+    { id: 3, value: "2025" },
+    { id: 4, value: "2026" },
+    { id: 5, value: "2027" },
+    { id: 6, value: "2028" },
+    { id: 7, value: "2029" },
+    { id: 8, value: "2030" },
+];
+
 var saved_filters = "";
 
 const form = useForm({
     company: ledger_company_id || "",
-    from_date: "",
-    to_date: "",
+    month: "",
+    year: "",
 });
 
 const create = () => {
     modal.value = true;
     edit.value = false;
-
     saved_filters = localStorage.getItem('filters');
     if (saved_filters) {
         saved_filters = JSON.parse(saved_filters);
-        form.company = saved_filters.company
-        // form.date = saved_filters.date
+
+        if (form.company == "") {
+            form.company = saved_filters.company
+        }
+
+        form.month = saved_filters.month
+        form.year = saved_filters.year
     }
 };
 
 const submit = () => {
     var filters = {
         company: form.company,
-        from_date: form.from_date,
-        to_date: form.to_date,
+        month: form.month,
+        year: form.year,
     };
 
-    form.post(route("ledger.index"), {
+    const queryParams = new URLSearchParams(filters).toString();
+    const urlWithFilters = `${route("ledger.index")}?${queryParams}`;
+
+    form.post(urlWithFilters, {
         preserveScroll: true,
         onSuccess: (response) => {
             closeModal();
             localStorage.setItem('filters', JSON.stringify(filters));
         },
         onError: (errors) => {
-            console.log(errors)
+            console.log(errors);
         },
         onFinish: () => { },
     });
@@ -77,16 +110,16 @@ const format_date = (date) => {
     return formattedDate;
 }
 
-watch(
-    () => {
-        if (form.from_date) {
-            form.from_date = format_date(form.from_date)
-        }
-        if (form.to_date) {
-            form.to_date = format_date(form.to_date)
-        }
-    }
-);
+// watch(
+//     () => {
+//         if (form.from_date) {
+//             form.from_date = format_date(form.from_date)
+//         }
+//         if (form.to_date) {
+//             form.to_date = format_date(form.to_date)
+//         }
+//     }
+// );
 </script>
 
 <template>
@@ -106,7 +139,8 @@ watch(
                     <div class="row g-2">
                         <div class="col-md-6">
                             <InputLabel for="" value="Company" class="mb-1" />
-                            <select v-model="form.company" class="form-control">
+                            <select v-model="form.company" class="form-control" :disabled="ledger_company_id">
+                                <option :value="''">EXPRESS SAVER CARGO</option>
                                 <template v-for="company in companies">
                                     <option :value="company.id">{{ company.name }}</option>
                                 </template>
@@ -114,18 +148,38 @@ watch(
                             <InputError :message="form.errors.company" />
                         </div>
 
-                        <div class="col-md-3">
-                            <InputLabel for="" value="From Date" class="mb-1" />
-                            <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
-                            </VueDatePicker>
-                            <InputError :message="form.errors.from_date" />
+                        <div class="col-md-4">
+                            <InputLabel for="" value="Month" class="mb-1" />
+                            <select v-model="form.month" class="form-control">
+                                <template v-for="month in months">
+                                    <option :value="month.id">{{ month.name }}</option>
+                                </template>
+                            </select>
+                            <InputError :message="form.errors.company" />
                         </div>
-                        <div class="col-md-3">
-                            <InputLabel for="" value="To Date" class="mb-1" />
-                            <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
-                            </VueDatePicker>
-                            <InputError :message="form.errors.to_date" />
+
+                        <div class="col-md-2">
+                            <InputLabel for="" value="Year" class="mb-1" />
+                            <select v-model="form.year" class="form-control">
+                                <template v-for="year in years">
+                                    <option :value="year.value">{{ year.value }}</option>
+                                </template>
+                            </select>
+                            <InputError :message="form.errors.company" />
                         </div>
+
+                        <!-- <div class="col-md-3">
+                                <InputLabel for="" value="From Date" class="mb-1" />
+                                <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
+                                </VueDatePicker>
+                                <InputError :message="form.errors.from_date" />
+                            </div>
+                            <div class="col-md-3">
+                                <InputLabel for="" value="To Date" class="mb-1" />
+                                <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
+                                </VueDatePicker>
+                                <InputError :message="form.errors.to_date" />
+                            </div> -->
                     </div>
                 </div>
 

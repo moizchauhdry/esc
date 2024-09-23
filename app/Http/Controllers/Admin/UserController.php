@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\NoSpacePassword;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -12,9 +13,34 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy('id', 'desc')->paginate(10)
+        $filter = [
+            'search_key' => $request->search_key,
+            'search_value' => $request->search_value,
+        ];
+
+        $users = User::orderBy('users.name', 'asc')
+            ->when($filter['search_key'] && $filter['search_value'], function ($q) use ($filter) {
+                if ($filter['search_key'] == 1) {
+                    $q->where('id', $filter['search_value']);
+                }
+
+                if ($filter['search_key'] == 2) {
+                    $q->where('name', 'LIKE', '%' . $filter['search_value'] . '%');
+                }
+
+                if ($filter['search_key'] == 3) {
+                    $q->where('email', $filter['search_value']);
+                }
+
+                if ($filter['search_key'] == 4) {
+                    $q->whereHas('roles', function ($qry) use ($filter) {
+                        $qry->where('id', $filter['search_value']);
+                    });
+                }
+            })
+            ->paginate(10)
             ->withQueryString()
             ->through(fn ($user) => [
                 'id' => $user->id,
@@ -68,7 +94,7 @@ class UserController extends Controller
 
             if (!in_array($request->role, [3, 4])) {
                 $rules += [
-                    'password' => ['string', 'min:8', 'confirmed', 'required'],
+                    'password' => ['string', 'min:8', 'confirmed', 'required',  new NoSpacePassword],
                 ];
             }
         }
@@ -146,5 +172,26 @@ class UserController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+
+        $rules = [
+            'user_id' => ['required'],
+            'password' => ['string', 'min:8', 'confirmed', 'required', new NoSpacePassword],
+        ];
+
+        $request->validate($rules);
+
+        $data = [
+            'password' => Hash::make($request->password)
+        ];
+
+        $user->update($data);
+
+
+        return redirect()->back()->with('success', 'Password updated.');
     }
 }

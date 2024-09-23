@@ -6,32 +6,25 @@ import CreateEdit from "./CreateEdit.vue";
 import Paginate from "@/Components/Paginate.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 import ActionButton from "@/Components/ActionButton.vue";
-import ResetPassword from "./ResetPassword.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 
 defineProps({
-    users: Object,
-    roles: Object,
+    templates: Array,
 });
 
 const create_edit_ref = ref(null);
-const password_ref = ref(null);
 
-const edit = (user) => {
-    create_edit_ref.value.edit(user)
-};
-
-const resetPasswordFunc = (user) => {
-    password_ref.value.resetpasswordfunc(user)
+const edit = (template) => {
+    create_edit_ref.value.edit(template)
 };
 
 const form = useForm({
-    search_key: 2,
+    search_key: 1,
     search_value: ""
 });
 
 const search = () => {
-    form.post(route("user.index"), {
+    form.post(route("template.index"), {
         preserveScroll: true,
         onSuccess: (response) => {
             // 
@@ -51,7 +44,7 @@ const resetFilter = () => {
 
 
 <template>
-    <Head title="Users" />
+    <Head title="Templates" />
 
     <AuthenticatedLayout>
         <!--start page wrapper -->
@@ -59,20 +52,19 @@ const resetFilter = () => {
             <div class="page-content">
                 <!--breadcrumb-->
                 <div class="page-breadcrumb d-sm-flex align-items-center mb-3">
-                    <div class="breadcrumb-title pe-3">User Management</div>
+                    <div class="breadcrumb-title pe-3">Template Management</div>
                     <div class="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0 p-0">
                                 <li class="breadcrumb-item"><a href="javascript:;">
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">User List</li>
+                                <li class="breadcrumb-item active" aria-current="page">Template List</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="ms-auto">
                         <CreateEdit :roles="roles" ref="create_edit_ref"></CreateEdit>
-                        <ResetPassword ref="password_ref"></ResetPassword>
                     </div>
                 </div>
 
@@ -83,29 +75,15 @@ const resetFilter = () => {
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <select v-model="form.search_key" class="form-control" @change="clearSearch">
-                                        <option value="1">User ID</option>
-                                        <option value="2">Name</option>
-                                        <option value="3">Email</option>
-                                        <option value="4">Role</option>
+                                        <option value="1">ID</option>
+                                        <option value="2">Title</option>
                                     </select>
                                 </div>
 
-                                <template v-if="form.search_key == 1 || form.search_key == 2 || form.search_key == 3">
-                                    <div class="col-md-3">
-                                        <input type="search" v-model="form.search_value" class="form-control"
-                                            placeholder="Search">
-                                    </div>
-                                </template>
-
-                                <template v-if="form.search_key == 4">
-                                    <div class="col-md-3">
-                                        <select v-model="form.search_value" class="form-control">
-                                        <template v-for="role in roles">
-                                            <option :value="role.id">{{ role.name }}</option>
-                                        </template>
-                                    </select>
-                                    </div>
-                                </template>
+                                <div class="col-md-3">
+                                    <input type="search" v-model="form.search_value" class="form-control"
+                                        placeholder="Search">
+                                </div>
 
                                 <div class="col-md-3">
                                     <SuccessButton class="px-4 py-1" :class="{ 'opacity-25': form.processing }"
@@ -125,37 +103,25 @@ const resetFilter = () => {
                                 <thead class="table-dark">
                                     <tr class="text-uppercase">
                                         <th>Sr.No.</th>
-                                        <th>User ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Register Date</th>
+                                        <th>Template ID</th>
+                                        <th>Title</th>
+                                        <th>Updated at</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-for="(user, index) in users.data">
+                                    <template v-for="(template, index) in templates.data">
                                         <tr>
                                             <td>
-                                                {{ (users.current_page - 1) * users.per_page + index + 1 }}
+                                                {{ (templates.current_page - 1) * templates.per_page + index + 1 }}
                                             </td>
-                                            <td>00{{ user.id }}</td>
-                                            <td>{{ user.name }}</td>
+                                            <td>00{{ template.id }}</td>
+                                            <td>{{ template.title }}</td>
+                                            <td>{{ template.updated_at }}</td>
                                             <td>
-                                                <template v-if="!([3, 4].includes(user.role_id))">
-                                                    {{ user.email }}
-                                                </template>
-                                            </td>
-                                            <td>{{ user.role }}</td>
-                                            <td>{{ user.created_at }}</td>
-                                            <td>
-                                                <ActionButton @click="edit(user)" title="Edit" class="mr-1">
+                                                <ActionButton @click="edit(template)" title="Edit" class="mr-1">
                                                     <i class="bx bx-edit"></i>
                                                 </ActionButton>
-
-                                                <ActionButton @click="resetPasswordFunc(user)" title="Reset Password"
-                                                    clas="btn btn-primary"><i class="bx bx-box"></i></ActionButton>
-
                                             </td>
                                         </tr>
                                     </template>
@@ -165,7 +131,7 @@ const resetFilter = () => {
                     </div>
                     <div class="card-body">
                         <div class="float-right">
-                            <Paginate :links="users.links" />
+                            <Paginate :links="templates.links" />
                         </div>
                     </div>
                 </div>

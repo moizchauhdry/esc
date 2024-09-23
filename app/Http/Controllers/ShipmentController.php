@@ -24,8 +24,8 @@ class ShipmentController extends Controller
         }
 
         $filter = [
-            'invoice_id' => $request->invoice_id,
-            'mawb_no' => $request->mawb_no,
+            'search_key' => $request->search_key,
+            'search_value' => $request->search_value,
         ];
 
         $query = Invoice::with(['shipper', 'consignee', 'company']);
@@ -34,12 +34,28 @@ class ShipmentController extends Controller
             $qry->where('company_id', $user->id);
         });
 
-        $query->when($filter['invoice_id'], function ($q) use ($filter) {
-            $q->where('id', $filter['invoice_id']);
-        });
+        $query->when($filter['search_key'] && $filter['search_value'], function ($q) use ($filter) {
 
-        $query->when($filter['mawb_no'], function ($q) use ($filter) {
-            $q->where('mawb_no', 'LIKE', '%' . $filter['mawb_no'] . '%');
+            if ($filter['search_key'] == 1) {
+                // $q->where('mawb_no', 'LIKE', '%' . $filter['search_value'] . '%');
+                $q->where('mawb_no', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 2) {
+                $q->where('id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 3) {
+                $q->where('company_id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 4) {
+                $q->where('shipper_id', $filter['search_value']);
+            }
+
+            if ($filter['search_key'] == 5) {
+                $q->where('consignee_id', $filter['search_value']);
+            }
         });
 
         $invoices = $query
@@ -61,9 +77,17 @@ class ShipmentController extends Controller
                 'status_id' => $invoice->status_id,
             ]);
 
+
+        $companies = User::select('id as value', 'name as label')->role('company')->get();
+        $shippers = User::select('id as value', 'name as label')->role('shipper')->get();
+        $consignees = User::select('id as value', 'name as label')->role('consignee')->get();
+
         return Inertia::render('Invoice/Index', [
             'invoices' => $invoices,
             'page_type' => "shipment",
+            'companies' => $companies,
+            'shippers' => $shippers,
+            'consignees' => $consignees,
         ]);
     }
 
@@ -124,8 +148,8 @@ class ShipmentController extends Controller
 
     public function create()
     {
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
@@ -150,10 +174,9 @@ class ShipmentController extends Controller
     {
         $invoice = Invoice::with(['items'])->find($id);
 
-        // dd($invoice);
-
-        $shippers = User::role('shipper')->get();
-        $consignees = User::role('consignee')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 

@@ -33,7 +33,7 @@ const create = () => {
     modal.value = true;
     edit.value = false;
 
-    fetchLedgerBalance();
+    // fetchLedgerBalance();
 };
 
 const fetchLedgerBalance = () => {
@@ -72,6 +72,14 @@ onMounted(() => {
     // 
 });
 
+watch(
+    () => {
+        if (form.ledger_at) {
+            fetchLedgerBalance();
+        }
+    }
+);
+
 </script>
 
 <template>
@@ -87,7 +95,7 @@ onMounted(() => {
                     <div class="row g-2">
                         <div class="col-md-7">
                             <InputLabel for="" value="Company" class="mb-1" />
-                            <select v-model="form.company_id" class="form-control">
+                            <select v-model="form.company_id" class="form-control" :disabled="ledger_company_id">
                                 <template v-for="company in companies">
                                     <option :value="company.id">{{ company.name }}</option>
                                 </template>

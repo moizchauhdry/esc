@@ -7,6 +7,7 @@ import Payment from "@/Pages/Ledger/Payment.vue";
 import Balance from "@/Pages/Ledger/Balance.vue";
 import EditLedger from "@/Pages/Ledger/EditLedger.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import InvoiceDetailModal from "@/Pages/Ledger/Partial/InvoiceDetailModal.vue";
 
 const role = usePage().props.auth.user.roles[0];
 const permission = usePage().props.can;
@@ -47,12 +48,16 @@ const create_edit_ref = ref(null);
 const edit = (ledger) => {
     create_edit_ref.value.edit(ledger)
 };
+
+const invoice_detail_ref = ref(null);
+const invoicedetail = (ledger) => {
+    invoice_detail_ref.value.invoicedetail(ledger)
+};
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <template>
-
     <Head title="Ledgers" />
 
     <AuthenticatedLayout>
@@ -79,38 +84,31 @@ const edit = (ledger) => {
                         <Balance v-if="role.id != 2" v-bind="$props"></Balance>
 
                         <Payment v-if="role.id != 2" v-bind="$props"></Payment>
-                        
+
                         <Filter v-bind="$props"></Filter>
                         <a :href="route('ledger.print', filter)" title="Print" class="ms-1" target="_blank">
-                            <PrimaryButton>
-                                <i class='bx bxs-printer text-white'></i>
+                        <PrimaryButton>
+                            <i class='bx bxs-printer text-white'></i>
                             </PrimaryButton>
                         </a>
-                    </div>
                 </div>
+            </div>
 
                 <div class="card">
                     <div class="card-body">
-                        <!-- <div class="d-lg-flex align-items-center mb-4 gap-3">
-                            <div class="position-relative">
-                                <input type="text" class="form-control ps-5 radius-30" placeholder="Search Invoice">
-                                <span class="position-absolute top-50 product-show translate-middle-y"><i
-                                        class="bx bx-search"></i></span>
-                            </div>
-                        </div> -->
                         <div class="table-responsive">
-                            <table class="table table-bordered ledger-table table-sm" style="font-size:12px">
+                            <table class="table table-bordered ledger-table table-sm text-uppercase" style="font-size:12px">
                                 <thead class="table-light">
                                     <tr>
-                                        <th colspan="14" style="text-align: center">
-                                            {{ filter['company_name'] ?? 'EXPRESS SAVER CARGO' }} |
-                                            CURRENCY: PKR/RS
+                                        <th colspan="15" class="text-uppercase text-center">
+                                            General Ledger | CURRENCY: PKR/RS
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th colspan="14" style="text-align: center" class="text-uppercase">General Ledger From
-                                            {{ filter['from'] }} to
-                                            {{ filter['to'] }}</th>
+                                        <th colspan="15" class="text-uppercase text-center text-lg">
+                                            {{ filter['company_name'] ?? 'EXPRESS SAVER CARGO' }} | {{
+                                                filter['month_name'] }} {{ filter['year'] }}
+                                        </th>
                                     </tr>
                                     <tr>
                                         <th class="px-2">Company</th>
@@ -119,6 +117,7 @@ const edit = (ledger) => {
                                         <th class="px-2">MAWB #</th>
                                         <th class="px-2">Orig</th>
                                         <th class="px-2">Dest</th>
+                                        <th class="px-2">AFC Rate</th>
                                         <th class="px-2">Pieces</th>
                                         <th class="px-2">Weight</th>
                                         <th class="px-2">Invoice ID</th>
@@ -139,12 +138,37 @@ const edit = (ledger) => {
                                                 <td class="px-2">{{ ledger.invoice?.mawb_no }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.sender }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.destination }}</td>
+                                                <td class="px-2">{{ format_number(ledger.invoice?.afc_rate) }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.quantity }}</td>
                                                 <td class="px-2">{{ ledger.invoice?.weight }}</td>
-                                                <td class="px-2">{{ ledger.invoice?.id }}</td>
+                                                <td class="px-2">
+                                                    {{ ledger.invoice.id }}
+
+                                                    <!-- <Link :href="route('invoice.detail', ledger.invoice.id)" title="Detail"
+                                                                class="text-lg underline"> 
+                                                            </Link> -->
+
+                                                    <!-- <button @click="invoicedetail(ledger)">
+                                                                    {{ ledger.invoice?.id }}
+                                                                </button> -->
+
+                                                    <template v-if="ledger.invoice?.id">
+                                                        <a :href="route('invoice.print', ledger.invoice?.id)" title="Print"
+                                                            class="text-lg" target="_blank"><i
+                                                                class='bx bxs-printer'></i></a>
+                                                    </template>
+
+                                                    <template v-if="permission.invoice_update">
+                                                        <a :href="route('invoice.edit', ledger.invoice?.id)" class="text-lg"
+                                                            target="_blank">
+                                                            <i class="bx bx-link-external"></i>
+                                                        </a>
+                                                    </template>
+
+                                                </td>
                                             </template>
                                             <template v-if="ledger.amount_type == 2 || ledger.amount_type == 3">
-                                                <td colspan="7">{{ ledger.comments }}</td>
+                                                <td colspan="8">{{ ledger.comments }}</td>
                                             </template>
                                             <td class="px-2">{{ format_number(ledger.debit) }}</td>
                                             <td class="px-2">{{ format_number(ledger.credit) }}</td>
@@ -157,10 +181,12 @@ const edit = (ledger) => {
                                                 <template v-if="ledger.amount_type == 2 || ledger.amount_type == 3">
                                                     <div class="d-flex order-actions">
                                                         <template v-if="ledger.amount_type == 2">
-                                                            <a href="#" class="mx-1" @click="edit(ledger)" v-if="permission.ledger_update">
+                                                            <a href="#" class="mx-1" @click="edit(ledger)"
+                                                                v-if="permission.ledger_update">
                                                                 <i class="bx bx-edit"></i></a>
                                                         </template>
-                                                        <a href="#" @click="deleteLedger(ledger.id)" v-if="permission.ledger_delete">
+                                                        <a class="text-danger" href="#" @click="deleteLedger(ledger.id)"
+                                                            v-if="permission.ledger_delete">
                                                             <i class="bx bx-trash"></i>
                                                         </a>
                                                     </div>
@@ -168,11 +194,18 @@ const edit = (ledger) => {
                                             </td>
                                         </tr>
                                     </template>
+
+                                    <tr v-if="ledgers.data.length == 0">
+                                        <td class="text-center" colspan="15">No record</td>
+                                    </tr>
+
                                     <tr>
-                                        <th colspan="9" class="text-right">Total</th>
+                                        <th colspan="10" class="text-right">Total</th>
                                         <th>{{ format_number(balance.debit_total) }}</th>
                                         <th>{{ format_number(balance.credit_total) }}</th>
                                         <th>{{ format_number(balance.balance_total) }}</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -182,6 +215,7 @@ const edit = (ledger) => {
 
             </div>
         </div>
-    </AuthenticatedLayout>
 
+        <InvoiceDetailModal ref="invoice_detail_ref"></InvoiceDetailModal>
+    </AuthenticatedLayout>
 </template>
