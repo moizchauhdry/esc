@@ -2,9 +2,17 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import Chart from 'chart.js/auto';
+import { getRelativePosition } from 'chart.js/helpers';
+import { onMounted } from "vue";
 
 const permission = usePage().props.can;
 const role = usePage().props.auth.user.roles[0];
+const revenue_data = usePage().props.data.revenue_data;
+const pre_shipments_data = usePage().props.data.pre_shipments_data;
+const invoices_data = usePage().props.data.invoices_data;
+const last_week_shipments = usePage().props.data.last_week_shipments;
+const companies_data = usePage().props.data.companies_data;
 
 defineProps({
     data: Array,
@@ -17,17 +25,240 @@ const format_number = (number) => {
     }).format(number);
 };
 
+
+onMounted(() => {
+
+    console.log(revenue_data);
+
+    const ctx1 = document.getElementById('chart-1');
+    const ctx2 = document.getElementById('chart-2');
+    const ctx3 = document.getElementById('chart-3');
+    const ctx4 = document.getElementById('chart-4');
+    const ctx5 = document.getElementById('chart-5');
+
+    // const data = [
+    //     { year: 2010, count: 10 },
+    //     { year: 2011, count: 20 },
+    //     { year: 2012, count: 15 },
+    //     { year: 2013, count: 25 },
+    //     { year: 2014, count: 22 },
+    //     { year: 2015, count: 30 },
+    //     { year: 2016, count: 28 },
+    // ];
+
+    const DATA_COUNT = 7;
+    const NUMBER_CFG = { count: DATA_COUNT, min: -100, max: 100 };
+    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Pre-Shipments',
+                data: pre_shipments_data,
+                stack: 'Stack 0',
+            },
+            {
+                label: 'Invoices',
+                data: invoices_data,
+                stack: 'Stack 1',
+            },
+        ]
+    };
+
+    const chart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Total Amount (PKR)',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: revenue_data
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+
+    const chart2 = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: companies_data.companies_labels,
+            datasets: [{
+                label: 'PKR',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: companies_data.companies_invoices_data
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Company Wise Revenue',
+                font: {
+                    size: 18, // You can adjust the font size here
+                },
+                padding: {
+                    top: 20,
+                    bottom: 20
+                }
+            }
+        }
+    }
+    });
+
+    const chart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+
+    const char4 = new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tues', 'Wed', 'Thursday', 'Friday', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'No.of Shipments',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: last_week_shipments
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Last Week Shipments',
+                    font: {
+                        size: 18, // You can adjust the font size here
+                    },
+                    padding: {
+                        top: 20,
+                        bottom: 20
+                    }
+                }
+            }
+        }
+    });
+
+    const char5 = new Chart(ctx5, {
+        type: 'doughnut',
+        data: {
+            labels: companies_data.companies_labels,
+            datasets: [{
+                label: 'No.of Shipments',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                // borderColor: 'rgb(255, 99, 132)',
+                data: companies_data.compnay_shipments_data
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Shipments By Company',
+                    font: {
+                        size: 18, // You can adjust the font size here
+                    },
+                    padding: {
+                        top: 20,
+                        bottom: 20
+                    }
+                }
+            }
+        }
+    });
+
+});
 </script>
+
+<style>
+.page_loader_page {
+    background: rgba(255, 255, 255, 0.8);
+    /* background: black; */
+    height: 94vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.page_loader {
+    width: 120px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        radial-gradient(farthest-side, #ffa516 94%, #0000) top/14px 14px no-repeat,
+        conic-gradient(#0000 30%, #ffa516);
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 14px), #000 0);
+    animation: l13 1s infinite linear;
+}
+
+@keyframes l13 {
+    100% {
+        transform: rotate(1turn)
+    }
+}
+
+@media screen and (max-width: 770px) {
+    .page_loader {
+        width: 80px;
+    }
+}
+
+
+.chart_loader {
+    width: 120px;
+    height: 20px;
+    background:
+        linear-gradient(90deg, #0001 33%, #0005 50%, #0001 66%) #f2f2f2;
+    background-size: 300% 100%;
+    animation: l1 1s infinite linear;
+}
+
+@keyframes l1 {
+    0% {
+        background-position: right
+    }
+}
+</style>
 
 <template>
 
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
+
+
+
         <!--start page wrapper -->
         <div class="page-wrapper">
-            <div class="page-content">
 
+            <!-- --------- Page Loader ---------- !-->
+            <!-- <div class="page_loader_page">
+                            <div class="page_loader"></div>
+                        </div> -->
+
+            <div class="page-content">
                 <template v-if="permission.analytics">
                     <div class="row">
                         <div class="col-md-3">
@@ -122,6 +353,55 @@ const format_number = (number) => {
                     </div>
                 </template>
 
+                <div class="row" v-if="role.id != 2">
+                    <div class="col-md-6">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div
+                                    style="height: 300px;width: 100%;display: flex;justify-content: center;align-items: center;">
+                                    <canvas id="chart-1"></canvas>
+                                    <!-- <div class="chart_loader"></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;width: 100%;">
+                                    <canvas id="chart-3"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-4"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div style="height: 300px;">
+                                    <canvas id="chart-5"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- <div class="row">
                     <div class="col-12 col-lg-8 d-flex">
@@ -225,7 +505,6 @@ const format_number = (number) => {
                         </div>
                     </div>
                 </div> -->
-
 
                 <!-- <div class="row">
                     <div class="col-12 col-lg-4 d-flex">
