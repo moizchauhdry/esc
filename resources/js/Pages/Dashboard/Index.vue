@@ -70,7 +70,8 @@ onMounted(() => {
             }]
         },
         options: {
-            //    
+            responsive: true,
+            maintainAspectRatio: false,
         }
     });
 
@@ -86,13 +87,15 @@ onMounted(() => {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             onClick: (e) => {
                 const canvasPosition = getRelativePosition(e, chart);
 
                 // Substitute the appropriate scale IDs
                 const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
                 const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-            }
+            },
         }
     });
 
@@ -100,7 +103,8 @@ onMounted(() => {
         type: 'bar',
         data: data,
         options: {
-
+            responsive: true,
+            maintainAspectRatio: false,
         }
     });
 
@@ -116,7 +120,8 @@ onMounted(() => {
             }]
         },
         options: {
-            // 
+            responsive: true,
+            maintainAspectRatio: false,
         }
     });
 
@@ -132,22 +137,83 @@ onMounted(() => {
             }]
         },
         options: {
-            // 
+            responsive: true,
+            maintainAspectRatio: false,   // 
         }
     });
 
 });
 </script>
 
+<style>
+    .page_loader_page{
+        background: rgba(255, 255, 255, 0.8);
+        /* background: black; */
+        height: 94vh;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+    }
+    .page_loader {
+        width: 120px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: 
+            radial-gradient(farthest-side,#ffa516 94%,#0000) top/14px 14px no-repeat,
+            conic-gradient(#0000 30%,#ffa516);
+        -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 14px),#000 0);
+        animation: l13 1s infinite linear;
+    }
+    @keyframes l13{ 
+    100%{transform: rotate(1turn)}
+    }
+
+    @media screen and (max-width: 770px) {
+        .page_loader {
+            width: 80px;
+        }
+    }
+
+
+    .chart_loader {
+        width: 120px;
+        height: 20px;
+        background: 
+            linear-gradient(90deg,#0001 33%,#0005 50%,#0001 66%)
+            #f2f2f2;
+        background-size:300% 100%;
+        animation: l1 1s infinite linear;
+        }
+        @keyframes l1 {
+        0% {background-position: right}
+        }
+
+</style>
+
 <template>
 
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
+        
+        
+        
         <!--start page wrapper -->
         <div class="page-wrapper">
-            <div class="page-content">
 
+                                <!-- --------- Page Loader ---------- !-->
+                        <!-- <div class="page_loader_page">
+                            <div class="page_loader"></div>
+                        </div> -->
+
+            <div class="page-content">
                 <template v-if="permission.analytics">
                     <div class="row">
                         <div class="col-md-3">
@@ -246,8 +312,9 @@ onMounted(() => {
                     <div class="col-md-6">
                         <div class="card radius-10">
                             <div class="card-body">
-                                <div style="height: 300px;">
-                                    <canvas id="chart-1"></canvas>
+                                <div style="height: 300px;width: 100%;display: flex;justify-content: center;align-items: center;">
+                                    <!-- <canvas id="chart-1"></canvas> -->
+                                    <div class="chart_loader"></div>
                                 </div>
                             </div>
                         </div>
@@ -255,7 +322,7 @@ onMounted(() => {
                     <div class="col-md-6">
                         <div class="card radius-10">
                             <div class="card-body">
-                                <div style="height: 300px;">
+                                <div style="height: 300px;width: 100%;">
                                     <canvas id="chart-3"></canvas>
                                 </div>
                             </div>
@@ -289,7 +356,6 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-
 
                 <!-- <div class="row">
                     <div class="col-12 col-lg-8 d-flex">
@@ -393,7 +459,6 @@ onMounted(() => {
                         </div>
                     </div>
                 </div> -->
-
 
                 <!-- <div class="row">
                     <div class="col-12 col-lg-4 d-flex">
