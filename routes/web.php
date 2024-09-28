@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
@@ -99,6 +100,11 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
             Route::get('/edit/{id}', [CarrierController::class, 'edit'])->name('carrier.edit');
             Route::post('/update', [CarrierController::class, 'update'])->name('carrier.update');
             Route::get('/fetch/carrier/{id}', [CarrierController::class, 'fetchCarrier'])->name('carrier.fetch-carrier');
+        });
+
+        Route::prefix('reports')->group(function () {
+            Route::get('/sale', [ReportController::class, 'saleReport'])->name('report.sale');
+            Route::post('/sale/update', [ReportController::class, 'updateSaleReport'])->name('report.sale.update');
         });
     });
 });
