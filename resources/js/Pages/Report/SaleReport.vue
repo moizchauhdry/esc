@@ -5,9 +5,11 @@ import Paginate from "@/Components/Paginate.vue";
 import ActionButton from "@/Components/ActionButton.vue";
 import { ref, watch } from "vue";
 import EditSaleReport from "./Partial/EditSaleReport.vue";
+import FilterSaleReport from "./Partial/FilterSaleReport.vue";
 
 defineProps({
-    invoices: Object,
+    invoices: Array,
+    carriers: Array,
 });
 
 const edit_sale_report_ref = ref(null);
@@ -38,6 +40,7 @@ const edit = (invoice) => {
                     </div>
                     <div class="ms-auto">
                         <EditSaleReport ref="edit_sale_report_ref"></EditSaleReport>
+                        <FilterSaleReport v-bind="$props"></FilterSaleReport>
                     </div>
                 </div>
 
@@ -58,6 +61,7 @@ const edit = (invoice) => {
                                         <th>Due Carrier</th>
                                         <th>Net Rate</th>
                                         <th>Net Payable</th>
+                                        <th>Invoice at</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -65,7 +69,7 @@ const edit = (invoice) => {
                                     <template v-for="(invoice, index) in invoices.data">
                                         <tr>
                                             <td>{{ ++index }}</td>
-                                            <td>{{ invoice.invoice.id }}</td>
+                                            <td>{{ invoice.id }}</td>
                                             <td>{{ invoice.invoice.mawb_no }}</td>
                                             <td>{{ invoice.invoice.quantity }}</td>
                                             <td>{{ invoice.invoice.weight }}</td>
@@ -74,6 +78,7 @@ const edit = (invoice) => {
                                             <td>{{ invoice.invoice.due_carrier ?? "-"}}</td>
                                             <td>{{ invoice.invoice.net_rate ?? "-"}}</td>
                                             <td>{{ invoice.invoice.net_payable ?? "-"}}</td>
+                                            <td>{{ invoice.invoice_at ?? "-"}}</td>
 
                                             <td style="width: 10px;">
                                                 <div class="d-flex order-actions">

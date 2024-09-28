@@ -103,7 +103,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
         });
 
         Route::prefix('reports')->group(function () {
-            Route::get('/sale', [ReportController::class, 'saleReport'])->name('report.sale');
+            Route::any('/sale/index', [ReportController::class, 'saleReport'])->name('report.sale.index');
             Route::post('/sale/update', [ReportController::class, 'updateSaleReport'])->name('report.sale.update');
         });
     });

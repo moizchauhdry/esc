@@ -146,15 +146,15 @@ watch(
                 </ul>
             </li>
 
-            <li v-if="permission.report" :class="{ 'mm-active': route().current('report.sale') }">
+            <li v-if="permission.report" :class="{ 'mm-active': route().current('report.sale.index') }">
                 <a href="javascript:;" class="has-arrow" @click="toggleList('reports')">
                     <div class="parent-icon"><i class="bx bx-box"></i>
                     </div>
                     <div class="menu-title">Manage Reports</div>
                 </a>
                 <ul :class="{ 'hidden': !isSubmenuVisible.reports }">
-                    <li v-if="permission.report_sale" :class="{ 'mm-active': route().current('report.sale') }">
-                        <Link :href="route('report.sale')"><i class='bx bx-radio-circle'></i>Sale Report</Link>
+                    <li v-if="permission.report_sale" :class="{ 'mm-active': route().current('report.sale.index') }">
+                        <Link :href="route('report.sale.index')"><i class='bx bx-radio-circle'></i>Sale Report</Link>
                     </li>
                 </ul>
             </li>
