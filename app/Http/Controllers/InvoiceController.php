@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carrier;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceUpload;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use PDF;
@@ -101,7 +103,8 @@ class InvoiceController extends Controller
             'shipper_id' => 'required',
             'consignee_id' => 'required',
 
-            'carrier' => 'required|string|max:50',
+            'carrier' => 'required|integer',
+
             'mawb_no' => 'required|string|max:20',
             'quantity' => 'required|numeric',
             'weight' => 'required|numeric',
@@ -133,7 +136,9 @@ class InvoiceController extends Controller
             'shipper_id' => $request->shipper_id,
             'consignee_id' => $request->consignee_id,
 
-            'carrier' => $request->carrier,
+            // 'carrier' => $request->carrier,
+            'carrier_id' => $request->carrier,
+
             'mawb_no' => $request->mawb_no,
             'commodity' => $request->commodity,
             'quantity' => $request->quantity,
@@ -193,8 +198,8 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
-        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name', 'asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name', 'asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
@@ -219,11 +224,12 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::with(['items'])->find($id);
 
-        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name','asc')->get();
-        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name','asc')->get();
+        $shippers = User::role('shipper')->select('id as value', 'name as label')->orderBy('name', 'asc')->get();
+        $consignees = User::role('consignee')->select('id as value', 'name as label')->orderBy('name', 'asc')->get();
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
         $templates = Template::get();
+        $carriers = Carrier::select('id as value', DB::raw("CONCAT(carrier_name, '-', carrier_code) as label"))->get();
 
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
@@ -236,6 +242,7 @@ class InvoiceController extends Controller
             'edit_mode' => true,
             'page_type' => "invoice",
             'templates' => $templates,
+            'carriers' => $carriers,
         ]);
     }
 
@@ -269,7 +276,7 @@ class InvoiceController extends Controller
 
     public function print($id)
     {
-        $invoice = Invoice::find($id);
+        $invoice = Invoice::with('getCarrier')->find($id);
         $items = InvoiceItem::where('invoice_id', $invoice->id)->get();
 
         $shipper = User::where('id', $invoice->shipper_id)->first();

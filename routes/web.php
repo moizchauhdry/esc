@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LedgerController;
@@ -90,6 +91,14 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
             Route::get('/edit/{id}', [TemplateController::class, 'edit'])->name('template.edit');
             Route::post('/update', [TemplateController::class, 'update'])->name('template.update');
             Route::get('/fetch/particulars/{id}', [TemplateController::class, 'fetchParticulars'])->name('template.fetch.particulars');
+        });
+
+        Route::prefix('carriers')->group(function () {
+            Route::get('/create', [CarrierController::class, 'create'])->name('carrier.create');
+            Route::post('/store', [CarrierController::class, 'store'])->name('carrier.store');
+            Route::get('/edit/{id}', [CarrierController::class, 'edit'])->name('carrier.edit');
+            Route::post('/update', [CarrierController::class, 'update'])->name('carrier.update');
+            Route::get('/fetch/carrier/{id}', [CarrierController::class, 'fetchCarrier'])->name('carrier.fetch-carrier');
         });
     });
 });

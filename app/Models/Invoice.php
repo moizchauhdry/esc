@@ -35,4 +35,9 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceUpload::class, 'invoice_id', 'id');
     }
+
+    public function getCarrier()
+    {
+        return $this->belongsTo(Carrier::class, 'carrier_id', 'id');
+    }
 }

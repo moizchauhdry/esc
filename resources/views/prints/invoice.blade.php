@@ -219,7 +219,7 @@
                     </div>
                     <div style="margin-top: 20px;">
                         <p style="float: left;"><b>CARRIER:</b></p>
-                        <p style="float: right;">{{$invoice->carrier}}</p>
+                        <p style="float: right;">{{$invoice->getCarrier->carrier_name}} - {{$invoice->getCarrier->carrier_code}}</p>
                     </div>
                     <div style="margin-top: 20px;">
                         <p style="float: left;"><b>INVOICE TO:</b></p>

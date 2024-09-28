@@ -13,6 +13,7 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import InputLabel from "@/Components/InputLabel.vue";
 import moment from 'moment';
 import Multiselect from "@vueform/multiselect";
+import CreateCarrier from "./CreateCarrier.vue";
 
 const props = defineProps({
     invoice: Object,
@@ -23,6 +24,7 @@ const props = defineProps({
     edit_mode: Boolean,
     page_type: String,
     templates: Array,
+    carriers: Array,
 });
 
 const invoice_modal = ref(false);
@@ -40,7 +42,9 @@ const form = useForm({
     shipper_id: invoice?.shipper_id,
     consignee_id: invoice?.consignee_id,
 
-    carrier: invoice?.carrier,
+    // carrier: invoice?.carrier,
+    carrier: invoice?.carrier_id,
+
     mawb_no: invoice?.mawb_no,
     commodity: invoice?.commodity,
     quantity: invoice?.quantity,
@@ -209,16 +213,32 @@ onMounted(() => {
     fetchConsignee(form.consignee_id);
 });
 
-
 const changeTemplate = (id) => {
     axios.get(`/templates/fetch/particulars/${id}`)
         .then(({ data }) => {
             form.items = data.particulars
         });
 };
+
+var selected_carrier = "";
+const fetchCarrier = (id) => {
+    if (id) {
+        axios.get(`/carriers/fetch/carrier/${id}`)
+            .then(({ data }) => {
+                selected_carrier = data.selected_carrier
+            });
+    }
+};
+
+const create_edit_carrier_ref = ref(null);
+const editCarrier = (carrier) => {
+    console.log(carrier)
+    create_edit_carrier_ref.value.editCarrier(carrier)
+};
 </script>
 
 <template>
+
     <Head title="Invoices" />
 
     <AuthenticatedLayout>
@@ -233,7 +253,7 @@ const changeTemplate = (id) => {
                                         <i class="bx bx-home-alt"></i></a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ edit_mode ? 'Create' : 'Edit'
-                                }}
+                                    }}
                                 </li>
                             </ol>
                         </nav>
@@ -278,8 +298,14 @@ const changeTemplate = (id) => {
                                     </div>
 
                                     <div class="col-md-2">
-                                        <InputLabel for="" value="Carrier" class="mb-1" />
-                                        <input type="text" class="form-control" v-model="form.carrier">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <InputLabel for="" value="Carrier" class="me-2" />
+                                            <CreateCarrier ref="create_edit_carrier_ref" />
+                                            <PrimaryButton @click="editCarrier(selected_carrier)" type="button">Edit<i class="bx bx-edit ms-1"></i></PrimaryButton>
+                                        </div>
+
+                                        <!-- <input type="text" class="form-control" v-model="form.carrier"> -->
+                                        <Multiselect style="margin-top: 3px !important" :searchable="true" v-model="form.carrier" :options="carriers" @click="fetchCarrier(form.carrier)"></Multiselect>
                                         <InputError :message="form.errors.carrier" />
                                     </div>
 
@@ -306,22 +332,15 @@ const changeTemplate = (id) => {
                                             <div class="col-md-12">
                                                 <label for="input13" class="form-label">Account
                                                     Number
-                                                    <UserCreateEdit :roles="roles" :selected_role="3" ref="create_edit_ref">
+                                                    <UserCreateEdit :roles="roles" :selected_role="3"
+                                                        ref="create_edit_ref">
                                                     </UserCreateEdit>
 
                                                     <PrimaryButton @click="edit(selected_shipper)" type="button">Edit
                                                         <i class="bx bx-edit ms-1"></i>
                                                     </PrimaryButton>
                                                 </label>
-                                                <!-- <select class="form-control" v-model="form.shipper_id"
-                                                        @change="fetchShipper(form.shipper_id)">
-                                                        <template v-for="shipper in shippers" :key="shipper.id">
-                                                            <option :value="shipper.id">{{ shipper.id }} - {{
-                                                                shipper.name }}
-                                                            </option>
-                                                        </template>
-                                                    </select> -->
-
+                                               
                                                 <Multiselect style="margin-top: 3px !important" :searchable="true"
                                                     v-model="form.shipper_id" :options="shippers"
                                                     @click="fetchShipper(form.shipper_id)"></Multiselect>
@@ -469,7 +488,8 @@ const changeTemplate = (id) => {
 
                                                     </td>
                                                     <td class="text-left" colspan="3" style="width:45%">
-                                                        <input type="text" class="form-control" v-model="item.particular">
+                                                        <input type="text" class="form-control"
+                                                            v-model="item.particular">
                                                     </td>
                                                     <td class="text-left" style="width:15%">
                                                         <input type="number" class="form-control" v-model="item.amount"
@@ -480,7 +500,7 @@ const changeTemplate = (id) => {
                                                             @keyup="getLineTotal(index)">
                                                     </td>
                                                     <td class="total" style="width:15%">PKR {{ format_number(item.total)
-                                                    }}</td>
+                                                        }}</td>
                                                 </tr>
                                             </template>
 
