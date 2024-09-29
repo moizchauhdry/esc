@@ -6,16 +6,24 @@ import ActionButton from "@/Components/ActionButton.vue";
 import { ref, watch } from "vue";
 import EditSaleReport from "./Partial/EditSaleReport.vue";
 import FilterSaleReport from "./Partial/FilterSaleReport.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
 
 defineProps({
     invoices: Array,
     carriers: Array,
+    filter: Object,
 });
 
 const edit_sale_report_ref = ref(null);
 const edit = (invoice) => {
     edit_sale_report_ref.value.edit(invoice)
 };
+
+const exportExcel = () => {
+    window.location.href = route('report.sale.export');
+};
+
 </script>
 
 <template>
@@ -41,6 +49,7 @@ const edit = (invoice) => {
                     <div class="ms-auto">
                         <EditSaleReport ref="edit_sale_report_ref"></EditSaleReport>
                         <FilterSaleReport v-bind="$props"></FilterSaleReport>
+                        <SuccessButton @click="exportExcel">Excel Export</SuccessButton>
                     </div>
                 </div>
 
@@ -50,6 +59,16 @@ const edit = (invoice) => {
                         <div class="table-responsive">
                             <table class="table">
                                 <thead class="table-light">
+                                    <tr>
+                                        <th colspan="15" class="text-uppercase text-center text-lg">
+                                            {{ filter['carrier_name'] ? filter['carrier_name'] + " - " + filter['carrier_code'] : 'ALL CARRIERS' }}
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="15" class="text-uppercase text-center text-lg">
+                                            From "{{ filter['from'] }}" TO "{{ filter['to'] }}"
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th>SR #</th>
                                         <th>Invoice ID</th>
@@ -75,10 +94,10 @@ const edit = (invoice) => {
                                             <td>{{ invoice.invoice.weight }}</td>
                                             <td>{{ invoice.invoice.sender }}</td>
                                             <td>{{ invoice.invoice.destination }}</td>
-                                            <td>{{ invoice.invoice.due_carrier ?? "-"}}</td>
-                                            <td>{{ invoice.invoice.net_rate ?? "-"}}</td>
-                                            <td>{{ invoice.invoice.net_payable ?? "-"}}</td>
-                                            <td>{{ invoice.invoice_at ?? "-"}}</td>
+                                            <td>{{ invoice.invoice.due_carrier ?? "-" }}</td>
+                                            <td>{{ invoice.invoice.net_rate ?? "-" }}</td>
+                                            <td>{{ invoice.invoice.net_payable ?? "-" }}</td>
+                                            <td>{{ invoice.invoice_at ?? "-" }}</td>
 
                                             <td style="width: 10px;">
                                                 <div class="d-flex order-actions">

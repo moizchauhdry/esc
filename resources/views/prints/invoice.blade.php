@@ -203,7 +203,7 @@
     <div class="container">
         <div class="invoice-header">
             <div style="float: left;">
-                <img src="https://esavercargo.com/wp-content/uploads/2022/11/png-01-3.png" alt="Logo"> <br>
+                <img src="{{asset('images/invoice-logo.png')}}" alt="Logo"> <br>
                 <div style="padding-left: 14px;"><span>Express Saver Cargo</span></div>
             </div>
             <div class="invoice-info" style="float: right;">
@@ -219,7 +219,7 @@
                     </div>
                     <div style="margin-top: 20px;">
                         <p style="float: left;"><b>CARRIER:</b></p>
-                        <p style="float: right;">{{$invoice->getCarrier->carrier_name}} - {{$invoice->getCarrier->carrier_code}}</p>
+                        <p style="float: right;">{{$invoice->getCarrier->carrier_name ?? ""}} - {{$invoice->getCarrier->carrier_code ?? ""}}</p>
                     </div>
                     <div style="margin-top: 20px;">
                         <p style="float: left;"><b>INVOICE TO:</b></p>
@@ -356,14 +356,14 @@
                     <div style="margin-top: 0px;">
                         <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
                                 style="height:25px;width:25px;"
-                                src="https://flypakistan.s3.us-west-2.amazonaws.com/call-icon-removebg-preview.png"
+                                src="{{asset('images/phone-icon.png')}}"
                                 alt=""></p>
                         <p style="float: left;padding-left:40px;">+923214208852 <br> +923214487971</p>
                     </div>
                     <div style="margin-top: 40px;">
                         <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
                                 style="height:25px;width:25px;transform:scale(.6);"
-                                src="https://flypakistan.s3.us-west-2.amazonaws.com/email-removebg-preview.png" alt="">
+                                src="{{asset('images/email-icon.png')}}" alt="">
                         </p>
                         <p style="float: left;padding-left:40px;">
                             hammad.ali@esavercargo.com <br>
@@ -373,7 +373,7 @@
                     <div style="margin-top: 40px;">
                         <p style="float: left;background:#0D8FCC;border-radius:5px;height:25px;width:25px;"><img
                                 style="height:25px;width:25px;transform:scale(.5);"
-                                src="https://flypakistan.s3.us-west-2.amazonaws.com/location-removebg-preview.png"
+                                src="{{asset('images/location-icon.png')}}"
                                 alt=""></p>
                         <p style="float: left;padding-left:40px;">
                             House #23 Basti Chiragh Shah Airport Road Lahore, Pakistan

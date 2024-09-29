@@ -10,15 +10,16 @@ const modal = ref(false);
 
 const form = useForm({
     invoice_id: "",
+    mawb_no: "",
     due_carrier: "",
     net_rate: "",
 });
 
 const edit = (invoice) => {
-    console.log(invoice)
     if (invoice) {
         modal.value = true;
         form.invoice_id = invoice.id
+        form.mawb_no = invoice.mawb_no
         form.due_carrier = invoice.invoice.due_carrier
         form.net_rate = invoice.invoice.net_rate
     }
@@ -50,7 +51,7 @@ defineExpose({ edit: (invoice) => edit(invoice) });
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="update()">
             <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900">Edit</h2>
+                <h2 class="text-lg font-medium text-gray-900">Edit => Invoice #{{ form.invoice_id}}, MAWB NO: {{ form.mawb_no}}</h2>
                 <hr>
                 <div class="mt-6">
 

@@ -109,4 +109,6 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
     });
 });
 
+Route::get('reports/sale/export', [ReportController::class, 'exportSaleReport'])->name('report.sale.export');
+
 require __DIR__ . '/auth.php';
