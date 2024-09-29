@@ -15,8 +15,8 @@ class ReportController extends Controller
     {
         $filter = [
             'carrier_id' => $request->carrier_id,
-            'from' => isset($request->invoice_at[0]) ? Carbon::parse($request->invoice_at[0])->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d'),
-            'to' => isset($request->invoice_at[1]) ? Carbon::parse($request->invoice_at[1])->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d'),
+            'from' => !empty($request->from_date) ? Carbon::parse($request->from_date)->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d'),
+            'to' => !empty($request->to_date) ? Carbon::parse($request->to_date)->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d'),
         ];
 
         $query = Invoice::query();

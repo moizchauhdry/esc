@@ -24,30 +24,29 @@ var saved_filters = "";
 
 const form = useForm({
     carrier_id: "",
-    invoice_at: "",
+    from_date: "",
+    to_date: "",
 });
 
 const create = () => {
     modal.value = true;
     edit.value = false;
     saved_filters = localStorage.getItem('filters');
+
     if (saved_filters) {
         saved_filters = JSON.parse(saved_filters);
 
-        if (form.carrier_id == "") {
-            form.carrier_id = saved_filters.carrier_id
-        }
-
-        // form.month = saved_filters.month
-        // form.year = saved_filters.year
+        form.carrier_id = saved_filters.carrier_id
+        form.from_date = saved_filters.from_date
+        form.to_date = saved_filters.to_date
     }
 };
 
 const submit = () => {
     var filters = {
         carrier_id: form.carrier_id,
-        // month: form.month,
-        // year: form.year,
+        from_date: form.from_date,
+        to_date: form.to_date,
     };
 
     const queryParams = new URLSearchParams(filters).toString();
@@ -82,16 +81,16 @@ const format_date = (date) => {
     return formattedDate;
 }
 
-// watch(
-//     () => {
-//         if (form.from_date) {
-//             form.from_date = format_date(form.from_date)
-//         }
-//         if (form.to_date) {
-//             form.to_date = format_date(form.to_date)
-//         }
-//     }
-// );
+watch(
+    () => {
+        if (form.from_date) {
+            form.from_date = format_date(form.from_date)
+        }
+        if (form.to_date) {
+            form.to_date = format_date(form.to_date)
+        }
+    }
+);
 </script>
 
 <template>
@@ -116,11 +115,17 @@ const format_date = (date) => {
                             <InputError :message="form.errors.carrier_id" />
                         </div>
 
-                        <div class="col-md-6">
-                            <InputLabel for="" value="Invoice Date" class="mb-1" />
-                            <VueDatePicker v-model="form.invoice_at" :teleport="true" :enable-time-picker="false" range>
+                        <div class="col-md-3">
+                            <InputLabel for="" value="From Date" class="mb-1" />
+                            <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
                             </VueDatePicker>
-                            <InputError :message="form.errors.invoice_at" />
+                            <InputError :message="form.errors.from_date" />
+                        </div>
+                        <div class="col-md-3">
+                            <InputLabel for="" value="To Date" class="mb-1" />
+                            <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
+                            </VueDatePicker>
+                            <InputError :message="form.errors.to_date" />
                         </div>
 
                     </div>

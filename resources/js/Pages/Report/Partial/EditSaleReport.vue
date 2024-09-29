@@ -19,8 +19,8 @@ const edit = (invoice) => {
     if (invoice) {
         modal.value = true;
         form.invoice_id = invoice.id
-        form.due_carrier = invoice.due_carrier
-        form.net_rate = invoice.net_rate
+        form.due_carrier = invoice.invoice.due_carrier
+        form.net_rate = invoice.invoice.net_rate
     }
 };
 
