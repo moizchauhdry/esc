@@ -60,6 +60,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'template_delete', 'level' => 2],
             ['name' => 'template_update', 'level' => 2],
 
+            // Report
+            ['name' => 'report', 'level' => 1],
+            ['name' => 'report_sale', 'level' => 2],
+
         ];
 
         foreach ($permissions as $permission) {

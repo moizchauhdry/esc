@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
@@ -91,7 +93,22 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
             Route::post('/update', [TemplateController::class, 'update'])->name('template.update');
             Route::get('/fetch/particulars/{id}', [TemplateController::class, 'fetchParticulars'])->name('template.fetch.particulars');
         });
+
+        Route::prefix('carriers')->group(function () {
+            Route::get('/create', [CarrierController::class, 'create'])->name('carrier.create');
+            Route::post('/store', [CarrierController::class, 'store'])->name('carrier.store');
+            Route::get('/edit/{id}', [CarrierController::class, 'edit'])->name('carrier.edit');
+            Route::post('/update', [CarrierController::class, 'update'])->name('carrier.update');
+            Route::get('/fetch/carrier/{id}', [CarrierController::class, 'fetchCarrier'])->name('carrier.fetch-carrier');
+        });
+
+        Route::prefix('reports')->group(function () {
+            Route::any('/sale/index', [ReportController::class, 'saleReport'])->name('report.sale.index');
+            Route::post('/sale/update', [ReportController::class, 'updateSaleReport'])->name('report.sale.update');
+        });
     });
 });
+
+Route::get('reports/sale/export', [ReportController::class, 'exportSaleReport'])->name('report.sale.export');
 
 require __DIR__ . '/auth.php';

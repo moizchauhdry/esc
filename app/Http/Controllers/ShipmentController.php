@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carrier;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -99,7 +101,8 @@ class ShipmentController extends Controller
             'shipper_id' => 'required',
             'consignee_id' => 'required',
 
-            'carrier' => 'required|string|max:50',
+            'carrier' => 'required|integer',
+
             'mawb_no' => 'required|string|max:20',
             'quantity' => 'required|numeric',
             'weight' => 'required|numeric',
@@ -124,7 +127,9 @@ class ShipmentController extends Controller
             'shipper_id' => $request->shipper_id,
             'consignee_id' => $request->consignee_id,
 
-            'carrier' => $request->carrier,
+            // 'carrier' => $request->carrier,
+            'carrier_id' => $request->carrier,
+
             'mawb_no' => $request->mawb_no,
             'commodity' => $request->commodity,
             'quantity' => $request->quantity,
@@ -153,6 +158,8 @@ class ShipmentController extends Controller
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
+        $carriers = Carrier::select('id as value', DB::raw("CONCAT(carrier_name, '-', carrier_code) as label"))->get();
+
         return Inertia::render('Invoice/CreateInvoice', [
             'shippers' => $shippers,
             'consignees' => $consignees,
@@ -161,6 +168,7 @@ class ShipmentController extends Controller
             'selected_shipper' => session('selected_shipper'),
             'selected_consignee' => session('selected_consignee'),
             'page_type' => "shipment",
+            'carriers' => $carriers,
         ]);
     }
 
@@ -180,6 +188,8 @@ class ShipmentController extends Controller
         $companies = User::role('company')->get();
         $roles = Role::select('id', 'name')->whereIn('id', [3, 4])->get();
 
+        $carriers = Carrier::select('id as value', DB::raw("CONCAT(carrier_name, '-', carrier_code) as label"))->get();
+
         return Inertia::render('Invoice/CreateInvoice', [
             'invoice' => $invoice,
             'shippers' => $shippers,
@@ -190,6 +200,7 @@ class ShipmentController extends Controller
             'selected_consignee' => session('selected_consignee'),
             'edit_mode' => true,
             'page_type' => "shipment",
+            'carriers' => $carriers,
         ]);
     }
 
