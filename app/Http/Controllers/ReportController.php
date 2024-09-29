@@ -18,8 +18,10 @@ class ReportController extends Controller
         $carrier_name = $carrier_code = NULL;
         if (!empty($request->carrier_id)) {
             $carrier = Carrier::where('id', $request->carrier_id)->first();
-            $carrier_name = $carrier->carrier_name;
-            $carrier_code = $carrier->carrier_code;
+            if ($carrier) {
+                $carrier_name = $carrier->carrier_name;
+                $carrier_code = $carrier->carrier_code;
+            }
         }
 
         $filter = [
