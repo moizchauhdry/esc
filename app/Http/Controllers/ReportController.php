@@ -42,7 +42,7 @@ class ReportController extends Controller
         });
 
         $query->when($filter['carrier_id'], function ($q) use ($filter) {
-            $q->where('carrier_id', '>=', $filter['carrier_id']);
+            $q->where('carrier_id', $filter['carrier_id']);
         });
 
         $invoices = $query
