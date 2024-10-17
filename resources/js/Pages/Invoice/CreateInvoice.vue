@@ -274,8 +274,18 @@ const editCarrier = (carrier) => {
 
                                     <div class="col-md-3" v-if="page_type == 'invoice'">
                                         <InputLabel for="" value="Invoice Date" class="mb-1" />
-                                        <VueDatePicker v-model="form.invoice_at" :teleport="true"></VueDatePicker>
+                                        <VueDatePicker v-model="form.invoice_at" :teleport="true" :enable-time-picker="false"></VueDatePicker>
                                         <InputError :message="form.errors.invoice_at" />
+                                    </div>
+
+                                    <div class="col-md-3" v-if="page_type == 'invoice'">
+                                        <InputLabel for="" value="Invoice Status" class="mb-1" />
+                                        <select class="form-control" v-model="form.status_id">
+                                            <option :value="1">Pending</option>
+                                            <option :value="2">Approved</option>
+                                            <option :value="3">Rejected</option>
+                                        </select>
+                                        <InputError :message="form.errors.status_id" />
                                     </div>
 
                                     <div class="col-md-3">
@@ -291,33 +301,26 @@ const editCarrier = (carrier) => {
                                         <InputError :message="form.errors.company_id" />
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <InputLabel for="" value="MAWB No" class="mb-1" />
                                         <input type="text" class="form-control" v-model="form.mawb_no">
                                         <InputError :message="form.errors.mawb_no" />
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <!-- <div class="col-md-2">
                                         <div class="d-flex align-items-center mb-1">
                                             <InputLabel for="" value="Carrier" class="me-2" />
                                             <CreateCarrier ref="create_edit_carrier_ref" />
-                                            <PrimaryButton @click="editCarrier(selected_carrier)" type="button">Edit<i class="bx bx-edit ms-1"></i></PrimaryButton>
+                                            <PrimaryButton @click="editCarrier(selected_carrier)" type="button">Edit<i
+                                                    class="bx bx-edit ms-1"></i>
+                                            </PrimaryButton>
                                         </div>
 
-                                        <!-- <input type="text" class="form-control" v-model="form.carrier"> -->
-                                        <Multiselect style="margin-top: 3px !important" :searchable="true" v-model="form.carrier" :options="carriers" @click="fetchCarrier(form.carrier)"></Multiselect>
+                                        <Multiselect style="margin-top: 3px !important" :searchable="true"
+                                            v-model="form.carrier" :options="carriers"
+                                            @click="fetchCarrier(form.carrier)"></Multiselect>
                                         <InputError :message="form.errors.carrier" />
-                                    </div>
-
-                                    <div class="col-md-2" v-if="page_type == 'invoice'">
-                                        <InputLabel for="" value="Invoice Status" class="mb-1" />
-                                        <select class="form-control" v-model="form.status_id">
-                                            <option :value="1">Pending</option>
-                                            <option :value="2">Approved</option>
-                                            <option :value="3">Rejected</option>
-                                        </select>
-                                        <InputError :message="form.errors.status_id" />
-                                    </div>
+                                    </div> -->
 
                                 </div>
 
@@ -326,21 +329,18 @@ const editCarrier = (carrier) => {
                                 <div class="row">
 
                                     <div class="col-md-4">
-                                        <h6 class="invoice-heading">SHIPPER</h6>
+                                        <h6 class="invoice-heading">SHIPPER ACCOUNT</h6>
                                         <hr>
-                                        <div class="row g-2">
+                                        <div class="row mb-3">
                                             <div class="col-md-12">
-                                                <label for="input13" class="form-label">Account
-                                                    Number
-                                                    <UserCreateEdit :roles="roles" :selected_role="3"
-                                                        ref="create_edit_ref">
-                                                    </UserCreateEdit>
 
-                                                    <PrimaryButton @click="edit(selected_shipper)" type="button">Edit
-                                                        <i class="bx bx-edit ms-1"></i>
-                                                    </PrimaryButton>
-                                                </label>
-                                               
+                                                <UserCreateEdit :roles="roles" :selected_role="3" ref="create_edit_ref">
+                                                </UserCreateEdit>
+
+                                                <PrimaryButton @click="edit(selected_shipper)" type="button">Edit
+                                                    <i class="bx bx-edit ms-1"></i>
+                                                </PrimaryButton>
+
                                                 <Multiselect style="margin-top: 3px !important" :searchable="true"
                                                     v-model="form.shipper_id" :options="shippers"
                                                     @click="fetchShipper(form.shipper_id)"></Multiselect>
@@ -349,34 +349,42 @@ const editCarrier = (carrier) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h6 class="invoice-heading">CONSIGNEE</h6>
-                                        <hr>
-                                        <div class="row g-2">
-                                            <div class="col-md-12">
-                                                <label for="input13" class="form-label">Account
-                                                    Number <UserCreateEdit :roles="roles" :selected_role="4"
-                                                        ref="create_edit_ref">
-                                                    </UserCreateEdit>
 
-                                                    <PrimaryButton @click="edit(selected_consignee)" type="button">Edit
-                                                        <i class="bx bx-edit ms-1"></i>
-                                                    </PrimaryButton>
-                                                </label>
-                                                <!-- <select class="form-control" v-model="form.consignee_id"
-                                                        @change="fetchConsignee(form.consignee_id)">
-                                                        <template v-for="consignee in consignees" :key="consignee.id">
-                                                            <option :value="consignee.id">{{ consignee.id }} - {{
-                                                                consignee.name }}
-                                                            </option>
-                                                        </template>
-                                                    </select> -->
+                                    <div class="col-md-4">
+                                        <h6 class="invoice-heading">CONSIGNEE ACCOUNT</h6>
+                                        <hr>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <UserCreateEdit :roles="roles" :selected_role="4" ref="create_edit_ref">
+                                                </UserCreateEdit>
+
+                                                <PrimaryButton @click="edit(selected_consignee)" type="button">Edit
+                                                    <i class="bx bx-edit ms-1"></i>
+                                                </PrimaryButton>
 
                                                 <Multiselect style="margin-top: 3px !important" :searchable="true"
                                                     v-model="form.consignee_id" :options="consignees"
                                                     @click="fetchConsignee(form.consignee_id)"></Multiselect>
 
                                                 <InputError :message="form.errors.consignee_id" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <h6 class="invoice-heading">CARRIER</h6>
+                                        <hr>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <CreateCarrier ref="create_edit_carrier_ref" />
+                                                <PrimaryButton @click="editCarrier(selected_carrier)" type="button">
+                                                    Edit<i class="bx bx-edit ms-1"></i>
+                                                </PrimaryButton>
+
+                                                <Multiselect style="margin-top: 3px !important" :searchable="true"
+                                                    v-model="form.carrier" :options="carriers"
+                                                    @click="fetchCarrier(form.carrier)"></Multiselect>
+                                                <InputError :message="form.errors.carrier" />
                                             </div>
                                         </div>
                                     </div>
@@ -390,14 +398,14 @@ const editCarrier = (carrier) => {
                                     <hr>
 
                                     <div class="col-md-3">
-                                        <InputLabel for="" value="Departure Date" class="mb-1" />
+                                        <InputLabel for="" value="Departure Date & Time" class="mb-1" />
                                         <VueDatePicker v-model="form.departure_at" :teleport="true" :is-24="false">
                                         </VueDatePicker>
                                         <InputError :message="form.errors.departure_at" />
                                     </div>
 
                                     <div class="col-md-3">
-                                        <InputLabel for="" value="Landing Date" class="mb-1" />
+                                        <InputLabel for="" value="Landing Date & Time" class="mb-1" />
                                         <VueDatePicker v-model="form.landing_at" :teleport="true" :is-24="false">
                                         </VueDatePicker>
                                         <InputError :message="form.errors.landing_at" />
