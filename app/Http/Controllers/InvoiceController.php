@@ -130,13 +130,15 @@ class InvoiceController extends Controller
 
         $request->validate($rules, $messages);
 
+        $carrier = Carrier::where('id', $request->carrier)->first();
+
         $data = [
             'invoice_at' => $request->invoice_at,
             'company_id' => $request->company_id,
             'shipper_id' => $request->shipper_id,
             'consignee_id' => $request->consignee_id,
 
-            // 'carrier' => $request->carrier,
+            'carrier' => $carrier->carrier_name,
             'carrier_id' => $request->carrier,
 
             'mawb_no' => $request->mawb_no,
