@@ -67,7 +67,7 @@ defineExpose({ editCarrier: (carrier) => editCarrier(carrier) });
 </script>
 
 <template>
-    <PrimaryButton @click="create" type="button">Add</PrimaryButton>
+    <PrimaryButton @click="create" type="button" class="mr-1">Add <i class="bx bx-plus text-lg"></i></PrimaryButton>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit_mode ? update() : submit()">
