@@ -9,9 +9,12 @@ import FilterSaleReport from "./Partial/FilterSaleReport.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 
+const permission = usePage().props.can;
+
 defineProps({
     invoices: Array,
     carriers: Array,
+    companies: Array,
     filter: Object,
 });
 
@@ -22,6 +25,13 @@ const edit = (invoice) => {
 
 const exportExcel = () => {
     window.location.href = route('report.sale.export');
+};
+
+const format_number = (number) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
 };
 
 </script>
@@ -60,26 +70,31 @@ const exportExcel = () => {
                             <table class="table">
                                 <thead class="table-light">
                                     <tr>
-                                        <th colspan="15" class="text-uppercase text-center text-lg">
-                                            {{ filter['carrier_name'] ? filter['carrier_name'] + " - " + filter['carrier_code'] : 'ALL CARRIERS' }}
+                                        <th colspan="17" class="text-uppercase text-center text-lg">
+                                            {{ filter['carrier_name'] ? filter['carrier_name'] + " - " +
+                                            filter['carrier_code'] : 'ALL CARRIERS' }}
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th colspan="15" class="text-uppercase text-center text-lg">
+                                        <th colspan="17" class="text-uppercase text-center text-lg">
                                             From "{{ filter['from'] }}" TO "{{ filter['to'] }}"
                                         </th>
                                     </tr>
-                                    <tr>
+                                    <tr class="text-uppercase">
                                         <th>SR #</th>
                                         <th>Invoice ID</th>
+                                        <th>Company</th>
+                                        <th>Carrier</th>
                                         <th>AWB NO</th>
                                         <th>Pieces</th>
                                         <th>Weight</th>
                                         <th>Sender</th>
                                         <th>Destination</th>
+                                        <th>Invoice Total</th>
                                         <th>Due Carrier</th>
                                         <th>Net Rate</th>
                                         <th>Net Payable</th>
+                                        <th>Net Total</th>
                                         <th>Invoice at</th>
                                         <th></th>
                                     </tr>
@@ -89,15 +104,26 @@ const exportExcel = () => {
                                         <tr>
                                             <td>{{ ++index }}</td>
                                             <td>{{ invoice.id }}</td>
-                                            <td>{{ invoice.invoice.mawb_no }}</td>
+                                            <td>{{ invoice.company_name }}</td>
+                                            <td>{{ invoice.invoice.carrier }}</td>
+                                            <td>
+                                                <template v-if="permission.invoice_update">
+                                                    <a :href="route('invoice.edit', invoice?.id)" class=""
+                                                        target="_blank">
+                                                        {{ invoice.invoice.mawb_no }} <i class="bx bx-link-external"></i>
+                                                    </a>
+                                                </template>
+                                            </td>
                                             <td>{{ invoice.invoice.quantity }}</td>
                                             <td>{{ invoice.invoice.weight }}</td>
                                             <td>{{ invoice.invoice.sender }}</td>
                                             <td>{{ invoice.invoice.destination }}</td>
-                                            <td>{{ invoice.invoice.due_carrier ?? "-" }}</td>
-                                            <td>{{ invoice.invoice.net_rate ?? "-" }}</td>
-                                            <td>{{ invoice.invoice.net_payable ?? "-" }}</td>
-                                            <td>{{ invoice.invoice_at ?? "-" }}</td>
+                                            <td>{{ format_number(invoice.invoice.total) }}</td>
+                                            <td>{{ format_number(invoice.invoice.due_carrier) }}</td>
+                                            <td>{{ format_number(invoice.invoice.net_rate) }}</td>
+                                            <td>{{ format_number(invoice.invoice.net_payable) }}</td>
+                                            <td>{{ format_number(invoice.invoice.net_total)}}</td>
+                                            <td>{{ invoice.invoice_at }}</td>
 
                                             <td style="width: 10px;">
                                                 <div class="d-flex order-actions">

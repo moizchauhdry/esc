@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\SaleReportExport;
 use App\Models\Carrier;
 use App\Models\Invoice;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,7 @@ class ReportController extends Controller
         }
 
         $filter = [
+            'company_id' => $request->company_id,
             'carrier_id' => $request->carrier_id,
             'carrier_name' => $carrier_name,
             'carrier_code' => $carrier_code,
@@ -34,7 +36,8 @@ class ReportController extends Controller
 
         session(['filter' => $filter]);
 
-        $query = Invoice::query();
+        $query = Invoice::select('*');
+        $query->selectRaw('(total - net_rate) as net_total');
 
         $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
             $q->whereDate('invoice_at', '>=', $filter['from']);
@@ -43,6 +46,10 @@ class ReportController extends Controller
 
         $query->when($filter['carrier_id'], function ($q) use ($filter) {
             $q->where('carrier_id', $filter['carrier_id']);
+        });
+
+        $query->when($filter['company_id'], function ($q) use ($filter) {
+            $q->where('company_id', $filter['company_id']);
         });
 
         $invoices = $query
@@ -54,14 +61,17 @@ class ReportController extends Controller
                 'mawb_no' => $invoice->mawb_no,
                 'invoice_at' => dateFormat($invoice->invoice_at),
                 'invoice' => $invoice,
+                'company_name' => $invoice->company->name,
             ]);
 
 
         $carriers = Carrier::select('id as value', DB::raw("CONCAT(carrier_name, '-', carrier_code) as label"))->get();
+        $companies = User::role('company')->get();
 
         return Inertia::render('Report/SaleReport', [
             'invoices' => $invoices,
             'carriers' => $carriers,
+            'companies' => $companies,
             'filter' => $filter,
         ]);
     }
