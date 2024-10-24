@@ -34,7 +34,7 @@ const edit = (ledger) => {
     form.company_id = ledger.company_id
     form.credit = ledger.credit
     // form.ledger_at = new Date(ledger.ledger_at)
-    form.ledger_at = ""
+    form.ledger_at = ledger.ledger_at
     form.comments = ledger.comments
 };
 
@@ -72,7 +72,7 @@ defineExpose({ edit: (ledger) => edit(ledger) });
 
                 <div class="mt-6">
                     <div class="row g-2">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <InputLabel for="" value="Company" class="mb-1" />
                             <select v-model="form.company_id" class="form-control">
                                 <template v-for="company in companies">
@@ -81,20 +81,22 @@ defineExpose({ edit: (ledger) => edit(ledger) });
                             </select>
                             <InputError :message="form.errors.company_id" />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <InputLabel for="" value="Payment Date" class="mb-1" />
-                            <VueDatePicker v-model="form.ledger_at" :teleport="true" :enable-time-picker="false">
-                            </VueDatePicker>
+                            <!-- <VueDatePicker v-model="form.ledger_at" :teleport="true" :enable-time-picker="false">
+                            </VueDatePicker> -->
+                            <input type="date" class="form-control" v-model="form.ledger_at">
+
                             <InputError :message="form.errors.ledger_at" />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <InputLabel for="" value="Credit Amount" class="mb-1" />
                             <input type="text" class="form-control" v-model="form.credit">
                             <InputError :message="form.errors.credit" />
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-12">
                             <InputLabel for="" value="Comments" class="mb-1" />
-                            <textarea class="form-control" v-model="form.comments" id="comments" rows="3"></textarea>
+                            <textarea class="form-control" v-model="form.comments" id="comments" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
