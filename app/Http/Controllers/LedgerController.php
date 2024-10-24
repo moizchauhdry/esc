@@ -128,7 +128,7 @@ class LedgerController extends Controller
             ->withQueryString()
             ->through(fn($ledger) => [
                 'id' => $ledger->id,
-                'ledger_at' => Carbon::parse($ledger->ledger_at)->format('d-m-Y'),
+                'ledger_at' => Carbon::parse($ledger->ledger_at)->format('Y-m-d'),
                 'debit' => $ledger->debit_amount,
                 'credit' => $ledger->credit_amount,
                 'balance' => $ledger->balance_amount,
