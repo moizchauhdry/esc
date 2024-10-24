@@ -19,10 +19,12 @@ defineProps({
 const modal = ref(false);
 const edit = ref(false);
 const carriers = usePage().props.carriers;
+const companies = usePage().props.companies;
 
 var saved_filters = "";
 
 const form = useForm({
+    company_id: "",
     carrier_id: "",
     from_date: "",
     to_date: "",
@@ -36,6 +38,7 @@ const create = () => {
     if (saved_filters) {
         saved_filters = JSON.parse(saved_filters);
 
+        form.company_id = saved_filters.company_id
         form.carrier_id = saved_filters.carrier_id
         form.from_date = saved_filters.from_date
         form.to_date = saved_filters.to_date
@@ -44,6 +47,7 @@ const create = () => {
 
 const submit = () => {
     var filters = {
+        company_id: form.company_id,
         carrier_id: form.carrier_id,
         from_date: form.from_date,
         to_date: form.to_date,
@@ -97,7 +101,7 @@ watch(
     <PrimaryButton @click="create" type="button" class="mx-1">Search</PrimaryButton>
 
     <Modal :show="modal" @close="closeModal">
-        <form @submit.prevent="edit ? update() : submit()">
+        <form @submit.prevent="edit ? update() : submit()"> 
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900">Search Report</h2>
                 <hr>
@@ -105,9 +109,20 @@ watch(
                 <div class="mt-6">
                     <div class="row g-2">
                         <div class="col-md-6">
+                            <InputLabel for="" value="Companies" class="mb-1" />
+                            <select v-model="form.company_id" class="form-control">
+                                <option :value="''">All Companies</option>
+                                <template v-for="company in companies">
+                                    <option :value="company.id">{{ company.name }} </option>
+                                </template>
+                            </select>
+                            <InputError :message="form.errors.company_id" />
+                        </div>
+
+                        <div class="col-md-6">
                             <InputLabel for="" value="Carrier" class="mb-1" />
                             <select v-model="form.carrier_id" class="form-control">
-                                <option value="">Select Carrier</option>
+                                <option :value="''">All Carriers</option>
                                 <template v-for="carrier in carriers">
                                     <option :value="carrier.value">{{ carrier.label }} </option>
                                 </template>

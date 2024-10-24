@@ -464,14 +464,12 @@ const editCarrier = (carrier) => {
 
                                     <hr>
 
-
-
                                     <table>
                                         <thead>
                                             <tr>
                                                 <th style="width:5%">
                                                     <button type="button" @click="addItem()"
-                                                        class="ms-1 text-sucess btn btn-success btn-sm"><i
+                                                        class="ms-1 text-white btn btn-success btn-sm"><i
                                                             class='bx bx-plus'></i>Add
                                                         Item</button>
                                                 </th>
@@ -500,7 +498,7 @@ const editCarrier = (carrier) => {
                                                             v-model="item.particular">
                                                     </td>
                                                     <td class="text-left" style="width:15%">
-                                                        <input type="number" class="form-control" v-model="item.amount"
+                                                        <input type="number" class="form-control" step="0.01" v-model="item.amount"
                                                             @keyup="getLineTotal(index)">
                                                     </td>
                                                     <td class="text-left" style="width:10%">
