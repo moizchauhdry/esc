@@ -130,16 +130,18 @@ watch(
                             <InputError :message="form.errors.carrier_id" />
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <InputLabel for="" value="From Date" class="mb-1" />
-                            <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
-                            </VueDatePicker>
+                            <!-- <VueDatePicker v-model="form.from_date" :teleport="true" :enable-time-picker="false">
+                            </VueDatePicker> -->
+                            <input type="date" class="form-control" v-model="form.from_date">
                             <InputError :message="form.errors.from_date" />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <InputLabel for="" value="To Date" class="mb-1" />
-                            <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
-                            </VueDatePicker>
+                            <!-- <VueDatePicker v-model="form.to_date" :teleport="true" :enable-time-picker="false">
+                            </VueDatePicker> -->
+                            <input type="date" class="form-control" v-model="form.to_date">
                             <InputError :message="form.errors.to_date" />
                         </div>
 
