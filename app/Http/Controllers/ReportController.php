@@ -37,7 +37,7 @@ class ReportController extends Controller
         session(['filter' => $filter]);
 
         $query = Invoice::select('*');
-        $query->selectRaw('(total - net_rate) as net_total');
+        $query->selectRaw('(total - net_payable) as net_total');
 
         $query->when($filter['from'] && $filter['to'], function ($q) use ($filter) {
             $q->whereDate('invoice_at', '>=', $filter['from']);
@@ -64,6 +64,15 @@ class ReportController extends Controller
                 'company_name' => $invoice->company->name,
             ]);
 
+        $grand_total = [
+            'invoice_amount_sum' => $query->sum('total'),
+            'due_carrier_sum' => $query->sum('due_carrier'),
+            'net_rate_sum' => $query->sum('net_rate'),
+            'net_payable_sum' => $query->sum('net_payable'),
+            'gross_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
+            'expense_sum' => 0,
+            'net_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
+        ];
 
         $carriers = Carrier::select('id as value', DB::raw("CONCAT(carrier_name, '-', carrier_code) as label"))->get();
         $companies = User::role('company')->get();
@@ -73,6 +82,7 @@ class ReportController extends Controller
             'carriers' => $carriers,
             'companies' => $companies,
             'filter' => $filter,
+            'grand_total' => $grand_total,
         ]);
     }
 
@@ -94,9 +104,9 @@ class ReportController extends Controller
         $validate = $request->validate($rules);
 
         $data = [
-            'due_carrier' => $request->due_carrier,
-            'net_rate' => $request->net_rate,
-            'net_payable' => $request->due_carrier * $request->net_rate,
+            'due_carrier' => $request->due_carrier ?? 0,
+            'net_rate' => $request->net_rate ?? 0,
+            'net_payable' => $request->due_carrier + $request->net_rate,
         ];
 
         $invoice = Invoice::find($invoice_id);

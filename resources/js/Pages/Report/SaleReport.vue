@@ -16,6 +16,7 @@ defineProps({
     carriers: Array,
     companies: Array,
     filter: Object,
+    grand_total: Object,
 });
 
 const edit_sale_report_ref = ref(null);
@@ -63,6 +64,84 @@ const format_number = (number) => {
                     </div>
                 </div>
 
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-5">
+                    <div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Total Amount</p>
+                                        <h4 class="my-1">{{ format_number(grand_total.invoice_amount_sum) }}</h4>
+                                    </div>
+                                    <div class="widgets-icons bg-light-info text-info ms-auto"><i
+                                            class='bx bx-dollar'></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Net Payable</p>
+                                        <h4 class="my-1">{{ format_number(grand_total.net_payable_sum) }}</h4>
+                                    </div>
+                                    <div class="widgets-icons bg-light-warning text-warning ms-auto"><i
+                                            class='bx bx-dollar'></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Gross Profit</p>
+                                        <h4 class="my-1">{{ format_number(grand_total.gross_profit_sum) }}</h4>
+                                    </div>
+                                    <div class="widgets-icons bg-light-success text-success ms-auto"><i
+                                            class='bx bx-dollar'></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Total Expense</p>
+                                        <h4 class="my-1">{{ format_number(grand_total.expense_sum) }}</h4>
+                                    </div>
+                                    <div class="widgets-icons bg-light-warning text-warning ms-auto"><i
+                                            class='bx bx-dollar'></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Net Profit</p>
+                                        <h4 class="my-1">{{ format_number(grand_total.net_profit_sum) }}</h4>
+                                    </div>
+                                    <div class="widgets-icons bg-light-success text-success ms-auto"><i
+                                            class='bx bx-dollar'></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-body">
 
@@ -94,7 +173,7 @@ const format_number = (number) => {
                                         <th>Due Carrier</th>
                                         <th>Net Rate</th>
                                         <th>Net Payable</th>
-                                        <th>Net Total</th>
+                                        <th>Profit Loss</th>
                                         <th>Invoice at</th>
                                         <th></th>
                                     </tr>
