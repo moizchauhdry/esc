@@ -19,24 +19,37 @@ class SaleReportExport implements FromView
 
     public function view(): View
     {
-        $query = Invoice::query();
+        $query = Invoice::select('*');
+        $query->selectRaw('(total - net_payable) as net_total');
 
-        if (!empty($this->filter['carrier_id'])) {
-            $query->where('carrier_id', $this->filter['carrier_id']);
-        }
+        $query->when($this->filter['from'] && $this->filter['to'], function ($q) {
+            $q->whereDate('invoice_at', '>=', $this->filter['from']);
+            $q->whereDate('invoice_at', '<=', $this->filter['to']);
+        });
 
-        if (!empty($this->filter['from'])) {
-            $query->whereDate('invoice_at', '>=', $this->filter['from']);
-        }
+        $query->when($this->filter['carrier_id'], function ($q) {
+            $q->where('carrier_id', $this->filter['carrier_id']);
+        });
 
-        if (!empty($this->filter['to'])) {
-            $query->whereDate('invoice_at', '<=', $this->filter['to']);
-        }
+        $query->when($this->filter['company_id'], function ($q) {
+            $q->where('company_id', $this->filter['company_id']);
+        });
 
-        return view('exports.sale-report-export', [
+        $grand_total = [
+            'invoice_amount_sum' => $query->sum('total'),
+            'due_carrier_sum' => $query->sum('due_carrier'),
+            'net_rate_sum' => $query->sum('net_rate'),
+            'net_payable_sum' => $query->sum('net_payable'),
+            'gross_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
+            'expense_sum' => 0,
+            'net_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
+        ];
+
+        return view('exports.sales-report-export-v2', [
             'invoices' => $query->get(),
-            'filter' =>$this->filter,
-        ]);
+            'filter' => $this->filter,
+            'grand_total' => $grand_total,
+        ]); 
     }
 
     public function registerEvents(): array

@@ -66,12 +66,13 @@ class ReportController extends Controller
 
         $grand_total = [
             'invoice_amount_sum' => $query->sum('total'),
+            'due_carrier_sum' => $query->sum('due_carrier'),
+            'net_rate_sum' => $query->sum('net_rate'),
             'net_payable_sum' => $query->sum('net_payable'),
             'gross_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
             'expense_sum' => 0,
             'net_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
         ];
-
 
         $carriers = Carrier::select('id as value', DB::raw("CONCAT(carrier_name, '-', carrier_code) as label"))->get();
         $companies = User::role('company')->get();
