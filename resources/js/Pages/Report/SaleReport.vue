@@ -94,7 +94,7 @@ const format_number = (number) => {
                                         <th>Due Carrier</th>
                                         <th>Net Rate</th>
                                         <th>Net Payable</th>
-                                        <th>Net Total</th>
+                                        <th>Profit Loss</th>
                                         <th>Invoice at</th>
                                         <th></th>
                                     </tr>
