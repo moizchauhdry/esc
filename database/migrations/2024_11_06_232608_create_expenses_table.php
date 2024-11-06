@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->string('description', 250)->nullable();
-            $table->double('amount')->nullable();
-            $table->dateTime('expense_at')->nullable();
+            $table->integer('year')->unsigned()->nullable();
             $table->integer('month')->unsigned()->nullable();
             $table->string('month_name')->nullable();
-            $table->integer('year')->unsigned()->nullable();
+            $table->dateTime('expense_at')->nullable();
+            $table->double('total_amount')->nullable();
+            $table->integer('items_count')->unsigned()->default(0);
             $table->timestamps();
         });
     }

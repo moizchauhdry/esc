@@ -20,13 +20,13 @@ const filter = usePage().props.filter;
 const form = useForm({
     items: [
         {
-            year: filter.year,
-            month: filter.month,
             description: "",
             amount: "",
         }
     ],
-    total:""
+    total: "",
+    year: filter.year,
+    month: filter.month,
 });
 
 var months = [
@@ -151,65 +151,72 @@ onMounted(() => {
 </script>
 
 <template>
-    <SuccessButton @click="create" type="button" class="mx-1">Add Expense</SuccessButton>
+    <SuccessButton @click="create" type="button" class="mx-1"><i class='bx bx-plus'></i> Add Expense</SuccessButton>
 
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit_mode ? update() : submit()">
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900">
-                    <span>Add Expense</span> 
-                    <SuccessButton type="button" class="float-right" @click="addItem()"><i class='bx bx-plus'></i>Add Item</SuccessButton>
+                    <span>Add Expense</span>
+                    <SuccessButton type="button" class="float-right" @click="addItem()"><i class='bx bx-plus text-lg'></i>Add
+                        Item</SuccessButton>
                 </h2>
                 <hr>
                 <div class="mt-6">
-                    <div class="row">
-                        <table v-if="form.items.length > 0">
-                            <thead>
-                                <tr>
-                                    <th class="text-left">SR. #</th>
-                                    <th class="text-left">YEAR</th>
-                                    <th class="text-left">MONTH</th>
-                                    <th class="text-left">DESCRIPTION</th>
-                                    <th class="text-left">AMOUNT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template v-for="(item, index) in form.items" :key="item.id">
-                                    <tr>
-                                        <td class="no" style="width:15%">
-                                            <span> Item {{ index }} <button type="button" @click="removeItem(index)" class="ms-1 text-danger"><i class='bx bxs-trash'></i></button></span>
-                                        </td>
-                                        <td class="text-left" style="width:15%">
-                                            <select v-model="item.year" class="form-control">
-                                                <template v-for="year in years">
-                                                    <option :value="year.value">{{ year.value }}</option>
-                                                </template>
-                                            </select>
-                                        </td>
-                                        <td class="text-left" style="width:25%">
-                                            <select v-model="item.month" class="form-control">
-                                                <template v-for="month in months">
-                                                    <option :value="month.id">{{ month.name }}</option>
-                                                </template>
-                                            </select>
-                                        </td>
-                                        <td class="text-left" style="width:50%">
-                                            <input type="text" class="form-control" v-model="item.description">
-                                        </td>
-                                        <td class="total" style="width:15%">
-                                            <input type="number" class="form-control" v-model="item.amount" @keyup="getGrandTotal">
-                                        </td>
-                                    </tr>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <InputLabel for="" value="Month" class="mb-1" />
+                            <select v-model="form.month" class="form-control">
+                                <template v-for="month in months">
+                                    <option :value="month.id">{{ month.name }}</option>
                                 </template>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="3"></th>
-                                    <th>TOTAL</th>
-                                    <th>{{ format_number(form.total) }}</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <InputLabel for="" value="Year" class="mb-1" />
+                            <select v-model="form.year" class="form-control">
+                                <template v-for="year in years">
+                                    <option :value="year.value">{{ year.value }}</option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table v-if="form.items.length > 0" class="mt-3">
+                                <thead>
+                                    <tr>
+                                        <td class="text-left">DESCRIPTION</td>
+                                        <td class="text-left">AMOUNT</td>
+                                        <td class="text-left"></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template v-for="(item, index) in form.items" :key="item.id">
+                                        <tr>
+                                            <td class="text-left" style="width:50%">
+                                                <input type="text" class="form-control" v-model="item.description">
+                                            </td>
+                                            <td class="total" style="width:15%">
+                                                <input type="number" class="form-control" v-model="item.amount"
+                                                    @keyup="getGrandTotal">
+                                            </td>
+                                            <td class="no" style="width:5%">
+                                                <button type="button" @click="removeItem(index)"
+                                                    class="ms-1 text-danger text-lg"><i class='bx bxs-trash'></i></button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-right">TOTAL</th>
+                                        <th class="text-right">{{ format_number(form.total) }}</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

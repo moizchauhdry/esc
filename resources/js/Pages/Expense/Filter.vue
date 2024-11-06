@@ -106,7 +106,7 @@ const closeModal = () => {
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <InputLabel for="" value="Year" class="mb-1" />
                             <select v-model="form.year" class="form-control">
                                 <template v-for="year in years">

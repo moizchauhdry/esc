@@ -69,8 +69,8 @@ const format_number = (number) => {
                                         <th>SR #</th>
                                         <th>Year</th>
                                         <th>Month</th>
-                                        <th>Description</th>
-                                        <th>Amount</th>
+                                        <th>No.of Items</th>
+                                        <th>Total Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,8 +79,8 @@ const format_number = (number) => {
                                             <td>{{ ++index }}</td>
                                             <td>{{ expense.year }}</td>
                                             <td>{{ expense.month_name }}</td>
-                                            <td>{{ expense.description }}</td>
-                                            <td>${{ format_number(expense.amount) }}</td>
+                                            <td>{{ expense.items_count }}</td>
+                                            <td>${{ format_number(expense.total_amount) }}</td>
                                         </tr>
                                     </template>
                                 </tbody>
