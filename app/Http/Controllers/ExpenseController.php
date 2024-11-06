@@ -47,4 +47,11 @@ class ExpenseController extends Controller
 
         return redirect()->route('expense.index')->with('success', 'Expense Added.');
     }
+
+    public function update(Request $request)
+    {
+        dd('s');
+        // $this->save($request, true);
+        return redirect()->back()->with('success', 'Record updated.');
+    }
 }

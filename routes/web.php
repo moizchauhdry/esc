@@ -111,6 +111,8 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
         Route::prefix('expenses')->group(function () {
             Route::any('/index', [ExpenseController::class, 'index'])->name('expense.index');
             Route::post('/store', [ExpenseController::class, 'store'])->name('expense.store');
+            Route::post('/update', [ExpenseController::class, 'update'])->name('expense.update');
+            Route::get('/fetch/expense-items/{id}', [TemplateController::class, 'fetchExpenseItems'])->name('expense.fetch.expense-items');
         });
     });
 });
