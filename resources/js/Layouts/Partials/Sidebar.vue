@@ -48,6 +48,9 @@ watch(
         else if (route().current('report.sale-report')) {
             isSubmenuVisible.value.report = true;
         }
+        else if (route().current('expense.index')) {
+            isSubmenuVisible.value.expense = true;
+        }
     }
 );
 
@@ -154,7 +157,20 @@ watch(
                 </a>
                 <ul :class="{ 'hidden': !isSubmenuVisible.reports }">
                     <li v-if="permission.report_sale" :class="{ 'mm-active': route().current('report.sale.index') }">
-                        <Link :href="route('report.sale.index')"><i class='bx bx-radio-circle'></i>Sale Report</Link>
+                        <Link :href="route('report.sale.index')"><i class='bx bx-radio-circle'></i>Sales Report</Link>
+                    </li>
+                </ul>
+            </li>
+
+            <li v-if="permission.expense_list" :class="{ 'mm-active': route().current('expense.index') }">
+                <a href="javascript:;" class="has-arrow" @click="toggleList('expense')">
+                    <div class="parent-icon"><i class="bx bx-box"></i>
+                    </div>
+                    <div class="menu-title">Manage Expenses</div>
+                </a>
+                <ul :class="{ 'hidden': !isSubmenuVisible.expense }">
+                    <li v-if="permission.expense_list" :class="{ 'mm-active': route().current('expense.index') }">
+                        <Link :href="route('expense.index')"><i class='bx bx-radio-circle'></i>Expense List</Link>
                     </li>
                 </ul>
             </li>

@@ -64,6 +64,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'report', 'level' => 1],
             ['name' => 'report_sale', 'level' => 2],
 
+            // Expense
+            ['name' => 'expense', 'level' => 1],
+            ['name' => 'expense_list', 'level' => 2],
+
         ];
 
         foreach ($permissions as $permission) {
