@@ -15,37 +15,11 @@ const modal = ref(false);
 const edit = ref(false);
 const filter = usePage().props.filter;
 
-var months = [
-    { id: 1, name: "January" },
-    { id: 2, name: "February" },
-    { id: 3, name: "March" },
-    { id: 4, name: "April" },
-    { id: 5, name: "May" },
-    { id: 6, name: "June" },
-    { id: 7, name: "July" },
-    { id: 8, name: "August" },
-    { id: 9, name: "September" },
-    { id: 10, name: "October" },
-    { id: 11, name: "November" },
-    { id: 12, name: "December" },
-];
-
-var years = [
-    { id: 1, value: "2023" },
-    { id: 2, value: "2024" },
-    { id: 3, value: "2025" },
-    { id: 4, value: "2026" },
-    { id: 5, value: "2027" },
-    { id: 6, value: "2028" },
-    { id: 7, value: "2029" },
-    { id: 8, value: "2030" },
-];
-
 var saved_filters = "";
 
 const form = useForm({
-    year: filter.year,
-    month: filter.month,
+    from_date: filter.from_date,
+    to_date: filter.to_date,
 });
 
 const create = () => {
@@ -54,15 +28,15 @@ const create = () => {
     saved_filters = localStorage.getItem('filters');
     if (saved_filters) {
         saved_filters = JSON.parse(saved_filters);
-        form.month = saved_filters.month
-        form.year = saved_filters.year
+        form.from_date = saved_filters.from_date
+        form.to_date = saved_filters.to_date
     }
 };
 
 const submit = () => {
     var filters = {
-        month: form.month,
-        year: form.year,
+        from_date: form.from_date,
+        to_date: form.to_date,
     };
 
     const queryParams = new URLSearchParams(filters).toString();
@@ -99,20 +73,11 @@ const closeModal = () => {
                     <div class="row g-2">
                         <div class="col-md-4">
                             <InputLabel for="" value="Month" class="mb-1" />
-                            <select v-model="form.month" class="form-control">
-                                <template v-for="month in months">
-                                    <option :value="month.id">{{ month.name }}</option>
-                                </template>
-                            </select>
+                            <input type="date" v-model="form.from_date" class="form-control">
                         </div>
-
-                        <div class="col-md-2">
-                            <InputLabel for="" value="Year" class="mb-1" />
-                            <select v-model="form.year" class="form-control">
-                                <template v-for="year in years">
-                                    <option :value="year.value">{{ year.value }}</option>
-                                </template>
-                            </select>
+                        <div class="col-md-4">
+                            <InputLabel for="" value="Month" class="mb-1" />
+                            <input type="date" v-model="form.to_date" class="form-control">
                         </div>
                     </div>
                 </div>

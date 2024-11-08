@@ -6,6 +6,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
+import InputError from '@/Components/InputError.vue';
 import { onMounted } from "vue";
 
 defineProps({
@@ -25,35 +26,9 @@ const form = useForm({
         }
     ],
     total: "",
-    year: filter.year,
-    month: filter.month,
+    expense_at: "",
+    expense_id: "",
 });
-
-var months = [
-    { id: 1, name: "January" },
-    { id: 2, name: "February" },
-    { id: 3, name: "March" },
-    { id: 4, name: "April" },
-    { id: 5, name: "May" },
-    { id: 6, name: "June" },
-    { id: 7, name: "July" },
-    { id: 8, name: "August" },
-    { id: 9, name: "September" },
-    { id: 10, name: "October" },
-    { id: 11, name: "November" },
-    { id: 12, name: "December" },
-];
-
-var years = [
-    { id: 1, value: "2023" },
-    { id: 2, value: "2024" },
-    { id: 3, value: "2025" },
-    { id: 4, value: "2026" },
-    { id: 5, value: "2027" },
-    { id: 6, value: "2028" },
-    { id: 7, value: "2029" },
-    { id: 8, value: "2030" },
-];
 
 const create = () => {
     modal.value = true;
@@ -158,7 +133,8 @@ onMounted(() => {
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900">
                     <span>Add Expense</span>
-                    <SuccessButton type="button" class="float-right" @click="addItem()"><i class='bx bx-plus text-lg'></i>Add
+                    <SuccessButton type="button" class="float-right" @click="addItem()"><i
+                            class='bx bx-plus text-lg'></i>Add
                         Item</SuccessButton>
                 </h2>
                 <hr>
@@ -166,19 +142,8 @@ onMounted(() => {
                     <div class="row g-2">
                         <div class="col-md-4">
                             <InputLabel for="" value="Month" class="mb-1" />
-                            <select v-model="form.month" class="form-control">
-                                <template v-for="month in months">
-                                    <option :value="month.id">{{ month.name }}</option>
-                                </template>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <InputLabel for="" value="Year" class="mb-1" />
-                            <select v-model="form.year" class="form-control">
-                                <template v-for="year in years">
-                                    <option :value="year.value">{{ year.value }}</option>
-                                </template>
-                            </select>
+                            <input type="date" v-model="form.expense_at" class="form-control">
+                            <InputError :message="form.errors.expense_at" />
                         </div>
                     </div>
                     <div class="row">
@@ -203,7 +168,8 @@ onMounted(() => {
                                             </td>
                                             <td class="no" style="width:5%">
                                                 <button type="button" @click="removeItem(index)"
-                                                    class="ms-1 text-danger text-lg"><i class='bx bxs-trash'></i></button>
+                                                    class="ms-1 text-danger text-lg"><i
+                                                        class='bx bxs-trash'></i></button>
                                             </td>
                                         </tr>
                                     </template>

@@ -12,44 +12,58 @@ class ExpenseController extends Controller
 {
     public function index(Request $request)
     {
-        $month = $request->month ?? Carbon::now()->format('m');
-        $year = $request->year ?? Carbon::now()->format('Y');
+        $from_date = !empty($request->from_date) ? Carbon::parse($request->from_date)->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d');
+        $to_date = !empty($request->to_date) ? Carbon::parse($request->to_date)->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d');
 
         $query = Expense::query();
 
-        $query->whereYear('expense_at', $year);
-        $query->whereMonth('expense_at', $month);
+        $query->whereDate('expense_at','>=', $from_date);
+        $query->whereDate('expense_at','<=', $to_date);
 
         $expenses = $query->orderBy('id', 'desc')->paginate(25);
 
         return Inertia::render('Expense/Index', [
             'expenses' => $expenses,
             'filter' => [
-                'year' => $year,
-                'month' => $month,
-                'month_name' => getMonthName($month),
+                'from_date' => $from_date,
+                'to_date' => $to_date,
             ]
         ]);
     }
 
     public function store(Request $request)
     {
+        $rules = [
+            'expense_at' => 'required|date_format:Y-m-d',
+        ];
+
+        $messages = [
+            'required' => 'The field is required.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $expense_at =Carbon::parse($request->expense_at)->format('Y-m-d');
+        $year = Carbon::parse($expense_at)->format('Y');
+        $month = Carbon::parse($expense_at)->format('m');
+        $month_name = Carbon::parse($expense_at)->format('F');
+
         $expense = Expense::create([
-            'year' => $request->year,
-            'month' => $request->month,
-            'month_name' => getMonthName($request->month),
-            'expense_at' => Carbon::create($request->year, $request->month),
+            'year' => $year,
+            'month' => $month,
+            'month_name' => $month_name,
+            'expense_at' => $expense_at,
         ]);
 
         foreach ($request->items as $key => $item) {
             ExpenseItem::create([
                 'expense_id' => $expense->id,
-                'year' => $request->year,
-                'month' => $request->month,
-                'month_name' => getMonthName($request->month),
+                'year' => $year,
+                'month' => $month,
+                'month_name' => $month_name,
+                'expense_at' => $expense_at,
                 'description' => $item['description'],
                 'amount' => $item['amount'],
-                'expense_at' => Carbon::create($request->year, $request->month),
             ]);
         }
 

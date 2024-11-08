@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('description', 250);
             $table->double('amount');
             $table->dateTime('expense_at');
-            $table->integer('month')->unsigned();
-            $table->string('month_name');
-            $table->integer('year')->unsigned();
+            $table->integer('month')->unsigned()->nullable();
+            $table->string('month_name')->nullable();
+            $table->integer('year')->unsigned()->nullable();
             $table->timestamps();
         });
     }

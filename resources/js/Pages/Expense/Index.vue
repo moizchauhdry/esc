@@ -62,13 +62,14 @@ const format_number = (number) => {
                                 <thead class="table-light">
                                     <tr>
                                         <th colspan="17" class="text-uppercase text-center text-lg">
-                                            {{ filter['month_name'] }} {{ filter['year'] }}
+                                            From "{{ filter['from_date'] }}" TO "{{ filter['to_date'] }}"
                                         </th>
                                     </tr>
                                     <tr class="text-uppercase">
                                         <th>SR #</th>
                                         <th>Year</th>
                                         <th>Month</th>
+                                        <th>Expense Date</th>
                                         <th>No.of Items</th>
                                         <th>Total Amount</th>
                                     </tr>
@@ -79,6 +80,7 @@ const format_number = (number) => {
                                             <td>{{ ++index }}</td>
                                             <td>{{ expense.year }}</td>
                                             <td>{{ expense.month_name }}</td>
+                                            <td>{{ expense.expense_at }}</td>
                                             <td>{{ expense.items_count }}</td>
                                             <td>${{ format_number(expense.total_amount) }}</td>
                                         </tr>
