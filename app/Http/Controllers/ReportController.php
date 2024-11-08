@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\SaleReportExport;
 use App\Models\Carrier;
+use App\Models\Expense;
 use App\Models\Invoice;
 use App\Models\User;
 use Carbon\Carbon;
@@ -64,14 +65,17 @@ class ReportController extends Controller
                 'company_name' => $invoice->company->name,
             ]);
 
+        $expense_sum = Expense::whereDate('expense_at', '>=', $filter['from'])->whereDate('expense_at', '<=', $filter['to'])->sum('total_amount');
+        $gross_profit_sum = $query->sum('total') - $query->sum('net_payable');
+
         $grand_total = [
             'invoice_amount_sum' => $query->sum('total'),
             'due_carrier_sum' => $query->sum('due_carrier'),
             'net_rate_sum' => $query->sum('net_rate'),
             'net_payable_sum' => $query->sum('net_payable'),
-            'gross_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
-            'expense_sum' => 0,
-            'net_profit_sum' => $query->sum('total') - $query->sum('net_payable'),
+            'gross_profit_sum' => $gross_profit_sum,
+            'expense_sum' => $expense_sum,
+            'net_profit_sum' => $gross_profit_sum - $expense_sum,
         ];
 
         $carriers = Carrier::select('id as value', DB::raw("CONCAT(carrier_name, '-', carrier_code) as label"))->get();

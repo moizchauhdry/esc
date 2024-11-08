@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CarrierController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\ProfileController;
@@ -105,6 +106,14 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
         Route::prefix('reports')->group(function () {
             Route::any('/sale/index', [ReportController::class, 'saleReport'])->name('report.sale.index');
             Route::post('/sale/update', [ReportController::class, 'updateSaleReport'])->name('report.sale.update');
+        });
+
+        Route::prefix('expenses')->group(function () {
+            Route::any('/index', [ExpenseController::class, 'index'])->name('expense.index');
+            Route::post('/store', [ExpenseController::class, 'store'])->name('expense.store');
+            Route::post('/update', [ExpenseController::class, 'update'])->name('expense.update');
+            Route::post('/delete', [ExpenseController::class, 'delete'])->name('expense.delete')->middleware('permission:expense_delete');
+            Route::get('/fetch/expense-items/{id}', [ExpenseController::class, 'fetchExpenseItems'])->name('expense.fetch.expense-items');
         });
     });
 });
