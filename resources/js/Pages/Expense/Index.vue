@@ -96,7 +96,7 @@ const format_date = (date) => {
                                         <th>Month</th>
                                         <th>Expense Date</th>
                                         <th>No.of Items</th>
-                                        <th>Total Amount</th>
+                                        <th>Total Amount (PKR)</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -109,7 +109,7 @@ const format_date = (date) => {
                                             <td>{{ expense.month_name }}</td>
                                             <td>{{ format_date(expense.expense_at) }}</td>
                                             <td>{{ expense.items_count }}</td>
-                                            <td>${{ format_number(expense.total_amount) }}</td>
+                                            <td>{{ format_number(expense.total_amount) }}</td>
                                             <td>
                                                 <ActionButton @click="edit(expense)" title="Edit" class="mr-1">
                                                     <i class="bx bx-edit"></i>
