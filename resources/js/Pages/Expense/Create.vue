@@ -23,16 +23,17 @@ const form = useForm({
         {
             description: "",
             amount: "",
-        }
+            qty: 1,
+            total: 0,
+        },
     ],
-    total: "",
     expense_at: "",
     expense_id: "",
 });
 
 const create = () => {
     modal.value = true;
-    edit.value = false;
+    edit_mode.value = false;
     form.total = 0;
 };
 
@@ -82,6 +83,8 @@ const addItem = () => {
         month: filter.month,
         description: "",
         amount: "",
+        qty: 1,
+        total: 0,
     });
 };
 
@@ -91,10 +94,19 @@ const removeItem = (index) => {
 };
 
 const getGrandTotal = () => {
-    form.total = 0;
+    form.subtotal = 0;
     form.items.forEach((item) => {
-        form.total += parseFloat(item.amount);
+        form.subtotal += parseFloat(item.total);
     });
+    form.total = form.subtotal;
+};
+
+const getLineTotal = (index) => {
+    const item = form.items[index];
+    const line_total = item.qty * item.amount;
+    item.total = line_total;
+
+    getGrandTotal();
 };
 
 const format_number = (number) => {
@@ -104,20 +116,9 @@ const format_number = (number) => {
     }).format(number);
 };
 
-defineExpose({ edit: (template) => edit(template) });
+// defineExpose({ edit: (template) => edit(template) });
 
 onMounted(() => {
-    if (!edit_mode) {
-        form.items = [
-            {
-                year: filter.year,
-                month: filter.month,
-                description: "",
-                amount: "",
-            },
-        ];
-    }
-
     if (edit_mode) {
         getGrandTotal();
     }
@@ -164,7 +165,7 @@ onMounted(() => {
                                             </td>
                                             <td class="total" style="width:15%">
                                                 <input type="number" class="form-control" v-model="item.amount"
-                                                    @keyup="getGrandTotal">
+                                                    @keyup="getLineTotal(index)">
                                             </td>
                                             <td class="no" style="width:5%">
                                                 <button type="button" @click="removeItem(index)"
