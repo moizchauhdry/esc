@@ -49,12 +49,21 @@ class ExpenseController extends Controller
         $month = Carbon::parse($expense_at)->format('m');
         $month_name = Carbon::parse($expense_at)->format('F');
 
-        $expense = Expense::create([
+        $expense_data = [
             'year' => $year,
             'month' => $month,
             'month_name' => $month_name,
             'expense_at' => $expense_at,
-        ]);
+        ];
+        
+        $expense = Expense::find($request->expense_id);
+
+        if ($expense) {
+            $expense->update($expense_data);
+            $expense_items = ExpenseItem::where('expense_id', $expense->id)->delete();
+        } else {
+            $expense = Expense::create($expense_data);
+        }
 
         foreach ($request->items as $key => $item) {
             ExpenseItem::create([

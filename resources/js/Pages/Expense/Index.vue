@@ -8,6 +8,7 @@ import SuccessButton from "@/Components/SuccessButton.vue";
 import ActionButton from "@/Components/ActionButton.vue";
 import Create from "./Create.vue";
 import Filter from "./Filter.vue";
+import moment from 'moment';
 
 const permission = usePage().props.can;
 
@@ -44,6 +45,12 @@ const deleteExpense = (expense_id) => {
         });
     }
 };
+
+const format_date = (date) => {
+    let parsedDate = moment(date);
+    let formattedDate = parsedDate.format('YYYY-MM-DD');
+    return formattedDate;
+}
 </script>
 
 <template>
@@ -84,6 +91,7 @@ const deleteExpense = (expense_id) => {
                                     </tr>
                                     <tr class="text-uppercase">
                                         <th>SR #</th>
+                                        <th>Expense ID</th>
                                         <th>Year</th>
                                         <th>Month</th>
                                         <th>Expense Date</th>
@@ -96,19 +104,20 @@ const deleteExpense = (expense_id) => {
                                     <template v-for="(expense, index) in expenses.data">
                                         <tr>
                                             <td>{{ ++index }}</td>
+                                            <td>{{ expense.id }}</td>
                                             <td>{{ expense.year }}</td>
                                             <td>{{ expense.month_name }}</td>
-                                            <td>{{ expense.expense_at }}</td>
+                                            <td>{{ format_date(expense.expense_at) }}</td>
                                             <td>{{ expense.items_count }}</td>
                                             <td>${{ format_number(expense.total_amount) }}</td>
                                             <td>
-                                                <a class="text-danger" href="#" @click="deleteExpense(expense.id)"
-                                                    v-if="permission.expense_delete">
-                                                    <i class="bx bx-trash"></i>
-                                                </a>
                                                 <ActionButton @click="edit(expense)" title="Edit" class="mr-1">
                                                     <i class="bx bx-edit"></i>
                                                 </ActionButton>
+                                                <a class="text-danger text-lg" href="#" @click="deleteExpense(expense.id)"
+                                                    v-if="permission.expense_delete">
+                                                    <i class="bx bx-trash"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     </template>

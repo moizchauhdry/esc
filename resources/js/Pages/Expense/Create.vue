@@ -8,6 +8,7 @@ import SuccessButton from "@/Components/SuccessButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from '@/Components/InputError.vue';
 import { onMounted } from "vue";
+import moment from 'moment';
 
 defineProps({
     filter: Object,
@@ -55,7 +56,7 @@ const edit = (expense) => {
         modal.value = true;
         edit_mode.value = true;
         form.expense_id = expense.id
-        // form.expense_at = expense.expense_at
+        form.expense_at = format_date(expense.expense_at)
 
         axios.get(`/expenses/fetch/expense-items/${expense.id}`)
             .then(({ data }) => {
@@ -125,6 +126,12 @@ const format_number = (number) => {
         maximumFractionDigits: 2
     }).format(number);
 };
+
+const format_date = (date) => {
+    let parsedDate = moment(date);
+    let formattedDate = parsedDate.format('YYYY-MM-DD');
+    return formattedDate;
+}
 
 defineExpose({ edit: (expense) => edit(expense) });
 
