@@ -6,6 +6,7 @@ use App\Models\Expense;
 use App\Models\ExpenseItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class ExpenseController extends Controller
@@ -17,8 +18,8 @@ class ExpenseController extends Controller
 
         $query = Expense::query();
 
-        $query->whereDate('expense_at','>=', $from_date);
-        $query->whereDate('expense_at','<=', $to_date);
+        $query->whereDate('expense_at', '>=', $from_date);
+        $query->whereDate('expense_at', '<=', $to_date);
 
         $expenses = $query->orderBy('id', 'desc')->paginate(25);
 
@@ -43,7 +44,7 @@ class ExpenseController extends Controller
 
         $request->validate($rules, $messages);
 
-        $expense_at =Carbon::parse($request->expense_at)->format('Y-m-d');
+        $expense_at = Carbon::parse($request->expense_at)->format('Y-m-d');
         $year = Carbon::parse($expense_at)->format('Y');
         $month = Carbon::parse($expense_at)->format('m');
         $month_name = Carbon::parse($expense_at)->format('F');
@@ -82,5 +83,14 @@ class ExpenseController extends Controller
         dd('update');
         // $this->save($request, true);
         return redirect()->back()->with('success', 'Record updated.');
+    }
+
+    public function delete(Request $request)
+    {
+        dd($request->all());
+        ExpenseItem::where('expense_id', $request->expense_id)->delete();
+        Expense::find($request->expense_id)->delete();
+
+        return Redirect::back()->with('success', 'Ledger deleted.');
     }
 }

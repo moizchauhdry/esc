@@ -27,6 +27,23 @@ const format_number = (number) => {
     }).format(number);
 };
 
+const deleteExpense = (expense_id) => {
+    const form = useForm({
+        expense_id: expense_id,
+    });
+    if (confirm('Are you sure you want to delete this Expense?')) {
+        form.post(route("expense.delete"), {
+            preserveScroll: true,
+            onSuccess: (response) => {
+                // closeModal();
+            },
+            onError: (errors) => {
+                // console.log(errors)
+            },
+            onFinish: () => { },
+        });
+    }
+};
 </script>
 
 <template>
@@ -72,6 +89,7 @@ const format_number = (number) => {
                                         <th>Expense Date</th>
                                         <th>No.of Items</th>
                                         <th>Total Amount</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -83,6 +101,12 @@ const format_number = (number) => {
                                             <td>{{ expense.expense_at }}</td>
                                             <td>{{ expense.items_count }}</td>
                                             <td>${{ format_number(expense.total_amount) }}</td>
+                                            <td>
+                                                <a class="text-danger" href="#" @click="deleteExpense(expense.id)"
+                                                    v-if="permission.expense_delete">
+                                                    <i class="bx bx-trash"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     </template>
                                 </tbody>

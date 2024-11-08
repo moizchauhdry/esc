@@ -67,6 +67,7 @@ class PermissionSeeder extends Seeder
             // Expense
             ['name' => 'expense', 'level' => 1],
             ['name' => 'expense_list', 'level' => 2],
+            ['name' => 'expense_delete', 'level' => 2],
 
         ];
 

@@ -112,7 +112,8 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
             Route::any('/index', [ExpenseController::class, 'index'])->name('expense.index');
             Route::post('/store', [ExpenseController::class, 'store'])->name('expense.store');
             Route::post('/update', [ExpenseController::class, 'update'])->name('expense.update');
-            Route::get('/fetch/expense-items/{id}', [TemplateController::class, 'fetchExpenseItems'])->name('expense.fetch.expense-items');
+            Route::post('/delete', [ExpenseController::class, 'delete'])->name('expense.delete')->middleware('permission:expense_delete');
+            // Route::get('/fetch/expense-items/{id}', [ExpenseController::class, 'fetchExpenseItems'])->name('expense.fetch.expense-items');
         });
     });
 });

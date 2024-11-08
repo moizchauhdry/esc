@@ -49,27 +49,27 @@ const submit = () => {
     });
 };
 
-const edit = (expense) => {
-    if (expense) {
-        modal.value = true;
-        edit_mode.value = true;
-        form.expense_id = expense.id
+// const edit = (expense) => {
+//     if (expense) {
+//         modal.value = true;
+//         edit_mode.value = true;
+//         form.expense_id = expense.id
 
-        axios.get(`/expenses/fetch/expense-items/${expense.id}`)
-            .then(({ data }) => {
-                form.items = data.particulars
-            });
-    }
-};
+//         axios.get(`/expenses/fetch/expense-items/${expense.id}`)
+//             .then(({ data }) => {
+//                 form.items = data.particulars
+//             });
+//     }
+// };
 
-const update = () => {
-    form.post(route("expense.update"), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => error(),
-        onFinish: () => { },
-    });
-};
+// const update = () => {
+//     form.post(route("expense.update"), {
+//         preserveScroll: true,
+//         onSuccess: () => closeModal(),
+//         onError: () => error(),
+//         onFinish: () => { },
+//     });
+// };
 
 const closeModal = () => {
     modal.value = false;
