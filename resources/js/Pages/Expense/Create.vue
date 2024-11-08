@@ -50,27 +50,37 @@ const submit = () => {
     });
 };
 
-// const edit = (expense) => {
-//     if (expense) {
-//         modal.value = true;
-//         edit_mode.value = true;
-//         form.expense_id = expense.id
+const edit = (expense) => {
+    if (expense) {
+        modal.value = true;
+        edit_mode.value = true;
+        form.expense_id = expense.id
+        // form.expense_at = expense.expense_at
 
-//         axios.get(`/expenses/fetch/expense-items/${expense.id}`)
-//             .then(({ data }) => {
-//                 form.items = data.particulars
-//             });
-//     }
-// };
+        axios.get(`/expenses/fetch/expense-items/${expense.id}`)
+            .then(({ data }) => {
+                form.items = [];
+                data.expense_items.forEach((item, index) => {
+                    form.items[index] = {
+                        description: item.description,
+                        amount: item.amount,
+                        qty: 1,
+                        total: item.amount,
+                    };
+                });
+                form.total = data.expense.total_amount;
+            });
+    }
+};
 
-// const update = () => {
-//     form.post(route("expense.update"), {
-//         preserveScroll: true,
-//         onSuccess: () => closeModal(),
-//         onError: () => error(),
-//         onFinish: () => { },
-//     });
-// };
+const update = () => {
+    form.post(route("expense.update"), {
+        preserveScroll: true,
+        onSuccess: () => closeModal(),
+        onError: () => error(),
+        onFinish: () => { },
+    });
+};
 
 const closeModal = () => {
     modal.value = false;
@@ -116,7 +126,7 @@ const format_number = (number) => {
     }).format(number);
 };
 
-// defineExpose({ edit: (template) => edit(template) });
+defineExpose({ edit: (expense) => edit(expense) });
 
 onMounted(() => {
     if (edit_mode) {

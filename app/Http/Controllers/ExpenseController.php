@@ -32,7 +32,7 @@ class ExpenseController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    private function save($request)
     {
         $rules = [
             'expense_at' => 'required|date_format:Y-m-d',
@@ -74,23 +74,38 @@ class ExpenseController extends Controller
             'total_amount' => $expense_items->sum('amount'),
             'items_count' => $expense_items->count()
         ]);
+    }
 
+    public function store(Request $request)
+    {
+        $this->save($request);
         return redirect()->route('expense.index')->with('success', 'Expense Added.');
     }
 
     public function update(Request $request)
     {
-        dd('update');
-        // $this->save($request, true);
+        $this->save($request);
         return redirect()->back()->with('success', 'Record updated.');
     }
 
     public function delete(Request $request)
     {
-        dd($request->all());
         ExpenseItem::where('expense_id', $request->expense_id)->delete();
         Expense::find($request->expense_id)->delete();
 
         return Redirect::back()->with('success', 'Ledger deleted.');
+    }
+
+    public function fetchExpenseItems($id)
+    {
+        $expense = Expense::find($id);
+        $expense_items = ExpenseItem::where('expense_id', $id)->get();
+
+        $data = [
+            'expense' => $expense,
+            'expense_items' => $expense_items,
+        ];
+
+        return response()->json($data);
     }
 }

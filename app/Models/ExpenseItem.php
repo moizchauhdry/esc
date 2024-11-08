@@ -9,4 +9,9 @@ class ExpenseItem extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function expense()
+    {
+        return $this->belongsTo(Expense::class, 'expense_id', 'id');
+    }
 }

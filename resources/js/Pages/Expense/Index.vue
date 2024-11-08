@@ -5,6 +5,7 @@ import Paginate from "@/Components/Paginate.vue";
 import { ref, watch } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
+import ActionButton from "@/Components/ActionButton.vue";
 import Create from "./Create.vue";
 import Filter from "./Filter.vue";
 
@@ -15,11 +16,10 @@ defineProps({
     filter: Object,
 });
 
-// const edit_sale_report_ref = ref(null);
-// const edit = (invoice) => {
-//     edit_sale_report_ref.value.edit(invoice)
-// };
-
+const create_edit_ref = ref(null);
+const edit = (expense) => {
+    create_edit_ref.value.edit(expense)
+};
 const format_number = (number) => {
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
@@ -68,7 +68,7 @@ const deleteExpense = (expense_id) => {
                     </div>
                     <div class="ms-auto">
                         <Filter v-bind="$props"></Filter>
-                        <Create v-bind="$props"></Create>
+                        <Create v-bind="$props" ref="create_edit_ref"></Create>
                     </div>
                 </div>
 
@@ -106,6 +106,9 @@ const deleteExpense = (expense_id) => {
                                                     v-if="permission.expense_delete">
                                                     <i class="bx bx-trash"></i>
                                                 </a>
+                                                <ActionButton @click="edit(expense)" title="Edit" class="mr-1">
+                                                    <i class="bx bx-edit"></i>
+                                                </ActionButton>
                                             </td>
                                         </tr>
                                     </template>
