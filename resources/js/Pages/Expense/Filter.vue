@@ -18,18 +18,22 @@ const filter = usePage().props.filter;
 var saved_filters = "";
 
 const form = useForm({
-    from_date: filter.from_date,
-    to_date: filter.to_date,
+    from_date: "",
+    to_date: "",
 });
 
 const create = () => {
     modal.value = true;
     edit.value = false;
+
     saved_filters = localStorage.getItem('filters');
     if (saved_filters) {
         saved_filters = JSON.parse(saved_filters);
         form.from_date = saved_filters.from_date
         form.to_date = saved_filters.to_date
+    } else {
+        form.from_date = filter.from_date;
+        form.to_date = filter.to_date;
     }
 };
 
@@ -67,7 +71,8 @@ const closeModal = () => {
     <Modal :show="modal" @close="closeModal">
         <form @submit.prevent="edit ? update() : submit()">
             <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900">Search Filter</h2> <hr>
+                <h2 class="text-lg font-medium text-gray-900">Search Filter</h2>
+                <hr>
 
                 <div class="mt-6">
                     <div class="row g-2">
@@ -84,7 +89,8 @@ const closeModal = () => {
 
                 <div class="mt-6 flex justify-end">
                     <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
-                    <SuccessButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Search</SuccessButton>
+                    <SuccessButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Search</SuccessButton>
                 </div>
             </div>
         </form>
