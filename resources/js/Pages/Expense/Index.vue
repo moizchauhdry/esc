@@ -104,11 +104,11 @@ const format_date = (date) => {
                                         <td>{{ expense.id }}</td>
                                         <td>{{ format_date(expense.expense_at) }}</td>
                                         <td>
-                                            <table class="table table-bordered table-light" style="font-size: 12px;">
+                                            <table class="table table-bordered" style="font-size: 12px;">
                                                 <tbody>
                                                     <tr v-for="item in expense.expense_items" :key="item.id">
                                                         <td style="width: 300px;">{{ item.description }}</td>
-                                                        <td style="width: 60px;">{{ format_number(item.amount) }}</td>
+                                                        <td style="width: 100px;">{{ format_number(item.amount) }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
