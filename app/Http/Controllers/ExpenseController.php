@@ -23,7 +23,7 @@ class ExpenseController extends Controller
 
         // dd($query->get());
         
-        $expenses = $query->orderBy('id', 'desc')->paginate(25);
+        $expenses = $query->orderBy('expense_at', 'desc')->paginate(25);
 
         return Inertia::render('Expense/Index', [
             'expenses' => $expenses,

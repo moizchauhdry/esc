@@ -91,20 +91,18 @@ const format_date = (date) => {
                                     </tr>
                                     <tr class="text-uppercase">
                                         <th>SR #</th>
-                                        <th>Expense ID</th>
                                         <th>Expense Date</th>
                                         <th>Expense Description</th>
-                                        <th>Total Amount (PKR)</th>
+                                        <th>Total Amount</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(expense, index) in expenses.data">
-                                        <td>{{ ++index }}</td>
-                                        <td>{{ expense.id }}</td>
+                                        <td>{{ (expenses.current_page - 1) * expenses.per_page + index + 1 }}</td>
                                         <td>{{ format_date(expense.expense_at) }}</td>
                                         <td>
-                                            <table class="table table-bordered" style="font-size: 12px;">
+                                            <table class="table table-bordered table-secondary" style="font-size: 12px;">
                                                 <tbody>
                                                     <tr v-for="item in expense.expense_items" :key="item.id">
                                                         <td style="width: 300px;">{{ item.description }}</td>
