@@ -82,45 +82,48 @@ const format_date = (date) => {
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <thead class="table-light">
                                     <tr>
-                                        <th colspan="17" class="text-uppercase text-center text-lg">
+                                        <th colspan="6" class="text-uppercase text-center text-lg">
                                             From "{{ filter['from_date'] }}" TO "{{ filter['to_date'] }}"
                                         </th>
                                     </tr>
                                     <tr class="text-uppercase">
                                         <th>SR #</th>
                                         <th>Expense ID</th>
-                                        <th>Year</th>
-                                        <th>Month</th>
                                         <th>Expense Date</th>
-                                        <th>No.of Items</th>
+                                        <th>Expense Description</th>
                                         <th>Total Amount (PKR)</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-for="(expense, index) in expenses.data">
-                                        <tr>
-                                            <td>{{ ++index }}</td>
-                                            <td>{{ expense.id }}</td>
-                                            <td>{{ expense.year }}</td>
-                                            <td>{{ expense.month_name }}</td>
-                                            <td>{{ format_date(expense.expense_at) }}</td>
-                                            <td>{{ expense.items_count }}</td>
-                                            <td>{{ format_number(expense.total_amount) }}</td>
-                                            <td>
-                                                <ActionButton @click="edit(expense)" title="Edit" class="mr-1">
-                                                    <i class="bx bx-edit"></i>
-                                                </ActionButton>
-                                                <a class="text-danger text-lg" href="#" @click="deleteExpense(expense.id)"
-                                                    v-if="permission.expense_delete">
-                                                    <i class="bx bx-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </template>
+                                    <tr v-for="(expense, index) in expenses.data">
+                                        <td>{{ ++index }}</td>
+                                        <td>{{ expense.id }}</td>
+                                        <td>{{ format_date(expense.expense_at) }}</td>
+                                        <td>
+                                            <table class="table table-bordered table-light" style="font-size: 12px;">
+                                                <tbody>
+                                                    <tr v-for="item in expense.expense_items" :key="item.id">
+                                                        <td style="width: 300px;">{{ item.description }}</td>
+                                                        <td style="width: 60px;">{{ format_number(item.amount) }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td>{{ format_number(expense.total_amount) }}</td>
+                                        <td>
+                                            <ActionButton @click="edit(expense)" title="Edit" class="mr-1">
+                                                <i class="bx bx-edit"></i>
+                                            </ActionButton>
+                                            <a class="text-danger text-lg" href="#" @click="deleteExpense(expense.id)"
+                                                v-if="permission.expense_delete">
+                                                <i class="bx bx-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

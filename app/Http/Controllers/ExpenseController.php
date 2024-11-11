@@ -16,11 +16,13 @@ class ExpenseController extends Controller
         $from_date = !empty($request->from_date) ? Carbon::parse($request->from_date)->format('Y-m-d') : Carbon::now()->startOfMonth()->format('Y-m-d');
         $to_date = !empty($request->to_date) ? Carbon::parse($request->to_date)->format('Y-m-d') : Carbon::now()->endOfMonth()->format('Y-m-d');
 
-        $query = Expense::query();
+        $query = Expense::with(['expenseItems']);
 
         $query->whereDate('expense_at', '>=', $from_date);
         $query->whereDate('expense_at', '<=', $to_date);
 
+        // dd($query->get());
+        
         $expenses = $query->orderBy('id', 'desc')->paginate(25);
 
         return Inertia::render('Expense/Index', [
