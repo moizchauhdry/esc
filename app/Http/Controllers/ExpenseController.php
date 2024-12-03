@@ -22,8 +22,8 @@ class ExpenseController extends Controller
         $query->whereDate('expense_at', '<=', $to_date);
 
         // dd($query->get());
-        
-        $expenses = $query->orderBy('expense_at', 'desc')->paginate(25);
+
+        $expenses = $query->orderBy('expense_at', 'desc')->paginate(25)->withQueryString();
 
         return Inertia::render('Expense/Index', [
             'expenses' => $expenses,
@@ -57,7 +57,7 @@ class ExpenseController extends Controller
             'month_name' => $month_name,
             'expense_at' => $expense_at,
         ];
-        
+
         $expense = Expense::find($request->expense_id);
 
         if ($expense) {
